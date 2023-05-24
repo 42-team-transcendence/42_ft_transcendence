@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@nestjs/cli": "^9.5.0"
+  },
+  "dependencies": {
+    "yarn": "^1.22.19"
+  }
+}
