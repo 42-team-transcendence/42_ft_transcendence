@@ -3,6 +3,7 @@
     "@nestjs/cli": "^9.5.0"
   },
   "dependencies": {
+    "argon2": "^0.30.3",
     "yarn": "^1.22.19"
   }
 }
