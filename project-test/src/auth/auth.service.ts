@@ -19,13 +19,11 @@ export class AuthService {
                 data: {
                     nickName: dto.nickName,
                     email: dto.email,
-                    hash,
-                },
-            
+                    hash }
             });
             delete user.hash;
             //return the save user
-            return user;
+            return "user";
             
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
@@ -33,6 +31,7 @@ export class AuthService {
                     throw new ForbiddenException('Credentials taken',);
                 }
             }
+            console.log(error);
             throw error;
         }
     }
