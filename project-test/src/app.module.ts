@@ -6,12 +6,12 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ //permet d'utiliser des variables d'env avec notre .env
+      isGlobal: true //permet d'utiliser ce module dans tous nos autres modules
+    }),
     AuthModule,
     UserModule,
     PrismaModule,
-    ConfigModule.forRoot({ //permet d'utiliser des variables d'env avec notre .env
-    isGlobal: true //permet d'utiliser ce module dans tous nos autres modules
-  })
-],
+  ],
 })
 export class AppModule {}
