@@ -23,7 +23,7 @@ export class AuthService {
             });
             delete user.hash;
             //return the save user
-            return "user";
+            return user;
             
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError) {
