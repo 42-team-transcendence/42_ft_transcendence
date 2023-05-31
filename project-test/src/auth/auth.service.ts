@@ -69,7 +69,8 @@ export class AuthService {
         }
     }
 
-    //vérification du JWT pour authentifier la personne après qu'elle se soit connectée une 1ere fois
+    //Création du JWT à partir des infos du user
+    //qui servira à authentifier la personne après qu'elle se soit connectée une 1ere fois
     //this is an asynchroneous function returning a promise
     async signToken(userId: number, email: string) {
         const payload = {
