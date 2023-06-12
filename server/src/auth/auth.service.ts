@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AuthDto } from "./dto";
+import { AuthDto, SignInAuthDto } from "./dto";
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { JwtService } from "@nestjs/jwt";
@@ -32,41 +32,34 @@ export class AuthService {
             return this.signToken(user.id, user.email);
             
         } catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                if (error.code === 'P2002') {
-                    throw new ForbiddenException('Credentials taken',);
-                }
+            if (error.code === 'P2002') {
+                throw new ForbiddenException('Credentials taken',);
             }
             console.log(error);
             throw error;
         }
     }
 
-    async signin(dto : AuthDto) {
-        try {//find user by email and nickname
-            const user = await this.prisma.user.findFirst({
-                where: {
-                    nickName : dto.nickName,
-                    email : dto.email,
-                }
-            })
-            
-            //if user does not exist throw exception
-            if (!user) {
-                throw new ForbiddenException("Credentials incorrect");
+    async signin(dto : SignInAuthDto) {
+        //find user by email
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email : dto.email,
             }
-
-            //check password. if it does not match, throw error
-            const pwdMatch = await argon.verify(user.hash, dto.password);
-            if (!pwdMatch) {
-                throw new ForbiddenException("Credentials incorrect");
-            }
-
-            return this.signToken(user.id, user.email);
-        } catch (error) {
-            console.log(error);
-            throw error;
+        })
+        
+        //if user does not exist throw exception
+        if (!user) {
+            throw new ForbiddenException("Credentials incorrect");
         }
+
+        //check password. if it does not match, throw error
+        const pwdMatch = await argon.verify(user.hash, dto.password);
+        if (!pwdMatch) {
+            throw new ForbiddenException("Credentials incorrect");
+        }
+
+        return this.signToken(user.id, user.email);
     }
 
     //Création du JWT à partir des infos du user
