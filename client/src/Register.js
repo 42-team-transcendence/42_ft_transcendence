@@ -7,6 +7,7 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = '/register';
 
 export default function Register() {
+    //useRef is a React Hook that lets you reference a value that’s not needed for rendering.  
     //The useRef() hook in React is used to create a mutable reference that persists across re-renders of a component.
     //It returns a mutable ref object with a .current property.
     //updating the ref does not trigger a re-render,
@@ -103,7 +104,41 @@ export default function Register() {
                 Allowed special characters: !@#$%
             </p>
 
+            <label htmlFor="confirm_pwd">
+                Confirm Password:
+                <span className={validMatch && matchPwd ? "valid" : "hide"}>
+                    <FontAwesomeIcon icon={faCheck} />
+                </span>
+                <span className={validMatch || !matchPwd ? "hide" : "invalid"}>
+                    <FontAwesomeIcon icon={faTimes} />
+                </span>
+            </label>
+            <input
+                type="password"
+                id="confirm_pwd" //même valeur que le label
+                ref={userRef}
+                onChange={(e) => setMatchPwd(e.target.value)}
+                required // champ requis
+                onFocus={() => setMatchFocus(true)}
+                onBlur={() => setMatchFocus(false)}
+            />
+            <p className={matchFocus && user && !validMatch ? "instructions" : "offscreen"} >
+                <FontAwesomeIcon icon={faInfoCircle} />
+                Must match the first password input field.
+            </p>
 
+            <button disabled={!validName || !validPwd || !validMatch ? true : false }>
+                Sign Up
+            </button>
+
+            <p>
+                Already Registered ?<br />
+                <span className="line">
+                    {/* TODO Put router link here */}
+                    {/* // placeholder link */}
+                    <a href="#">Sign In</a>
+                </span>
+            </p>
         </form>
     </section>
 
