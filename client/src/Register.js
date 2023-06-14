@@ -91,9 +91,7 @@ export default function Register() {
                 //vérifier le statut de la réponse : err.response.status
                 //409...
                 setErrMsg('Registration failed');
-
                 console.log(err);
-
                 //????
                 errRef.current.focus();
             }
@@ -114,6 +112,7 @@ export default function Register() {
         ) : (
         <section>
             <p ref={errRef} className={errMsg? "errmsg" : "offscreen"}>
+                {errMsg}
             </p>
             <h1>Register</h1>
             <form onSubmit={handleSubmit}>
