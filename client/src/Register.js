@@ -77,6 +77,33 @@ export default function Register() {
                 Must begin with a letter.<br/>
                 Letters, numbers, underscores, hypens allowed
             </p>
+
+            <label htmlFor="password">
+                Password:
+                <span className={validPwd ? "valid" : "hide"}>
+                    <FontAwesomeIcon icon={faCheck} />
+                </span>
+                <span className={validPwd || !pwd ? "hide" : "invalid"}>
+                    <FontAwesomeIcon icon={faTimes} />
+                </span>
+            </label>
+            <input
+                type="password"
+                id="password" //même valeur que le label
+                ref={userRef}
+                onChange={(e) => setPwd(e.target.value)}
+                required // champ requis
+                onFocus={() => setPwdFocus(true)}
+                onBlur={() => setPwdFocus(false)}
+            />
+            <p className={pwdFocus && user && !validPwd ? "instructions" : "offscreen"} >
+                <FontAwesomeIcon icon={faInfoCircle} />
+                8 to 24 characters.<br/>
+                Must include uppercase and lowercase character, a number and a special character.<br/>
+                Allowed special characters: !@#$%
+            </p>
+
+
         </form>
     </section>
 
