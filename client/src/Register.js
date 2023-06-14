@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "./api/axios";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const REGISTER_URL = '/register';
 
@@ -19,9 +20,9 @@ export default function Register() {
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
 
-    // const [email, setEmail] = useState('');
-    // const [validName, setValidName] = useState(false);
-    // const [userFocus, setUserFocus] = useState(false);
+    const [email, setEmail] = useState('');
+    const [validEmail, setValidEmail] = useState(false);
+    const [emailFocus, setEmailFocus] = useState(false);
 
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
@@ -43,13 +44,18 @@ export default function Register() {
     }, [user])
 
     useEffect(() => {
+        setValidEmail(EMAIL_REGEX.test(email));
+    }, [email])
+
+    useEffect(() => {
         setValidPwd(PWD_REGEX.test(pwd));
         setValidMatch(pwd === matchPwd);
     }, [pwd, matchPwd])
 
+
     useEffect(() => {
         setErrMsg('');
-    }, [user, pwd, matchPwd])
+    }, [user, email, pwd, matchPwd])
 
 
     const handleSubmit = async (e) => {
@@ -118,6 +124,32 @@ export default function Register() {
                     Letters, numbers, underscores, hypens allowed
                 </p>
 
+                <label htmlFor="email">
+                    Email:
+                    <span className={validEmail ? "valid" : "hide"}>
+                        <FontAwesomeIcon icon={faCheck} />
+                    </span>
+                    <span className={validEmail || !email ? "hide" : "invalid"}>
+                        <FontAwesomeIcon icon={faTimes} />
+                    </span>
+                </label>
+                <input
+                    type="text"
+                    id="email" //même valeur que le label
+                    // ref={userRef}
+                    // autoComplete="off"
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    required // champ requis
+                    onFocus={() => setEmailFocus(true)}
+                    onBlur={() => setEmailFocus(false)}
+                />
+                <p className={emailFocus && email && !validEmail ? "instructions" : "offscreen"} >
+                    <FontAwesomeIcon icon={faInfoCircle} />
+                    Enter valid email please.
+                </p>
+
+
                 <label htmlFor="password">
                     Password:
                     <span className={validPwd ? "valid" : "hide"}>
@@ -166,10 +198,9 @@ export default function Register() {
                     Must match the first password input field.
                 </p>
 
-                <button disabled={!validName || !validPwd || !validMatch ? true : false }>
+                <button disabled={!validName || !validEmail || !validPwd || !validMatch ? true : false }>
                     Sign Up
                 </button>
-
                 <p>
                     Already Registered ?<br />
                     <span className="line">
