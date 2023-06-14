@@ -1,19 +1,11 @@
-import React from 'react';
-import './App.css';
+import Register from './Register';
 
 function App() {
-  
-  function sayHello() {
-    console.log('hello');
-  }
-  
+
   return (
-    <div className="App">
-        <h1>
-          Hello World
-        </h1>
-        <button onClick={sayHello}>Yo babe</button>
-    </div>
+    <main className="App">
+      <Register />
+    </main>
   );
 }
 
