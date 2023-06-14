@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "./api/axios";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -17,6 +18,10 @@ export default function Register() {
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
+
+    // const [email, setEmail] = useState('');
+    // const [validName, setValidName] = useState(false);
+    // const [userFocus, setUserFocus] = useState(false);
 
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
@@ -58,7 +63,16 @@ export default function Register() {
             return;
         }
         console.log(user, pwd);
-        setSuccess(true);
+
+        try {
+            const response = await axios.post(
+                REGISTER_URL,
+                JSON.stringify({ user, pwd })
+            )
+        } catch (err) {
+            
+        }
+        
     }
 
 
