@@ -6,7 +6,7 @@ import axios from "./api/axios";
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const REGISTER_URL = '/register';
+const REGISTER_URL = '/auth/signup';
 
 export default function Register() {
     //useRef is a React Hook that lets you reference a value that’s not needed for rendering.  
@@ -73,10 +73,30 @@ export default function Register() {
         try {
             const response = await axios.post(
                 REGISTER_URL,
-                JSON.stringify({ user, pwd })
-            )
+                JSON.stringify({ nickName : user, password : pwd }),
+                {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                }
+            );
+            console.log(response.data);
+            console.log(response.accessToken);
+            console.log(JSON.stringify(response));
+            setSuccess(true);
+            //TODO if needed : clear input fields avec les setStates
         } catch (err) {
-            
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else if (err.response) {
+                //vérifier le statut de la réponse : err.response.status
+                //409...
+                setErrMsg('Registration failed');
+
+                console.log(err);
+
+                //????
+                errRef.current.focus();
+            }
         }
         
     }
