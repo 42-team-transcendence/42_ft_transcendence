@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-function Email({email, setEmail, validEmail, setValidEmail, emailFocus, setEmailFocus}) {    
+function Email({email, setEmail, validEmail, setValidEmail}) {    
     useEffect(() => {
         setValidEmail(EMAIL_REGEX.test(email));
     }, [email])
@@ -28,10 +28,8 @@ function Email({email, setEmail, validEmail, setValidEmail, emailFocus, setEmail
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 required // champ requis
-                onFocus={() => setEmailFocus(true)}
-                onBlur={() => setEmailFocus(false)}
             />
-            <p className={emailFocus && email && !validEmail ? "instructions" : "offscreen"} >
+            <p className={ email && !validEmail ? "instructions" : "offscreen"} >
                 <FontAwesomeIcon icon={faInfoCircle} />
                 Enter valid email please.
             </p>

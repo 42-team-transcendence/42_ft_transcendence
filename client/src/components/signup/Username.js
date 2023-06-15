@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 
-const Username = ({ user, setUser, validName, setValidName, userFocus, setUserFocus }) => {
+const Username = ({ user, setUser, validName, setValidName }) => {
   const userRef = useRef();
 
   useEffect(() => {
@@ -34,10 +34,8 @@ const Username = ({ user, setUser, validName, setValidName, userFocus, setUserFo
         onChange={(e) => setUser(e.target.value)}
         value={user}
         required
-        onFocus={() => setUserFocus(true)}
-        onBlur={() => setUserFocus(false)}
       />
-      <p className={userFocus && user && !validName ? "instructions" : "offscreen"}>
+      <p className={ user && !validName ? "instructions" : "offscreen"}>
         <FontAwesomeIcon icon={faInfoCircle} />
         4 to 24 characters.<br/>
         Must begin with a letter.<br/>

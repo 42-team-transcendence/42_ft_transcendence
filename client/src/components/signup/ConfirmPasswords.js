@@ -3,7 +3,7 @@ import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
-function ConfirmPassword({matchPwd, setMatchPwd, validMatch, setValidMatch, matchFocus, setMatchFocus, pwd}) {
+function ConfirmPassword({matchPwd, setMatchPwd, validMatch, setValidMatch, pwd}) {
     // const userRef = useRef();
     // useEffect(() => {
     //     userRef.current.focus();
@@ -31,10 +31,9 @@ function ConfirmPassword({matchPwd, setMatchPwd, validMatch, setValidMatch, matc
                 // ref={userRef}
                 onChange={(e) => setMatchPwd(e.target.value)}
                 required // champ requis
-                onFocus={() => setMatchFocus(true)}
-                onBlur={() => setMatchFocus(false)}
+    
             />
-            <p className={matchFocus && !validMatch ? "instructions" : "offscreen"} >
+            <p className={ !validMatch ? "instructions" : "offscreen"} >
                 <FontAwesomeIcon icon={faInfoCircle} />
                 Must match the first password input field.
             </p>

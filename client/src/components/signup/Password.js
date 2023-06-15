@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-function Password({pwd, setPwd, validPwd, setValidPwd, pwdFocus, setPwdFocus}) {
+function Password({pwd, setPwd, validPwd, setValidPwd}) {
     // const userRef = useRef();
     // useEffect(() => {
     //     userRef.current.focus();
@@ -32,10 +32,9 @@ function Password({pwd, setPwd, validPwd, setValidPwd, pwdFocus, setPwdFocus}) {
                 // ref={userRef}
                 onChange={(e) => setPwd(e.target.value)}
                 required // champ requis
-                onFocus={() => setPwdFocus(true)}
-                onBlur={() => setPwdFocus(false)}
+             
             />
-            <p className={pwdFocus && !validPwd ? "instructions" : "offscreen"} >
+            <p className={!validPwd ? "instructions" : "offscreen"} >
                 <FontAwesomeIcon icon={faInfoCircle} />
                 8 to 24 characters.<br/>
                 Must include uppercase and lowercase character, a number and a special character.<br/>
