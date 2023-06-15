@@ -34,7 +34,7 @@ function Password({pwd, setPwd, validPwd, setValidPwd}) {
                 required // champ requis
              
             />
-            <p className={!validPwd ? "instructions" : "offscreen"} >
+            <p className={pwd && !validPwd ? "instructions" : "offscreen"} >
                 <FontAwesomeIcon icon={faInfoCircle} />
                 8 to 24 characters.<br/>
                 Must include uppercase and lowercase character, a number and a special character.<br/>

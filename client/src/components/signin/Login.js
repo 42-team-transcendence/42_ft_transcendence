@@ -1,13 +1,19 @@
-import { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect } from "react";
 import AuthContext from "../../context/AuthProvider";
 import axios from "../../api/axios";
 import Email from "./Email";
 import Password from "./Password";
+import useAuth from "../../hooks/useAuth";
+import { Link, useNavigate, useLocation} from "react-router-dom"
 
 const SIGNIN_URL = '/auth/signin';
 
 export default function Login() {
-    const {setAuth} = useContext(AuthContext);
+    const {setAuth} = useAuth();
+
+	const navigate = useNavigate();
+	const location = useLocation();
+	const from = location.state?.from?.pathname || "/";
     const errRef = useRef();
 
     const [email, setEmail] = useState('');
@@ -35,7 +41,7 @@ export default function Login() {
 			setAuth({email, pwd, accessToken});
 			setEmail('');
 			setPwd('');
-			setSuccess(true);
+			navigate(from, { replace: true});
 			
 			console.log(JSON.stringify(response?.data));
     
@@ -73,11 +79,11 @@ export default function Login() {
                 Sign In
             </button>
             <p>
-                Already Registered ?<br />
+                Not Registered yet ?<br />
                 <span className="line">
                     {/* TODO Put router link here */}
                     {/* // placeholder link */}
-                    <a href="#">Sign In</a>
+                    <Link to="/register">Sign Up</Link>
                 </span>
             </p>
             </form>

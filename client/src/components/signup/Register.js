@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { Routes, Route,Link } from "react-router-dom"
 import axios from "../../api/axios";
 import Username from "./Username";
 import Email from "./Email";
@@ -114,7 +115,7 @@ export default function Register() {
                 <span className="line">
                     {/* TODO Put router link here */}
                     {/* // placeholder link */}
-                    <a href="#">Sign In</a>
+                    <Link to="/login">Log In</Link>
                 </span>
             </p>
             </form>
