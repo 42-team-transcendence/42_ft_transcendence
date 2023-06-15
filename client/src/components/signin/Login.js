@@ -1,16 +1,13 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
+import AuthContext from "../../context/AuthProvider";
 import axios from "../../api/axios";
 import Email from "./Email";
 import Password from "./Password";
 
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const SIGNIN_URL = '/auth/signin';
 
-export default function Register() {
-    //useRef is a React Hook that lets you reference a value that’s not needed for rendering.  
-    //The useRef() hook in React is used to create a mutable reference that persists across re-renders of a component.
-    //It returns a mutable ref object with a .current property.
-    //updating the ref does not trigger a re-render,
+export default function Login() {
+    const {setAuth} = useContext(AuthContext);
     const errRef = useRef();
 
     const [email, setEmail] = useState('');
@@ -23,35 +20,33 @@ export default function Register() {
     }, [email, pwd])
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); //on enlève le comportement par défaut du bouton pour mettre le n$otre
+        e.preventDefault(); 
         
         try {
             const response = await axios.post(
                 SIGNIN_URL,
-                JSON.stringify({ password : pwd, email }),
+                JSON.stringify({ password: pwd, email }),
                 {
                     headers: {'Content-Type': 'application/json'},
                     withCredentials: true
                 }
             );
-            console.log(response.data);
-            console.log(response.accessToken);
-            console.log(JSON.stringify(response));
-            setSuccess(true);
-            //TODO if needed : clear input fields avec les setStates
+			const accessToken = response?.data?.access_token;
+			setAuth({email, pwd, accessToken});
+			setEmail('');
+			setPwd('');
+			setSuccess(true);
+			
+			console.log(JSON.stringify(response?.data));
+    
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response) {
-                //vérifier le statut de la réponse : err.response.status
-                //409...
-                setErrMsg('Sign In failed');
+                setErrMsg(err.status + ' : ' +  err.response + 'Sign In failed');
                 console.log(err);
-                
-                errRef.current.focus(); //????
             }
         }
-        
     }
 
     return (
