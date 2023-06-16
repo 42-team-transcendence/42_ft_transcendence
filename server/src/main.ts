@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import * as cors from 'cors'
+
 
 
 async function bootstrap() {
@@ -15,13 +17,12 @@ async function bootstrap() {
   // axiosInstance.defaults.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,PATCH,OPTIONS';
   // axiosInstance.defaults.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
 
-  app.enableCors();
+  // app.enableCors();
 
-  // app.enableCors({
-  //   origin: true,
-  //   methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
-  //   allowedHeaders: ['Content-Type', 'Authorization'],
-  // });
+  app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  }))
 
   app.useGlobalPipes(
     new ValidationPipe({
