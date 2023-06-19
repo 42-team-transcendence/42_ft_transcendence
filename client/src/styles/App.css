@@ -1,5 +1,12 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; 
+  padding: 1rem 0.5rem;
+  background: linear-gradient(to bottom, #FF79AF 0%,#FF79AF 45%, white 45%, white 47%, #FF8100 47%, #FF8100 100%);
 }
 
 .App-logo {
@@ -36,14 +43,3 @@
     transform: rotate(360deg);
   }
 }
-
-/* .firstpage{
-  height: 300px;
-  width: 300px;
-  background: white;
-  border-radius: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-} */

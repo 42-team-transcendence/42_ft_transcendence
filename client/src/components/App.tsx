@@ -1,10 +1,11 @@
-import Register from './components/signup/Register';
-import Login from './components/signin/Login';
+import Register from './signup/Register';
+import Login from './signin/Login';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './Layout';
-import RequireAuth from './components/RequireAuth';
-import Homepage from './components/homepage/HomePage';
-import FirstPage from './components/homepage/FirstPage';
+import '../styles/App.css';
+import RequireAuth from './RequireAuth';
+import Homepage from './homepage/HomePage';
+import FirstPage from './homepage/FirstPage';
 
 function App() {
 

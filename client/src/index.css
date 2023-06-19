@@ -1,10 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap%27');
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap%27');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+/* .App {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    padding: 1rem 0.5rem;
+    background: linear-gradient(to bottom, #FF79AF 0%,#FF79AF 45%, white 45%, white 47%, #FF8100 47%, #FF8100 100%);
+  } */
 
 html {
     font-family: 'Nunito', sans-serif;
@@ -15,15 +27,6 @@ html {
 body {
     min-height: 100vh;
     background-color: dodgerblue;
-}
-
-.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; 
-  padding: 1rem 0.5rem;
 }
 
 section {
