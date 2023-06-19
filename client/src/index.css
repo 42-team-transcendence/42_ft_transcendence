@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 
 * {
     margin: 0;
@@ -7,23 +8,25 @@
 }
 
 html {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Lato', sans-serif;
     font-size: 22px;
     color: #fff;
 }
 
 body {
+	height:50%;
     min-height: 100vh;
-    background-color: dodgerblue;
+    background-color: #FF79AF;
 }
 
 .App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; 
-  padding: 1rem 0.5rem;
+	background: linear-gradient(to bottom, #FF79AF 0%,#FF79AF 45%, white 45%, white 47%, #FF8100 47%, #FF8100 100%);
+ 	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh; 
+	padding: 1rem 0.5rem;
 }
 
 section {
@@ -53,7 +56,7 @@ input[type="text"],
 input[type="password"],
 button,
 textarea {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Lato', sans-serif;
   font-size: 22px;
   padding: 0.25rem;
   border-radius: 0.5rem;
