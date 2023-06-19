@@ -14,7 +14,7 @@ export default function Register() {
 
     const { setAuth } = useAuth();
     const navigate = useNavigate();
-    const from = "/homepage";
+    const from = "/";
 
     /******************************** USERS***************************************************************** */
 

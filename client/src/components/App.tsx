@@ -14,16 +14,13 @@ function App() {
       <Routes>
 
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<FirstPage />} />
+          <Route element= {<RequireAuth />}>
+            <Route path="/" element={<Homepage />} />
+          </Route>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
 				</Route>
-
-          <Route element= {<RequireAuth />}>
-				  <Route path="homepage" element={<Homepage />}/>
-				{/* <Route path="*" element={<Missing />}/> */}
-			  </Route>
-
+        
       </Routes>
     </main>
   );

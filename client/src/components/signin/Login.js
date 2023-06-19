@@ -13,7 +13,7 @@ function Login () {
 
     const navigate = useNavigate(); //useNavigate retourne une fct qui permet de naviguer vers d'autres pages de l'appli
     const location = useLocation(); // useLocation retourne un objet qui contient des éléments sur l'URL de la page actuelle
-    const from = location.state?.from?.pathname || "/homepage"; //from = chemin de la page précédente à partir de laquelle l'utilisateur est arrivé sur la page de connexion
+    const from = location.state?.from?.pathname || "/"; //from = chemin de la page précédente à partir de laquelle l'utilisateur est arrivé sur la page de connexion
 
     /******************************** EMAIL***************************************************************** */
 
