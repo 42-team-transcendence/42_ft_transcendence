@@ -6,14 +6,8 @@ const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 
  function Username ({ stateUser, fonctionUpdate }) {
     
-   const {user, validName, userFocus} = stateUser;
-   const {updateUser, updateUserFocus, updateValideName} = fonctionUpdate;
-
-    const userRef = useRef();
-    
-    useEffect(() => {
-        userRef.current.focus();
-    }, [])
+   const {user, validName} = stateUser;
+   const {updateUser, updateValideName} = fonctionUpdate;
     
     useEffect(() => {
         updateValideName(USER_REGEX.test(user));
@@ -33,15 +27,12 @@ const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
             <input
                 type="text"
                 id="username" //même valeur que le label
-                ref={userRef}
                 autoComplete="off"
                 onChange={(e) => updateUser(e.target.value)}
                 value={user}
                 required // champ requis
-                onFocus={() => updateUserFocus(true)}
-                onBlur={() => updateUserFocus(false)}
             />
-            <p className={userFocus && user && !validName ? "instructions" : "offscreen"} >
+            <p className={user && !validName ? "instructions" : "offscreen"} >
                 <FontAwesomeIcon icon={faInfoCircle} />
                 4 to 24 characters.<br/>
                 Must begin with a letter.<br/>

@@ -11,9 +11,9 @@ function Login () {
 
     const { setAuth } = useAuth();
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const navigate = useNavigate(); //useNavigate retourne une fct qui permet de naviguer vers d'autres pages de l'appli
+    const location = useLocation(); // useLocation retourne un objet qui contient des éléments sur l'URL de la page actuelle
+    const from = location.state?.from?.pathname || "/homepage"; //from = chemin de la page précédente à partir de laquelle l'utilisateur est arrivé sur la page de connexion
 
     /******************************** EMAIL***************************************************************** */
 
@@ -58,27 +58,23 @@ function Login () {
                     withCredentials: true
                 }
             );
-            const accessToken = response?.data?.accessToken;
-            const roles = response?.data?.roles;
-            setAuth({email, pwd, roles, accessToken});
+            const accessToken = response?.data?.access_token;
+            setAuth({email, pwd, accessToken});
             setEmail('');
             setPwd('');
             navigate(from, { replace: true});
         } catch (err) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
-            } else if (err.response?.status === 400) {
-                setErrMsg('Missing Email or Password');
-            } else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
-            } else {
-                setErrMsg('Login Failed');
+            } else if (err.response) {
+                setErrMsg(err.status + ' : ' +  err.response + 'Sign In failed');
+                console.log(err);
             }
         }
     }
     return (
         <section>
-            <p /*ref={errRef}*/ className={errMsg? "errmsg" : "offscreen"}
+            <p className={errMsg? "errmsg" : "offscreen"}
             aria-live="assertive">{errMsg}</p>
             <h1>Sign In</h1>
             <form onSubmit={handleSubmit}>
@@ -86,7 +82,9 @@ function Login () {
                 <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail} />
                 <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd} />
 
-                <button>Sign In</button>
+                <button  disabled={ !email || !pwd  ? true : false }>
+                    Sign In
+                </button>
             </form>
             <p>
                 Need an Account ?<br />

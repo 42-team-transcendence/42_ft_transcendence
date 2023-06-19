@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -6,8 +6,8 @@ const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 function Email ({ stateEmail, fonctionUpdateEmail }) {
 
-    const {email, validEmail, emailFocus} = stateEmail;
-    const {updateEmail, updateEmailFocus, updateValideEmail} = fonctionUpdateEmail;
+    const {email, validEmail} = stateEmail;
+    const {updateEmail, updateValideEmail} = fonctionUpdateEmail;
 
     useEffect(() => {
         updateValideEmail(EMAIL_REGEX.test(email));
@@ -32,10 +32,8 @@ function Email ({ stateEmail, fonctionUpdateEmail }) {
                     onChange={(e) => updateEmail(e.target.value)}
                     value={email}
                     required // champ requis
-                    onFocus={() => updateEmailFocus(true)}
-                    onBlur={() => updateEmailFocus(false)}
                 />
-                <p className={emailFocus && email && !validEmail ? "instructions" : "offscreen"} >
+                <p className={email && !validEmail ? "instructions" : "offscreen"} >
                     <FontAwesomeIcon icon={faInfoCircle} />
                     Enter valid email please.
                 </p>

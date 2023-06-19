@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -6,8 +6,8 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 function Password ({ statePwd, fonctionUpdatePwd }) {
     
-    const {user, pwd, matchPwd, validPwd, pwdFocus} = statePwd;
-    const {updatePwd, updatePwdFocus, updateValidePwd, updateValideMatch} = fonctionUpdatePwd;
+    const {user, pwd, matchPwd, validPwd} = statePwd;
+    const {updatePwd, updateValidePwd, updateValideMatch} = fonctionUpdatePwd;
 
     useEffect(() => {
         updateValidePwd(PWD_REGEX.test(pwd));
@@ -30,10 +30,8 @@ function Password ({ statePwd, fonctionUpdatePwd }) {
                     id="password" //même valeur que le label
                     onChange={(e) => updatePwd(e.target.value)}
                     required // champ requis
-                    onFocus={() => updatePwdFocus(true)}
-                    onBlur={() => updatePwdFocus(false)}
                 />
-                <p className={pwdFocus && user && !validPwd ? "instructions" : "offscreen"} >
+                <p className={pwd && !validPwd ? "instructions" : "offscreen"} >
                     <FontAwesomeIcon icon={faInfoCircle} />
                     8 to 24 characters.<br/>
                     Must include uppercase and lowercase character, a number and a special character.<br/>

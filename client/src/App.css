@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+/* .firstpage{
+  height: 300px;
+  width: 300px;
+  background: white;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+} */
