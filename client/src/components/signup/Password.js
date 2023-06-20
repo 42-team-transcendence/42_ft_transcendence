@@ -6,7 +6,7 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
 function Password ({ statePwd, fonctionUpdatePwd }) {
     
-    const {user, pwd, matchPwd, validPwd} = statePwd;
+    const {pwd, matchPwd, validPwd} = statePwd;
     const {updatePwd, updateValidePwd, updateValideMatch} = fonctionUpdatePwd;
 
     useEffect(() => {

@@ -1,6 +1,5 @@
-import React from "react";
 import { useNavigate } from 'react-router-dom';
-import Leaderboard from "../leaderboard/Leaderboard";
+// import Leaderboard from "../leaderboard/Leaderboard";
 
 function Homepage() {
 
@@ -15,7 +14,6 @@ function Homepage() {
 		<div>
 		<h1> WELCOME TO PONG </h1>
 
-		<label><u>Leaderboard </u> </label>
 		<button onClick={handleLeaderboard}>Leaderboard</button>
 		</div>
 	)
