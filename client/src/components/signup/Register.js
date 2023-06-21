@@ -16,8 +16,8 @@ export default function Register() {
     const navigate = useNavigate();
     const from = "/";
 
-    /******************************** USERS***************************************************************** */
-
+    // =============================================================================
+	// USERS =======================================================================
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     
@@ -31,8 +31,9 @@ export default function Register() {
     }
     const fonctionUpdate = {updateUser, updateValideName};
 
-    /******************************** EMAIL***************************************************************** */
 
+    // =============================================================================
+	// EMAIL =======================================================================
     const [email, setEmail] = useState('');
     const [validEmail, setValidEmail] = useState(false);
 
@@ -47,8 +48,8 @@ export default function Register() {
     const fonctionUpdateEmail = {updateEmail, updateValideEmail};
     
     
-    /********************************PASSWORD_MATCH***************************************************************** */
-    
+    // =============================================================================
+	// PWD MATCH ===================================================================
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
     
@@ -63,8 +64,9 @@ export default function Register() {
     
     const fonctionUpdateMatchPwd = {updateMatchPwd};
     
-    /********************************PASSWORD********************************************************************/
-    
+
+   	// =============================================================================
+	// PASSWORD ====================================================================
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
     
@@ -78,8 +80,9 @@ export default function Register() {
     }
     const fonctionUpdatePwd = {updatePwd, updateValidePwd, updateValideMatch};
 
-    /*************************************************************************************************************/
-
+    
+	// =============================================================================
+	// =============================================================================
     const [errMsg, setErrMsg] = useState('');
 
     useEffect(() => {
