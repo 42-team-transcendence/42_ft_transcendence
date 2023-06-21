@@ -15,8 +15,8 @@ function Login () {
     const location = useLocation(); // useLocation retourne un objet qui contient des éléments sur l'URL de la page actuelle
     const from = location.state?.from?.pathname || "/"; //from = chemin de la page précédente à partir de laquelle l'utilisateur est arrivé sur la page de connexion
 
-    /******************************** EMAIL***************************************************************** */
-
+    // =============================================================================
+	// EMAIL =======================================================================
     const [email, setEmail] = useState('');
 
     const stateEmail = {email};
@@ -27,8 +27,8 @@ function Login () {
 
     const fonctionUpdateEmail = {updateEmail};
 
-    /********************************PASSWORD********************************************************************/
-
+    // =============================================================================
+	// PASSWORD ====================================================================
     const [pwd, setPwd] = useState('');
 
     const statePwd = {pwd};
@@ -39,8 +39,8 @@ function Login () {
 
     const fonctionUpdatePwd = {updatePwd};
 
-    /*************************************************************************************************************/
-
+    /// =============================================================================
+	// 	=============================================================================
     const [errMsg, setErrMsg] = useState('');
 
     useEffect(() => {
