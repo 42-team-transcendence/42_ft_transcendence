@@ -17,10 +17,10 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route element= {<RequireAuth />}>
             <Route path="/" element={<Homepage />} />
+			<Route path="leaderboard" element={<Leaderboard />} />
 
           </Route>
         
-			<Route path="leaderboard" element={<Leaderboard />} />
 			<Route path="login" element={<Login />} />
         	<Route path="register" element={<Register />} />
 		</Route>
