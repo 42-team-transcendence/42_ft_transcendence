@@ -6,6 +6,7 @@ import '../styles/App.css';
 import RequireAuth from './RequireAuth';
 import Homepage from './homepage/HomePage';
 import FirstPage from './homepage/FirstPage';
+import Leaderboard from './leaderboard/Leaderboard';
 
 function App() {
 
@@ -16,10 +17,13 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route element= {<RequireAuth />}>
             <Route path="/" element={<Homepage />} />
+
           </Route>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-				</Route>
+        
+			<Route path="leaderboard" element={<Leaderboard />} />
+			<Route path="login" element={<Login />} />
+        	<Route path="register" element={<Register />} />
+		</Route>
         
       </Routes>
     </main>

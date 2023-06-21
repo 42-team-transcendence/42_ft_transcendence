@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import useRefreshToken from "../../hooks/useRefreshToken";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from 'axios';
+
 
 /*
 A propos de AbortController et controller.signal
@@ -23,25 +24,27 @@ function Users() {
 
 	useEffect(() => {
 		let isMounted = true;
-		const controller = new AbortController();
+		//const controller = new AbortController();
 
 		const getUsers = async () => {
 			try {
-				const response = await axiosPrivate.get('/users', {
-					signal: controller.signal
+				const response = await axios.get('/users', {
+				//const response = await axiosPrivate.get('/users', {
+					
+					//signal: controller.signal
 				});
 				console.log(response.data);
 				isMounted && setUsers(response.data);
 			} catch (error) {
 				console.log(error);
-				navigate('/login', { state: {from: location}, replace: true});
+				//navigate('/login', { state: {from: location}, replace: true});
 			}
 		}
 		getUsers();
 
 		return () => {
 			isMounted = false;
-			controller.abort();
+			//controller.abort();
 		}
 		
 	}, [])
