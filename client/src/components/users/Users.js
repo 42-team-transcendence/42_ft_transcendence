@@ -20,7 +20,6 @@ function Users() {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	// const refresh = useRefreshToken();
 
 	useEffect(() => {
 		let isMounted = true;
@@ -35,7 +34,7 @@ function Users() {
 				isMounted && setUsers(response.data);
 			} catch (error) {
 				console.log(error);
-				// navigate('/login', { state: {from: location}, replace: true});
+				navigate('/login', { state: {from: location}, replace: true});
 			}
 		}
 		getUsers();
@@ -55,7 +54,7 @@ function Users() {
 		{ users?.length
 			? (
 				<ul>
-					{users.map((user, i) => <li key={i}>{user?.nickName}</li>)}
+					{users.map((user, i) => <li key={i}>{user?.nickname}</li>)}
 				</ul>
 			): <p> No users to display</p>
 		}

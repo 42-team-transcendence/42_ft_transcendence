@@ -96,7 +96,7 @@ export default function Register() {
         try {
             const response = await axios.post(
                 REGISTER_URL,
-                JSON.stringify({ nickName : user, email, password : pwd }),
+                JSON.stringify({ nickname : user, email, password : pwd }),
                 {
                     headers: {'Content-Type': 'application/json'},
                     withCredentials: true
