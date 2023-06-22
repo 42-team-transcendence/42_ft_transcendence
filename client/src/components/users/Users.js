@@ -20,31 +20,30 @@ function Users() {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	// const refresh = useRefreshToken();
 
 	useEffect(() => {
 		let isMounted = true;
-		//const controller = new AbortController();
+		const controller = new AbortController();
 
 		const getUsers = async () => {
 			try {
-				const response = await axios.get('/users', {
-				//const response = await axiosPrivate.get('/users', {
+				// const response = await axiosPrivate.get('/users', {
+				const response = await axiosPrivate.get('/users', {
 					
-					//signal: controller.signal
+					signal: controller.signal
 				});
 				console.log(response.data);
 				isMounted && setUsers(response.data);
 			} catch (error) {
 				console.log(error);
-				//navigate('/login', { state: {from: location}, replace: true});
+				navigate('/login', { state: {from: location}, replace: true});
 			}
 		}
 		getUsers();
 
 		return () => {
 			isMounted = false;
-			//controller.abort();
+			// controller.abort();
 		}
 		
 	}, [])
@@ -57,7 +56,7 @@ function Users() {
 		{ users?.length
 			? (
 				<ul>
-					{users.map((user, i) => <li key={i}>{user?.username}</li>)}
+					{users.map((user, i) => <li key={i}>{user?.nickname}</li>)}
 				</ul>
 			): <p> No users to display</p>
 		}
