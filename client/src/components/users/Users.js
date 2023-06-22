@@ -28,10 +28,15 @@ function Users() {
 		const getUsers = async () => {
 			try {
 <<<<<<< HEAD
+<<<<<<< HEAD
 				// const response = await axiosPrivate.get('/users', {
 				const response = await axiosPrivate.get('/users', {
 					
 					signal: controller.signal
+=======
+				const response = await axiosPrivate.get('/users', {
+				signal: controller.signal
+>>>>>>> bea40003f9ba6b3bb6d5e79d172576f4975953f6
 =======
 				const response = await axiosPrivate.get('/users', {
 				signal: controller.signal
@@ -42,7 +47,11 @@ function Users() {
 			} catch (error) {
 				console.log(error);
 <<<<<<< HEAD
+<<<<<<< HEAD
 				navigate('/login', { state: {from: location}, replace: true});
+=======
+				// navigate('/login', { state: {from: location}, replace: true});
+>>>>>>> bea40003f9ba6b3bb6d5e79d172576f4975953f6
 =======
 				// navigate('/login', { state: {from: location}, replace: true});
 >>>>>>> bea40003f9ba6b3bb6d5e79d172576f4975953f6
@@ -66,7 +75,11 @@ function Users() {
 			? (
 				<ul>
 <<<<<<< HEAD
+<<<<<<< HEAD
 					{users.map((user, i) => <li key={i}>{user?.nickname}</li>)}
+=======
+					{users.map((user, i) => <li key={i}>{user?.nickName}</li>)}
+>>>>>>> bea40003f9ba6b3bb6d5e79d172576f4975953f6
 =======
 					{users.map((user, i) => <li key={i}>{user?.nickName}</li>)}
 >>>>>>> bea40003f9ba6b3bb6d5e79d172576f4975953f6
