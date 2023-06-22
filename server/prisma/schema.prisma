@@ -19,7 +19,7 @@ model User {
   email	   	String @unique
   hash	  	String
 
-  hashedRt String?
+  hashedRt  String?
 
   @@map("users")
 }
