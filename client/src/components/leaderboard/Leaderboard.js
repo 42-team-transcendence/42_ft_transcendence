@@ -3,7 +3,8 @@ import Users from '../users/Users'
 
 function Leaderboard() {
   return (
-	<div>Leaderboard
+	<div>
+		<h1>Leaderboard</h1>
 		< Users />
 	</div>
   )
