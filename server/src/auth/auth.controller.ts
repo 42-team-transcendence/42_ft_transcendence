@@ -1,4 +1,4 @@
-import { Controller, Post , Body, HttpCode, HttpStatus, UseGuards, Res, Response} from "@nestjs/common";
+import { Controller, Post , Body, HttpCode, HttpStatus, UseGuards, Res} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthDto, SignInAuthDto } from "./dto";
@@ -15,22 +15,19 @@ export class AuthController {
 
     @Post('signup')
     @HttpCode(HttpStatus.CREATED)
-    signup(@Body() dto: AuthDto): Promise<Tokens> {
+    signup(
+        @Body() dto: AuthDto,
+        @Res({ passthrough: true }) res    
+    ) {
         console.log(dto);
-        return (this.authService.signup(dto));
+        return (this.authService.signup(dto, res));
     }
-
-    // @Post('signin')
-    // @HttpCode(HttpStatus.OK)
-    // signin(@Body() dto: SignInAuthDto): Promise<Tokens> {
-    //     return (this.authService.signin(dto));
-    // }
 
     @Post('signin')
     @HttpCode(HttpStatus.OK)
     signin(
         @Body() dto: SignInAuthDto,
-        @Res({ passthrough: true }) res: Response
+        @Res({ passthrough: true }) res
     ) {
         return (this.authService.signin(dto, res));
 
@@ -39,17 +36,19 @@ export class AuthController {
     @UseGuards(JwtGuard)
     @Post('logout')
     @HttpCode(HttpStatus.OK)
-    logout(@GetUser() user: User) {
+    logout(@GetUser() user) {
         console.log({"controller": user});
-        return (this.authService.logout(user['sub']));
+        return (this.authService.logout(user.sub));
     }
 
     @UseGuards(RtGuard) //link this guard (check for refresh token) to our refresh token strategy 
     @Post('refresh')
     @HttpCode(HttpStatus.OK)
-    refresh(@GetUser() user): Promise<Tokens> {
+    refresh(
+        @GetUser() user,
+        @Res({ passthrough: true }) res  
+    ) {
         console.log({"controller_user" : user});
-        return (this.authService.refresh(user.sub, user.refreshToken));
+        return (this.authService.refresh(user.sub, user.refreshToken, res));
     }
 }
-

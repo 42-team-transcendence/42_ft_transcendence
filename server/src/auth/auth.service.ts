@@ -14,8 +14,7 @@ export class AuthService {
         private jwt: JwtService,
         private config: ConfigService
     ) {}
-    //TODO check away + async
-    async signup(dto: AuthDto): Promise<Tokens> {
+    async signup(dto: AuthDto, res) {
 
         // generate the password hash
         const hash = await argon.hash(dto.password);
@@ -33,19 +32,14 @@ export class AuthService {
             const tokens = await this.getToken(user.id, user.email);
             // Stockage du refreshToken dans la DB
             await this.updateRtHash(user.id, tokens.refreshToken);
-            
-            return (tokens);
 
-            // res.cookie('refreshToken', tokens.refreshToken, {
-            //     httpOnly: true,
-            //     secure: false,
-            //     sameSite: 'lax',
-            //     expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
-            // });
-    
-            // res.json(tokens);
-
-
+            res.cookie('refreshToken', tokens.refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax',
+                expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+            });
+            return res.json({accessToken : tokens.accessToken});
 
         } catch (error) {
             if (error.code === 'P2002') {
@@ -86,9 +80,7 @@ export class AuthService {
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
         });
 
-        return res.json(tokens);
-        // res.json(tokens);
-        // return (tokens);
+        return res.json({accessToken : tokens.accessToken});
     }
 
     //Création du JWT à partir des infos du user
@@ -145,7 +137,7 @@ export class AuthService {
         })
     }
 
-    async refresh(userId: number, rt: string) {
+    async refresh(userId: number, rt: string, res) {
         console.log({userId, rt})
         const user = await this.prisma.user.findUnique({
             where : {
@@ -161,6 +153,14 @@ export class AuthService {
         const tokens = await this.getToken(user.id, user.email);
         // Stockage du refreshToken dans la Database
         await this.updateRtHash(user.id, tokens.refreshToken);
-        return (tokens);
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        });
+
+        return res.json({accessToken : tokens.accessToken});
     }
 }
