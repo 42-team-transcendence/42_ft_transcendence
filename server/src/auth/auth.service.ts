@@ -69,12 +69,12 @@ export class AuthService {
         // Stockage du refresh_token dans la DB
         await this.updateRtHash(user.id, tokens.refresh_token);
 
-        res.cookie('refresh_token', tokens.refresh_token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
-            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
-        }).send({ status: 'ok' });
+        // res.cookie('refresh_token', tokens.refresh_token, {
+        //     httpOnly: true,
+        //     secure: false,
+        //     sameSite: 'lax',
+        //     expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        // }).send({ status: 'ok' });
 
         return (tokens);
     }
