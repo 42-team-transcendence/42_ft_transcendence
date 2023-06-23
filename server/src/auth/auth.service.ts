@@ -29,10 +29,9 @@ export class AuthService {
                     hash }
             });
             
-            //return the save user
             // Creation du access_token et du refresh_token
             const tokens = await this.getToken(user.id, user.email);
-            // Stockage du refresh_token dans la Database
+            // Stockage du refresh_token dans la DB
             await this.updateRtHash(user.id, tokens.refresh_token);
             return (tokens);
             
@@ -65,7 +64,7 @@ export class AuthService {
         }
         // Creation du access_token et du refresh_token
         const tokens = await this.getToken(user.id, user.email);
-        // Stockage du refresh_token dans la Database
+        // Stockage du refresh_token dans la DB
         await this.updateRtHash(user.id, tokens.refresh_token);
         return (tokens);
     }
@@ -122,10 +121,10 @@ export class AuthService {
                 hashedRt: null
             }
         })
-
     }
 
     async refresh(userId: number, rt: string) {
+        console.log({userId, rt})
         const user = await this.prisma.user.findUnique({
             where : {
                 id: userId,

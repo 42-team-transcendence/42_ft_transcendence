@@ -47,7 +47,7 @@ function Users() {
 	}, [])
 
   return (
-	<article> 
+	<article>
 		<h2>
 			Users List
 		</h2>
