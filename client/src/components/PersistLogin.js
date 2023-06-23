@@ -17,7 +17,6 @@ const PersistLogin = () => {
             } finally {
                 setIsLoading(false);
             }
-
         }
 
         console.log({auth});

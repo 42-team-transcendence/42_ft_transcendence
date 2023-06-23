@@ -20,6 +20,8 @@ export class RtJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     };
 
     private static extractJWTFromCookie(req: Request): string | null {
+        console.log({req});
+        console.log({req.cookies});
         if (req.cookies && req.cookies.refreshToken) {
           return req.cookies.refreshToken;
         }
@@ -30,8 +32,7 @@ export class RtJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     // via l'objet request d'Express, dans l'objet "user"
     validate(req: Request, payload : JwtPayload): JwtPayloadWithRt {
         console.log({payload});
-
-        const refreshToken = req?.get('authorization')?.replace('Bearer', '').trim();
+        const refreshToken = RtJwtStrategy.extractJWTFromCookie(req);
         if (!refreshToken) throw new ForbiddenException('Refresh token malformed');
 
 		//passport inclus le retour de la méthode validate dans l'objet request (qui pourra ensuite être
