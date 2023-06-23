@@ -33,8 +33,10 @@ export class AuthService {
             const tokens = await this.getToken(user.id, user.email);
             // Stockage du refresh_token dans la DB
             await this.updateRtHash(user.id, tokens.refresh_token);
-            return (tokens);
             
+            return (tokens);
+
+
         } catch (error) {
             if (error.code === 'P2002') {
                 throw new ForbiddenException('Credentials taken',);
@@ -44,7 +46,7 @@ export class AuthService {
         }
     }
 
-    async signin(dto : SignInAuthDto): Promise<Tokens> {
+    async signin(dto : SignInAuthDto, res): Promise<Tokens> {
         //find user by email
         const user = await this.prisma.user.findUnique({
             where: {
@@ -66,6 +68,14 @@ export class AuthService {
         const tokens = await this.getToken(user.id, user.email);
         // Stockage du refresh_token dans la DB
         await this.updateRtHash(user.id, tokens.refresh_token);
+
+        res.cookie('refresh_token', tokens.refresh_token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        }).send({ status: 'ok' });
+
         return (tokens);
     }
 

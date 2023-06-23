@@ -1,4 +1,4 @@
-import { Controller, Post , Body, HttpCode, HttpStatus, UseGuards, Req} from "@nestjs/common";
+import { Controller, Post , Body, HttpCode, HttpStatus, UseGuards, Res, Response} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthDto, SignInAuthDto } from "./dto";
@@ -20,10 +20,20 @@ export class AuthController {
         return (this.authService.signup(dto));
     }
 
+    // @Post('signin')
+    // @HttpCode(HttpStatus.OK)
+    // signin(@Body() dto: SignInAuthDto): Promise<Tokens> {
+    //     return (this.authService.signin(dto));
+    // }
+
     @Post('signin')
     @HttpCode(HttpStatus.OK)
-    signin(@Body() dto: SignInAuthDto): Promise<Tokens> {
-        return (this.authService.signin(dto));
+    signin(
+        @Body() dto: SignInAuthDto,
+        @Res({ passthrough: true }) res: Response
+    ) {
+        return (this.authService.signin(dto, res));
+
     }
 
     @UseGuards(JwtGuard)
@@ -42,3 +52,4 @@ export class AuthController {
         return (this.authService.refresh(user.sub, user.refreshToken));
     }
 }
+
