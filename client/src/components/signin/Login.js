@@ -58,7 +58,7 @@ function Login () {
                     withCredentials: true
                 }
             );
-            const accessToken = response?.data?.access_token;
+            const accessToken = response?.data?.accessToken;
             setAuth({email, pwd, accessToken});
             setEmail('');
             setPwd('');

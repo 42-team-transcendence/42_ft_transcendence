@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import * as cors from 'cors'
-
+import * as cookieParser from 'cookie-parser';
 
 
 async function bootstrap() {
@@ -23,6 +23,8 @@ async function bootstrap() {
     origin: 'http://localhost:3000',
     credentials: true
   }))
+
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({

@@ -11,11 +11,20 @@ import { JwtPayload, JwtPayloadWithRt } from "../types";
 export class RtJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     constructor (config : ConfigService, private prisma : PrismaService) {
         super ({
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //recuperation auto du token dans les headers lors d'une requete
+            jwtFromRequest: ExtractJwt.fromExtractors([
+                RtJwtStrategy.extractJWTFromCookie,
+            ]),
             secretOrKey: config.get<string>('REFRESH_SECRET'),
             passReqToCallback: true,
         })
     };
+
+    private static extractJWTFromCookie(req: Request): string | null {
+        if (req.cookies && req.cookies.refreshToken) {
+          return req.cookies.refreshToken;
+        }
+        return null;
+      }
 
     //tout ce qui est retourné avec la fonction validate est passée aux fonctions suivantes
     // via l'objet request d'Express, dans l'objet "user"

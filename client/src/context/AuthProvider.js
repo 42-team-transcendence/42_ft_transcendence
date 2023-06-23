@@ -4,13 +4,13 @@ import { createContext, useState, useEffect } from "react";
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    const storedAuth = localStorage.getItem('auth');
-    const [auth, setAuth] = useState(storedAuth ? JSON.parse(storedAuth) : {});
-
-    useEffect(() => {
-        localStorage.setItem('auth', JSON.stringify(auth));
-    }, [auth]);
-    // const [auth, setAuth] = useState({});
+    //Mauvaise pratique de stocker notre access token dans local storage
+    // const storedAuth = localStorage.getItem('auth');
+    // const [auth, setAuth] = useState(storedAuth ? JSON.parse(storedAuth) : {});
+    // useEffect(() => {
+    //     localStorage.setItem('auth', JSON.stringify(auth));
+    // }, [auth]);
+    const [auth, setAuth] = useState({});
 
 
 	/* return (...). Ici, nous utilisons <AuthContext.Provider value={{auth, setAuth}}> ... </AuthContext.Provider> pour envelopper les composants enfants avec le contexte d'authentification. Cela signifie que tous les composants enfants pourront accéder aux informations d'authentification grâce à ce contexte. */
