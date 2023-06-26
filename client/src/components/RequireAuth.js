@@ -5,11 +5,11 @@ const RequireAuth = () => {
     const { auth } = useAuth();
     const location = useLocation();
     
-    console.log(auth.email);
-    console.log(auth.accessToken);
+    console.log("EMAIL == " + auth.email);
+    console.log("TOKENS == " + auth.accessToken);
 
     return (
-        auth?.email
+        auth?.accessToken
             ? <Outlet />
             : <Navigate to="/register" state={{from: location}} replace />
     );

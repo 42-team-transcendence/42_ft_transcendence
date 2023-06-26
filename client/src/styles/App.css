@@ -43,3 +43,15 @@
     transform: rotate(360deg);
   }
 }
+
+.button-logout {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: blue;
+  background-color: #FF79AF;
+  font-size: 15px;
+  border: 0px;
+  text-decoration: underline;
+  cursor: pointer;
+}

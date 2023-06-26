@@ -7,24 +7,28 @@ import RequireAuth from './RequireAuth';
 import Homepage from './homepage/HomePage';
 import FirstPage from './homepage/FirstPage';
 import Leaderboard from './leaderboard/Leaderboard';
+import PersistLogin from './PersistLogin';
 
 function App() {
-
+//Contient toutes les URLS / Routes de notre app front.
   return (
     <main className="App">
       <Routes>
-
         <Route path="/" element={<Layout />}>
-          <Route element= {<RequireAuth />}>
-            <Route path="/" element={<Homepage />} />
-			<Route path="leaderboard" element={<Leaderboard />} />
 
+          {/* Public routes */}
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+
+          {/* Routes protégées avec JWT */}
+          <Route element={<PersistLogin />}>
+            <Route element= {<RequireAuth />}>
+              <Route path="/" element={<Homepage />} />
+              <Route path="leaderboard" element={<Leaderboard />} />
+            </Route>
           </Route>
         
-			<Route path="login" element={<Login />} />
-        	<Route path="register" element={<Register />} />
-		</Route>
-        
+        </Route>
       </Routes>
     </main>
   );

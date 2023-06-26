@@ -14,8 +14,7 @@ export class AuthService {
         private jwt: JwtService,
         private config: ConfigService
     ) {}
-    //TODO check away + async
-    async signup(dto: AuthDto): Promise<Tokens> {
+    async signup(dto: AuthDto, res) {
 
         // generate the password hash
         const hash = await argon.hash(dto.password);
@@ -29,12 +28,19 @@ export class AuthService {
                     hash }
             });
             
-            // Creation du access_token et du refresh_token
+            // Creation du accessToken et du refreshToken
             const tokens = await this.getToken(user.id, user.email);
-            // Stockage du refresh_token dans la DB
-            await this.updateRtHash(user.id, tokens.refresh_token);
-            return (tokens);
-            
+            // Stockage du refreshToken dans la DB
+            await this.updateRtHash(user.id, tokens.refreshToken);
+
+            res.cookie('refreshToken', tokens.refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax',
+                expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+            });
+            return res.json({accessToken : tokens.accessToken});
+
         } catch (error) {
             if (error.code === 'P2002') {
                 throw new ForbiddenException('Credentials taken',);
@@ -44,7 +50,7 @@ export class AuthService {
         }
     }
 
-    async signin(dto : SignInAuthDto): Promise<Tokens> {
+    async signin(dto : SignInAuthDto, res) {
         //find user by email
         const user = await this.prisma.user.findUnique({
             where: {
@@ -62,11 +68,19 @@ export class AuthService {
         if (!pwdMatch) {
             throw new ForbiddenException("Credentials incorrect");
         }
-        // Creation du access_token et du refresh_token
+        // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(user.id, user.email);
-        // Stockage du refresh_token dans la DB
-        await this.updateRtHash(user.id, tokens.refresh_token);
-        return (tokens);
+        // Stockage du refreshToken dans la DB
+        await this.updateRtHash(user.id, tokens.refreshToken);
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        });
+
+        return res.json({accessToken : tokens.accessToken});
     }
 
     //Création du JWT à partir des infos du user
@@ -80,22 +94,22 @@ export class AuthService {
 
         const secret = this.config.get('JWT_SECRET');
         const token = await this.jwt.signAsync(payload, {
-            expiresIn: '15m',
+            expiresIn: '30s',
             secret: secret //après 15min, le user devra à nouveau se connecter
         })
 
         const refresh_secret = this.config.get('REFRESH_SECRET');
-        const refresh_token = await this.jwt.signAsync(payload, {
+        const refreshToken = await this.jwt.signAsync(payload, {
             expiresIn: '15d',
             secret: refresh_secret //après 15jours, le user devra à nouveau se connecter
         })
 
-        return { access_token : token, refresh_token}
+        return { accessToken : token, refreshToken}
     }
 
 
     async updateRtHash(userId: number, rt: string) {
-        // Transforme le refresh_token en hash
+        // Transforme le refreshToken en hash
         const hash = await argon.hash(rt);
         // Stock le hash dans la DATABASE
         await this.prisma.user.update({
@@ -109,7 +123,7 @@ export class AuthService {
     }
 
 
-    async logout(userId: number) {
+    async logout(userId: number, res) {
         await this.prisma.user.updateMany({
             where: {
                 id: userId,
@@ -121,9 +135,10 @@ export class AuthService {
                 hashedRt: null
             }
         })
+        res.clearCookie('refreshToken');
     }
 
-    async refresh(userId: number, rt: string) {
+    async refresh(userId: number, rt: string, res) {
         console.log({userId, rt})
         const user = await this.prisma.user.findUnique({
             where : {
@@ -135,10 +150,18 @@ export class AuthService {
         const rtMatches = await argon.verify(user.hashedRt, rt);
         if (!rtMatches) throw new ForbiddenException("Credentials incorrect");
 
-        // Creation du access_token et du refresh_token
+        // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(user.id, user.email);
-        // Stockage du refresh_token dans la Database
-        await this.updateRtHash(user.id, tokens.refresh_token);
-        return (tokens);
+        // Stockage du refreshToken dans la Database
+        await this.updateRtHash(user.id, tokens.refreshToken);
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        });
+
+        return res.json({accessToken : tokens.accessToken});
     }
 }

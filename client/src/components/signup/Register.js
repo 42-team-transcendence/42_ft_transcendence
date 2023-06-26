@@ -102,7 +102,7 @@ export default function Register() {
                     withCredentials: true
                 }
                 );
-            const accessToken = response?.data?.access_token;
+            const accessToken = response?.data?.accessToken;
             setAuth({email, pwd, accessToken});
             navigate(from, { replace: false});
             //TODO if needed : clear input fields avec les setStates
