@@ -123,7 +123,7 @@ export class AuthService {
     }
 
 
-    async logout(userId: number) {
+    async logout(userId: number, res) {
         await this.prisma.user.updateMany({
             where: {
                 id: userId,
@@ -135,6 +135,7 @@ export class AuthService {
                 hashedRt: null
             }
         })
+        res.clearCookie('refreshToken');
     }
 
     async refresh(userId: number, rt: string, res) {

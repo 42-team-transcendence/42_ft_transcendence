@@ -1,4 +1,4 @@
-import { Controller, Post , Body, HttpCode, HttpStatus, UseGuards, Res} from "@nestjs/common";
+import { Controller, Post , Body, HttpCode, HttpStatus, UseGuards, Res, Response} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthDto, SignInAuthDto } from "./dto";
@@ -17,7 +17,7 @@ export class AuthController {
     @HttpCode(HttpStatus.CREATED)
     signup(
         @Body() dto: AuthDto,
-        @Res({ passthrough: true }) res    
+        @Res({ passthrough: true }) res: Response    
     ) {
         console.log(dto);
         return (this.authService.signup(dto, res));
@@ -27,7 +27,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     signin(
         @Body() dto: SignInAuthDto,
-        @Res({ passthrough: true }) res
+        @Res({ passthrough: true }) res: Response 
     ) {
         return (this.authService.signin(dto, res));
 
@@ -36,9 +36,11 @@ export class AuthController {
     @UseGuards(JwtGuard)
     @Post('logout')
     @HttpCode(HttpStatus.OK)
-    logout(@GetUser() user) {
+    logout(@GetUser() user,
+            @Res({ passthrough: true }) res: Response   
+    ) {
         console.log({"controller": user});
-        return (this.authService.logout(user.sub));
+        return (this.authService.logout(user.sub, res));
     }
 
     @UseGuards(RtGuard) //link this guard (check for refresh token) to our refresh token strategy 
@@ -46,7 +48,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     refresh(
         @GetUser() user,
-        @Res({ passthrough: true }) res  
+        @Res({ passthrough: true }) res: Response   
     ) {
         console.log({"controller_user" : user});
         return (this.authService.refresh(user.sub, user.refreshToken, res));

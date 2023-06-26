@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from '../../api/axios';
-
+import Logout from "../logout/Logout";
 
 /*
 A propos de AbortController et controller.signal
@@ -58,6 +58,7 @@ function Users() {
 				</ul>
 			): <p> No users to display</p>
 		}
+		<Logout />
 		{/* <button onClick={() => refresh()}>Refresh</button> */}
 	</article>
   );

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 function FirstPage() {
 
     const navigate = useNavigate();
-    const from_signup = "/register"; 
+    const from_signup = "/register";
     const from_signin = "/login";
 
     const handleSignup = () => {

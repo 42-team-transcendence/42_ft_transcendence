@@ -60,7 +60,7 @@ function Login () {
             );
             console.log({"test": response?.data})
             const accessToken = response?.data?.accessToken;
-            
+            //TODO est ce important de set l'email et le pwd dans auth ? 
             setAuth({email, pwd, accessToken});
             setEmail('');
             setPwd('');
