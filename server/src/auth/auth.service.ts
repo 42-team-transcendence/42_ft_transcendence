@@ -123,19 +123,20 @@ export class AuthService {
 
 
     async logout(userId: number, res) {
-        await this.prisma.user.updateMany({
-            where: {
-                id: userId,
-                hashedRt: {
-                    not: null
+           await this.prisma.user.updateMany({
+                where: {
+                    id: userId,
+                    //evite de spamer le bouton logout en arretant d'envoyer des requetes apres la 1ere modif.
+                    hashedRt: {
+                        not: null
+                    },
                 },
-            },
-            data: {
-                hashedRt: null
-            }
-        })
+                data: {
+                    hashedRt: null
+                }
+            })
         res.clearCookie('refreshToken');
-        res.send('Vous êtes déconnecté.');
+        return res.send('Vous êtes déconnecté.');
     }
 
     async refresh(userId: number, rt: string, res) {
