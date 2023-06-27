@@ -34,7 +34,7 @@ function Users() {
 				isMounted && setUsers(response.data);
 			} catch (error) {
 				console.log(error);
-				navigate('/login', { state: {from: location}, replace: true});
+				navigate('/register', { state: {from: location}, replace: true});
 			}
 		}
 		getUsers();

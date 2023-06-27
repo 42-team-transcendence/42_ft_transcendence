@@ -17,7 +17,7 @@ export class AuthController {
     @HttpCode(HttpStatus.CREATED)
     signup(
         @Body() dto: AuthDto,
-        @Res({ passthrough: true }) res: Response    
+        @Res()/*({ passthrough: true })*/ res: Response
     ) {
         console.log(dto);
         return (this.authService.signup(dto, res));
@@ -27,7 +27,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     signin(
         @Body() dto: SignInAuthDto,
-        @Res({ passthrough: true }) res: Response 
+        @Res(/*({ passthrough: true })*/) res: Response 
     ) {
         return (this.authService.signin(dto, res));
 
@@ -37,7 +37,7 @@ export class AuthController {
     @Post('logout')
     @HttpCode(HttpStatus.OK)
     logout(@GetUser() user,
-            @Res({ passthrough: true }) res: Response   
+            @Res(/*({ passthrough: true })*/) res: Response   
     ) {
         console.log({"controller": user});
         return (this.authService.logout(user.sub, res));
@@ -48,7 +48,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     refresh(
         @GetUser() user,
-        @Res({ passthrough: true }) res: Response   
+        @Res(/*({ passthrough: true })*/) res: Response   
     ) {
         console.log({"controller_user" : user});
         return (this.authService.refresh(user.sub, user.refreshToken, res));

@@ -5,7 +5,7 @@ const RequireAuth = () => {
     const { auth } = useAuth();
     const location = useLocation();
     
-    console.log("EMAIL == " + auth.email);
+    // console.log("EMAIL == " + auth.email);
     console.log("TOKENS == " + auth.accessToken);
 
     return (
