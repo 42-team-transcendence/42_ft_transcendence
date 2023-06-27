@@ -52,13 +52,13 @@ function Login () {
 
         try {
             const response = await axios.post(LOGIN_URL, 
-                JSON.stringify({email, password: pwd}),
+                JSON.stringify({email, 'password': pwd}),
                 {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 }
             );
-            console.log({"test": response?.data})
+            // console.log({"test": response?.data})
             const accessToken = response?.data?.accessToken;
             //TODO est ce important de set l'email et le pwd dans auth ? 
             setAuth({email, pwd, accessToken});

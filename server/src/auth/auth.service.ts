@@ -39,7 +39,7 @@ export class AuthService {
                 sameSite: 'lax',
                 expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
             });
-            return res.json({accessToken : tokens.accessToken});
+            return res.json({accessToken: tokens.accessToken});
 
         } catch (error) {
             if (error.code === 'P2002') {
@@ -79,7 +79,6 @@ export class AuthService {
             sameSite: 'lax',
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
         });
-
         return res.json({accessToken : tokens.accessToken});
     }
 
@@ -136,16 +135,19 @@ export class AuthService {
             }
         })
         res.clearCookie('refreshToken');
+        res.send('Vous êtes déconnecté.');
     }
 
     async refresh(userId: number, rt: string, res) {
-        console.log({userId, rt})
+        // console.log({userId, rt})
         const user = await this.prisma.user.findUnique({
             where : {
                 id: userId,
             },
         });
+
         if (!user) throw new ForbiddenException("Credentials incorrect");
+        if (!user.hashedRt) throw new ForbiddenException("Credentials incorrect");
 
         const rtMatches = await argon.verify(user.hashedRt, rt);
         if (!rtMatches) throw new ForbiddenException("Credentials incorrect");
