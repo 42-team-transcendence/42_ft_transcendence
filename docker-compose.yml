@@ -1,0 +1,60 @@
+# L'argument version permet de spécifier à Docker Compose quelle version on souhaite utiliser
+# et donc d'utiliser ou pas certaines versions
+version: '3.8'
+
+# L'ensemble des conteneurs qui doivent être créés doivent être définis sous l'argument services
+services:
+  dev-db: # projet name
+    hostname: postgres
+    image: postgres:15
+    container_name: dev-db
+    restart: on-failure
+    ports:
+      - 5432:5432
+    environment: #defines environment variables set in the container
+      - DATABASE_URL=${DATABASE_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h dev-db"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    # volumes:
+    #   - pgdata:/var/lib/postgresql/data
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file: .env
+    # volumes : permet de stocker l'ensemble du contenu du dossier /var/lib/mysql dans un disque persistant. Et donc, de pouvoir garder les données en local sur notre host.
+    # volumes:
+      # On place le chemin local à gauche du séparateur : et le chemin dans le conteneur à droite
+      # chemin_local:chemin_conteneur
+      # - ./server:/app
+      # - "./scripts/wait.sh:/wait.sh"
+      # - /app/node_modules
+    networks:
+      - db
+    ports: # Exposes container ports
+        #HOST_PORT:CONTAINER_PORT 
+        # api
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+        # prisma studio
+      - 5555:5555 
+    depends_on:
+      dev-db:
+        condition: service_healthy
+    # links:
+    #   - dev-db
+
+# networks defines the networks that service containers are attached to, 
+# referencing entries under the top-level networks key.
+networks:
+  db:
+    driver: bridge

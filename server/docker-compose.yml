@@ -3,13 +3,13 @@ services:
   dev-db:
     image: postgres:15
     ports:
-      - 5434:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: nest
     networks:
-      - transcendence
+      - db
 networks:
-  transcendence:
+  db:
     
