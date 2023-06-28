@@ -15,10 +15,10 @@ RUN npm install
 COPY . .
 
 # Set the backend URL
-ENV BACKEND_URL http://server:3333
+# ENV BACKEND_URL http://server:3333
 
-# Expose the port on which the frontend will run
-EXPOSE 3000
+# Expose the port on which the frontend will run - INUTILE car instructions dans le docker compose
+# EXPOSE 3000
 
 # Start the frontend application
 CMD ["npm", "start"]
