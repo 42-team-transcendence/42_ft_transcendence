@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { styled } from '@mui/system';
+import TextField from '@mui/material/TextField';
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -13,32 +15,25 @@ function Email ({ stateEmail, fonctionUpdateEmail }) {
         updateValideEmail(EMAIL_REGEX.test(email));
     }, [email])
 
-    return (
-        <>
-                <label htmlFor="email">
-                    Email:
-                    <span className={validEmail ? "valid" : "hide"}>
-                        <FontAwesomeIcon icon={faCheck} />
-                    </span>
-                    <span className={validEmail || !email ? "hide" : "invalid"}>
-                        <FontAwesomeIcon icon={faTimes} />
-                    </span>
-                </label>
-                <input
-                    type="text"
-                    id="email" //même valeur que le label
-                    // ref={userRef}
-                    // autoComplete="off"
-                    onChange={(e) => updateEmail(e.target.value)}
-                    value={email}
-                    required // champ requis
-                />
-                <p className={email && !validEmail ? "instructions" : "offscreen"} >
-                    <FontAwesomeIcon icon={faInfoCircle} />
-                    Enter valid email please.
-                </p>
-        </>
-    )
+	return (
+		<>
+			<TextField
+				required
+				id="email"
+				variant="standard"
+				label="email"
+				autoComplete="off"
+				onChange={(e) => updateEmail(e.target.value)}
+				value={email}
+				error={!validEmail && email.length > 0}
+				helperText={
+					!validEmail && email.length > 0 && (
+						<>	unvalid email </>
+					)
+				}
+		 	/>
+		</>
+	);
 }
 
 export default Email;
