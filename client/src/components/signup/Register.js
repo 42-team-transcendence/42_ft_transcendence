@@ -6,6 +6,8 @@ import Email from "./Email";
 import Password from "./Password";
 import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
+import CustomButton from "../../styles/buttons/CustomButton";
+import Box from '@mui/material/Box';
 
 
 const REGISTER_URL = '/auth/signup';
@@ -117,29 +119,48 @@ export default function Register() {
             }
         }
     }
+
+	const handleSignUp = () => {
+        if (validName && validEmail && validPwd && validMatch) {
+            handleSubmit();
+        }
+    };
+
+
     return (
-        <section>
+        <section className="form_design">
             <p className={errMsg? "errmsg" : "offscreen"}>
                 {errMsg}
             </p>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-
-                <Username stateUser={stateUser} fonctionUpdate={fonctionUpdate}/>
-                <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail}/>
-                <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd}/>
-                <MatchPwd stateMatchPwd={stateMatchPwd} fonctionUpdateMatchPwd={fonctionUpdateMatchPwd} />
-
-                <button disabled={!validName || !validEmail || !validPwd || !validMatch ? true : false }>
-                    Sign Up
-                </button>
+            <h1 className="title">PONG</h1>
+            <form onSubmit={handleSubmit} id="myForm">
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						'& .MuiTextField-root': { m: 1, width: '25ch' },
+					}}
+					autoComplete="off"
+				>
+					<Username stateUser={stateUser} fonctionUpdate={fonctionUpdate}/>
+					<Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail}/>
+					<Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd}/>
+					<MatchPwd stateMatchPwd={stateMatchPwd} fonctionUpdateMatchPwd={fonctionUpdateMatchPwd} />
+					<CustomButton
+						onClick={handleSubmit}
+						disabled={!validName || !validEmail || !validPwd || !validMatch ? true : false }
+					>
+						Sign Up
+					</CustomButton>
+				</Box>
                 <p>
                     Already Registered ?<br />
                     <span className="line">
-                    {/* TODO Put router link here */}
-                    {/* // placeholder link */}
-                    <Link to="/login">Sign In</Link>
-                </span>
+						{/* TODO Put router link here */}
+						{/* // placeholder link */}
+						<Link to="/login">Sign In</Link>
+                	</span>
                 </p>
             </form>
         </section>
