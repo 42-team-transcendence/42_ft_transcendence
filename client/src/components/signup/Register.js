@@ -1,16 +1,21 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
+
 import axios from "../../api/axios";
 import Username from "./Username";
 import Email from "./Email";
 import Password from "./Password";
 import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
+
+// STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
 import Box from '@mui/material/Box';
-import '../../styles/Register.css';
+import '../../styles/Register_Login.css';
 
 
+// =============================================================================
+// =============================================================================
 const REGISTER_URL = '/auth/signup';
 
 export default function Register() {
@@ -120,13 +125,6 @@ export default function Register() {
             }
         }
     }
-
-	const handleSignUp = () => {
-        if (validName && validEmail && validPwd && validMatch) {
-            handleSubmit();
-        }
-    };
-
 
     return (
         <section className="Register">
