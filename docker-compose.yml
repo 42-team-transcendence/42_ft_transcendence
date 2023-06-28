@@ -17,7 +17,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     networks:
-      - db
+      - transcendece-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h dev-db"]
       interval: 5s
@@ -25,6 +25,7 @@ services:
       retries: 5
     # volumes:
     #   - pgdata:/var/lib/postgresql/data
+
   server:
     container_name: server
     build:
@@ -40,11 +41,12 @@ services:
       # - "./scripts/wait.sh:/wait.sh"
       # - /app/node_modules
     networks:
-      - db
+      - transcendece-network
     ports: # Exposes container ports
         #HOST_PORT:CONTAINER_PORT 
         # api
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+     # - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - 3333:3333
         # prisma studio
       - 5555:5555 
     depends_on:
@@ -53,8 +55,28 @@ services:
     # links:
     #   - dev-db
 
+  client:
+    container_name: client
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file: .env
+    networks:
+      - transcendece-network
+    ports: # Exposes container ports
+        #HOST_PORT:CONTAINER_PORT 
+        # api
+      - 3000:3000 
+    depends_on:
+      - dev-db
+      - server
+
+#volumes:
+#  database_v:
+
 # networks defines the networks that service containers are attached to, 
 # referencing entries under the top-level networks key.
 networks:
-  db:
+  transcendece-network:
     driver: bridge

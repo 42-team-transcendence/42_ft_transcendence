@@ -17,7 +17,8 @@ COPY . .
 # RUN npm i -g @nestjs/cli
 
 # Value set in .env file.
-EXPOSE $BACKEND_PORT
+#EXPOSE $BACKEND_PORT
+EXPOSE 3333
 
 # Génération du code du client prisma, 
 # qu'on pourra ensuite utiliser dans le code pour communiquer avec la DB
