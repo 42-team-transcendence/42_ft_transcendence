@@ -1,40 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap%27');
-@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap%27');
-
-/* @font-face {
-	font-family: 'Alfa Slab One';
-	src: url('/chemin/vers/votre/fichier-de-police.ttf') format('truetype');
-  } */
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-.title {
-	margin-top: 68px;
-	color: #FF8100;
-	text-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.40);
-	font-size: 100px;
-	text-decoration: 3px solid black;
-	font-family: 'Alfa Slab One';
+	font-family: 'Lato';
 }
 
 
-.form_design {
-	/* display: 'flex';
-	justify-content: 'center';
-	align-items: 'center'; */
-	width: 582px;
-	height: 755px;
-	flex-wrap: wrap;
-	/* flex-shrink: 0; */
-	border-radius: 20px;
-	border: 3px solid #000;
-	background: #FFF;
-
-}
 
 /* .App {
     text-align: center;

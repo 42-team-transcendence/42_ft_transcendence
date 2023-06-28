@@ -8,6 +8,7 @@ import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
 import CustomButton from "../../styles/buttons/CustomButton";
 import Box from '@mui/material/Box';
+import '../../styles/Register.css';
 
 
 const REGISTER_URL = '/auth/signup';
@@ -128,7 +129,7 @@ export default function Register() {
 
 
     return (
-        <section className="form_design">
+        <section className="Register">
             <p className={errMsg? "errmsg" : "offscreen"}>
                 {errMsg}
             </p>
@@ -155,12 +156,10 @@ export default function Register() {
 					</CustomButton>
 				</Box>
                 <p>
-                    Already Registered ?<br />
-                    <span className="line">
-						{/* TODO Put router link here */}
-						{/* // placeholder link */}
-						<Link to="/login">Sign In</Link>
-                	</span>
+					Already got an account ?<br />
+					{/* //TODO Put router link here 
+					//TODO placeholder link */}
+					<Link to="/login" className="line">Log in</Link>
                 </p>
             </form>
         </section>

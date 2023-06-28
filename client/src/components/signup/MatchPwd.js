@@ -40,10 +40,10 @@ function MatchPwd ({ stateMatchPwd, fonctionUpdateMatchPwd }) {
 	autoComplete="off"
 	onChange={(e) => updateMatchPwd(e.target.value)}
 	value={matchPwd}
-	error={!validMatch}
+	error={!validMatch && matchPwd }
 	helperText={
-		!validMatch  &&  (
-			<>	error </>
+		!validMatch && (
+			<>	password not identical </>
 		)
 	}
 />

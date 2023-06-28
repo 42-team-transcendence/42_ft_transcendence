@@ -28,7 +28,7 @@ function Email ({ stateEmail, fonctionUpdateEmail }) {
 				error={!validEmail && email.length > 0}
 				helperText={
 					!validEmail && email.length > 0 && (
-						<>	error </>
+						<>	unvalid email </>
 					)
 				}
 		 	/>

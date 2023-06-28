@@ -15,6 +15,7 @@ const CustomButtonWrapper = styled(Button)(({ theme }) => ({
 	fontFamily: 'Lato',
 	fontSize: '28px',
 	fontWeight: 900,
+	marginTop: '30px',
 
 }));
 
@@ -28,7 +29,7 @@ const CustomButton = ({ children, onClick }) => {
 			width: '256px',
 			height: '81px',
 			border: '4px solid black',
-			borderRadius: '7px',
+			borderRadius: '10px',
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',

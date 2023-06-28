@@ -31,7 +31,7 @@ function Username ({ stateUser, fonctionUpdate }) {
 				error={!validName && user.length > 0}
 				helperText={
 					!validName && user.length > 0 && (
-						<>	error </>
+						<>	username's too short </>
 					)
 				}
 		 	/>
