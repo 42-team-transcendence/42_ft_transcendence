@@ -1,0 +1,32 @@
+.navbar {
+	position: fixed; 
+	top: 0;
+	left: 0; 
+	display: flex;
+	align-items: center; 
+	justify-content: space-between;
+	width: 100vw;
+	margin: auto;
+	background: white;
+}
+
+.menu {
+    display: flex;
+	justify-content: space-between;
+	margin-right: 47px;
+    /* align-items: center; */
+	
+}
+
+h2 {
+	margin-left: 112px;
+	color: #FF8100;
+	text-shadow:
+	-4px -0px 0 rgba(0, 0, 0, .20),  
+	0px -0px 0 rgba(0, 0, 0, .20),
+	-4px 0px 0 rgba(0, 0, 0, .20),
+	0px 0px 0 rgba(0, 0, 0, .20);
+	-webkit-text-stroke: 1px black;
+	font-size: 50px;
+	font-family: Alfa Slab One;
+}

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
+import Navbar from "../navbar/Navbar";
 
 
 function Homepage() {
@@ -13,6 +14,7 @@ function Homepage() {
 
 	return (
 		<div>
+		<Navbar />
 		<h1> WELCOME TO PONG </h1>
 
 		<label><u>Leaderboard </u> </label>

@@ -28,13 +28,14 @@ h1.title {
 }
 
 
-.line
+/* .line
 {
 	color: #FF79AF;
 	display: inline-block;
 	font-weight: 700;
 	text-decoration-line: underline;
-}
+	margin-right: 40px;
+} */
 
 
 .formLogin {
