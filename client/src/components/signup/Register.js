@@ -7,6 +7,7 @@ import Email from "./Email";
 import Password from "./Password";
 import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
+import LoginAuth from "../auth0/LoginAuth";
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -132,6 +133,7 @@ export default function Register() {
                 {errMsg}
             </p>
             <h1 className="title">PONG</h1>
+            <LoginAuth />
             <form onSubmit={handleSubmit} id="myForm">
 				<Box
 					sx={{
