@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 import Navbar from "../navbar/Navbar";
+import HomepageStyle from '../../styles/HomepageStyle.css';
+import CustomButton from "../../styles/buttons/CustomButton";
 
 
 function Homepage() {
@@ -13,12 +15,18 @@ function Homepage() {
     }
 
 	return (
-		<div>
-		<Navbar />
-		<h1> WELCOME TO PONG </h1>
-
-		<label><u>Leaderboard </u> </label>
-		<button onClick={handleLeaderboard}>Leaderboard</button>
+		<div className="column">
+			<Navbar />
+			<div className="welcomeHome">
+				<h1 className="welcome"> Welcome </h1>
+				<h1 className="welcome"> to </h1>
+				<h1 className="titleHomePage"> PONG </h1>
+			</div>
+				<div className="ButtonHomePage">
+					<CustomButton > PLAY </CustomButton>
+					<CustomButton > How to Play </CustomButton>
+					<CustomButton onClick={handleLeaderboard}> Leaderboard </CustomButton>
+				</div>
 		</div>
 	)
 }

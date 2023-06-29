@@ -19,7 +19,7 @@ export default function Logout () {
     }
 
     return (
-		<Link to="/login" onClick={handleClick} className="line">Log out</Link>
+		<Link to="/login" onClick={handleClick} className="textMenu">Log out</Link>
         // <button className="button-logout" onClick={handleClick}>Log Out</button>
     )
 }

@@ -5,7 +5,6 @@ import Layout from './Layout';
 import '../styles/App.css';
 import RequireAuth from './RequireAuth';
 import Homepage from './homepage/HomePage';
-import FirstPage from './homepage/FirstPage';
 import Leaderboard from './leaderboard/Leaderboard';
 import PersistLogin from './PersistLogin';
 
