@@ -5,11 +5,10 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh; 
-  padding: 1rem 0.5rem;
   background: linear-gradient(to bottom, #FF79AF 0%,#FF79AF 45%, white 45%, white 47%, #FF8100 47%, #FF8100 100%);
 }
 
-.App-logo {
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -42,7 +41,7 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 .button-logout {
   position: absolute;
