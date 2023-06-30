@@ -63,8 +63,8 @@ services:
     depends_on:
       - dev-db
       - server
-    #volumes:
-      #- ./client:/app
+    volumes:
+      - ./client:/app
 
 volumes:
   db-data:
