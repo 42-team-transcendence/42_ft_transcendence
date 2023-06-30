@@ -1,7 +1,7 @@
+import { Link, useNavigate } from "react-router-dom"
+
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import '../../styles/App.css';
 
 export default function Logout () {
 
@@ -19,6 +19,6 @@ export default function Logout () {
     }
 
     return (
-        <button className="button-logout" onClick={handleClick}>Log Out</button>
+		<Link onClick={handleClick} className="textMenu">Log out</Link>
     )
 }

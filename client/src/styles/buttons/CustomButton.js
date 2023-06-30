@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 
 const CustomButtonWrapper = styled(Button)(({ theme }) => ({
 	display: 'flex',
-	texTransform: 'lowercase !important',
+	// textTransform: 'lowercase !important',
 	justifyContent: 'center',
 	alignItems: 'center',
 	color: 'white',
@@ -15,7 +15,8 @@ const CustomButtonWrapper = styled(Button)(({ theme }) => ({
 	fontFamily: 'Lato',
 	fontSize: '28px',
 	fontWeight: 900,
-	marginTop: '30px',
+	border: '2px black',
+	marginTop: '10px',
 
 }));
 

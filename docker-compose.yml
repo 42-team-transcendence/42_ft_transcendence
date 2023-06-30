@@ -44,8 +44,10 @@ services:
     depends_on:
       dev-db:
         condition: service_healthy
-    # volumes:
-    #   - ./server:/app
+    #volumes:
+      #- ./server:/app
+      #- ./scripts/wait.sh:/wait.sh
+      #- /app/node_modules
 
   client:
     container_name: client
