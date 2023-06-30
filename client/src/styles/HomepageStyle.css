@@ -1,0 +1,37 @@
+.welcomeHome
+{
+	margin-top: 100px;
+}
+
+.welcome {
+	color: #FFF;
+	text-align: center;
+	font-size: 90px;
+	font-family: Alfa Slab One;
+	line-height: 50px;
+	-webkit-text-stroke: 1px black;
+	margin-bottom: 22px;
+}
+
+.titleHomePage {
+
+	color: #FF8100;
+	text-shadow:
+	-4px -0px 0 rgba(0, 0, 0, .20),  
+	0px -0px 0 rgba(0, 0, 0, .20),
+	-4px 0px 0 rgba(0, 0, 0, .20),
+	0px 0px 0 rgba(0, 0, 0, .20);
+	font-size: 100px;
+	font-weight: 900;
+	-webkit-text-stroke: 1px black;
+	font-family: 'Alfa Slab One', cursive;
+}
+
+
+.ButtonHomePage{
+	margin-top: 80px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
