@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
 import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Email from './Email';
 import Password from './Password';
 
+// STYLE =====================================================
+import CustomButton from "../../styles/buttons/CustomButton";
+import Box from '@mui/material/Box';
+import '../../styles/Register_Login.css';
+
+
+
+ // =============================================================================
+ // =============================================================================
 const LOGIN_URL = '/auth/signin'
 
 function Login () {
@@ -52,13 +62,13 @@ function Login () {
 
         try {
             const response = await axios.post(LOGIN_URL, 
-                JSON.stringify({email, password: pwd}),
+                JSON.stringify({email, 'password': pwd}),
                 {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 }
             );
-            console.log({"test": response?.data})
+            // console.log({"test": response?.data})
             const accessToken = response?.data?.accessToken;
             //TODO est ce important de set l'email et le pwd dans auth ? 
             setAuth({email, pwd, accessToken});
@@ -75,27 +85,37 @@ function Login () {
         }
     }
     return (
-        <section>
-            <p className={errMsg? "errmsg" : "offscreen"}
-            aria-live="assertive">{errMsg}</p>
-            <h1>Sign In</h1>
-            <form onSubmit={handleSubmit}>
+        <section className="Register">
+            <h1 className="title">PONG</h1>
+            <form className="formLogin" onSubmit={handleSubmit}>
+				<Box
+						sx={{
+							display: 'flex',
+							flexDirection: 'column',
+							alignItems: 'center',
+							'& .MuiTextField-root': { m: 1, width: '25ch' },
+						}}
+						autoComplete="off"
+				>
                 
                 <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail} />
                 <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd} />
 
-                <button  disabled={ !email || !pwd  ? true : false }>
-                    Sign In
-                </button>
-            </form>
+					<CustomButton
+						onClick={handleSubmit}
+						disabled={ !email || !pwd  ? true : false }
+					>
+						Sign in
+					</CustomButton>
+				</Box>
             <p>
                 Need an Account ?<br />
-                <span className="line">
+        
                     {/* TODO Put router link here */}
                     {/* // placeholder link */}
-                    <Link to="/register">Sign Up</Link>
-                </span>
+                    <Link to="/register" className="line">Sign Up</Link>
             </p>
+            </form>
         </section>
     )
 }

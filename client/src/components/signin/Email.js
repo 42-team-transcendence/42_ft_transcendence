@@ -1,4 +1,4 @@
-// import { useRef, useEffect } from 'react';
+import TextField from '@mui/material/TextField';
 
 function Email ({ stateEmail, fonctionUpdateEmail}) {
 
@@ -12,18 +12,17 @@ function Email ({ stateEmail, fonctionUpdateEmail}) {
     // }, [])
 
     return (
-        <>
-            <label htmlFor="email">Email:</label>
-                <input 
-                    type="text"  
-                    id="email"
-                    // ref={emailRef}
-                    autoComplete="off"
-                    onChange={(e) => updateEmail(e.target.value)}
-                    value={email}
-                    required
-                />
-        </>
+		<>
+			<TextField
+				required
+				id="email"
+				variant="standard"
+				label="email"
+				autoComplete="off"
+				onChange={(e) => updateEmail(e.target.value)}
+				value={email}
+			/>
+		</>
     )
 }
 

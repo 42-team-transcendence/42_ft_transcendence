@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
+
 import axios from "../../api/axios";
 import Username from "./Username";
 import Email from "./Email";
@@ -7,7 +8,14 @@ import Password from "./Password";
 import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
 
+// STYLE =====================================================
+import CustomButton from "../../styles/buttons/CustomButton";
+import Box from '@mui/material/Box';
+import '../../styles/Register_Login.css';
 
+
+// =============================================================================
+// =============================================================================
 const REGISTER_URL = '/auth/signup';
 
 export default function Register() {
@@ -96,7 +104,7 @@ export default function Register() {
         try {
             const response = await axios.post(
                 REGISTER_URL,
-                JSON.stringify({ nickname : user, email, password : pwd }),
+                JSON.stringify({ nickname: user, email, password: pwd }),
                 {
                     headers: {'Content-Type': 'application/json'},
                     withCredentials: true
@@ -117,29 +125,39 @@ export default function Register() {
             }
         }
     }
+
     return (
-        <section>
+        <section className="Register">
             <p className={errMsg? "errmsg" : "offscreen"}>
                 {errMsg}
             </p>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-
-                <Username stateUser={stateUser} fonctionUpdate={fonctionUpdate}/>
-                <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail}/>
-                <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd}/>
-                <MatchPwd stateMatchPwd={stateMatchPwd} fonctionUpdateMatchPwd={fonctionUpdateMatchPwd} />
-
-                <button disabled={!validName || !validEmail || !validPwd || !validMatch ? true : false }>
-                    Sign Up
-                </button>
+            <h1 className="title">PONG</h1>
+            <form onSubmit={handleSubmit} id="myForm">
+				<Box
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						'& .MuiTextField-root': { m: 1, width: '25ch' },
+					}}
+					autoComplete="off"
+				>
+					<Username stateUser={stateUser} fonctionUpdate={fonctionUpdate}/>
+					<Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail}/>
+					<Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd}/>
+					<MatchPwd stateMatchPwd={stateMatchPwd} fonctionUpdateMatchPwd={fonctionUpdateMatchPwd} />
+					<CustomButton
+						onClick={handleSubmit}
+						disabled={!validName || !validEmail || !validPwd || !validMatch ? true : false }
+					>
+						Sign Up
+					</CustomButton>
+				</Box>
                 <p>
-                    Already Registered ?<br />
-                    <span className="line">
-                    {/* TODO Put router link here */}
-                    {/* // placeholder link */}
-                    <Link to="/login">Sign In</Link>
-                </span>
+					Already got an account ?<br />
+					{/* //TODO Put router link here 
+					//TODO placeholder link */}
+					<Link to="/login" className="line">Log in</Link>
                 </p>
             </form>
         </section>

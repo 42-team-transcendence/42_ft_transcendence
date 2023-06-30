@@ -1,3 +1,4 @@
+import TextField from '@mui/material/TextField';
 
 function Password ({ statePwd, fonctionUpdatePwd }) {
 
@@ -5,16 +6,18 @@ function Password ({ statePwd, fonctionUpdatePwd }) {
     const {updatePwd} = fonctionUpdatePwd;
 
     return (
-        <>
-             <label htmlFor="password">Password:</label>
-                <input 
-                    type="password"  
-                    id="password"
-                    onChange={(e) => updatePwd(e.target.value)}
-                    value={pwd}
-                    required
-                />
-        </>
+		<>
+			<TextField
+				required
+				id="password"
+				type="password"
+				variant="standard"
+				label="password"
+				autoComplete="off"
+				onChange={(e) => updatePwd(e.target.value)}
+				value={pwd}
+			/>
+		</>
     )
 }
 
