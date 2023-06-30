@@ -8,7 +8,9 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies //l'install ne se fait pas automatiquement parce que MUI ne fonctionne pas encore avec React 18
+# RUN npm install --force @mui/material @emotion/react @emotion/styled @material-ui/core
+
 RUN npm install
 
 # Copy the rest of the files

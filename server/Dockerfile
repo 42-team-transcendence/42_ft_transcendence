@@ -1,5 +1,6 @@
 # Base image
-FROM node:16-alpine
+# FROM node:16-alpine
+FROM node:18
 
 # Create a non-root user and switch to it
 # This should help avoid permission issues when accessing the /root/.npm directory.
@@ -12,11 +13,11 @@ WORKDIR /app
 
 
 # Change ownership of /app directory to the node user (non-root user within the Node.js Docker image)
-# RUN chown root:root . 
+RUN chown root:root . 
 # RUN chown -R node:node /app
 
 # Switch to the node user
-USER node
+# USER node
 
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./

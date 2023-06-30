@@ -4,7 +4,6 @@ import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { styled } from '@mui/system';
 import TextField from '@mui/material/TextField';
-import { makeStyles } from "@material-ui/core";
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 
