@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser';
+import { ConfigService } from "@nestjs/config";
 
 
 async function bootstrap() {
@@ -32,6 +33,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3333);
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('BACKEND_PORT') || 3333;
+  await app.listen(port);
 }
 bootstrap();

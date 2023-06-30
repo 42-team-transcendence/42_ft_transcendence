@@ -1,0 +1,77 @@
+# L'argument version permet de spécifier à Docker Compose quelle version on souhaite utiliser
+# et donc d'utiliser ou pas certaines versions
+version: '3.8'
+
+# L'ensemble des conteneurs qui doivent être créés doivent être définis sous l'argument services
+services:
+  dev-db: # projet name
+    hostname: postgres
+    image: postgres:15
+    container_name: dev-db
+    restart: on-failure
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    environment: #defines environment variables set in the container
+      - DATABASE_URL=${DATABASE_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - transcendence-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h dev-db"]
+      interval: 2s
+      timeout: 10s
+      retries: 5
+    # volumes : permet de stocker l'ensemble du contenu du dossier /var/lib/mysql dans un disque persistant. Et donc, de pouvoir garder les données en local sur notre host.
+    volumes:
+      # On place le chemin local à gauche du séparateur : et le chemin dans le conteneur à droite
+      # chemin_local:chemin_conteneur
+      - db-data:/var/lib/postgresql/data
+
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file: .env
+    networks:
+      - transcendence-network
+    ports: # Exposes container ports. syntaxe is HOST_PORT:CONTAINER_PORT 
+      - ${BACKEND_PORT}:${BACKEND_PORT} # api
+      - ${PRISMA_STUDIO_PORT}:${PRISMA_STUDIO_PORT} # prisma studio
+    depends_on:
+      dev-db:
+        condition: service_healthy
+    #volumes:
+      #- ./server:/app
+      #- ./scripts/wait.sh:/wait.sh
+      #- /app/node_modules
+
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file: .env
+    networks:
+      - transcendence-network
+    ports: # Exposes container ports : HOST_PORT:CONTAINER_PORT 
+      - ${FRONTEND_PORT}:${FRONTEND_PORT} 
+    depends_on:
+      - dev-db
+      - server
+    #volumes:
+      #- ./client:/app
+
+volumes:
+  db-data:
+    name: "db-data"
+
+# networks defines the networks that service containers are attached to, 
+# referencing entries under the top-level networks key.
+networks:
+  transcendence-network:
+    driver: bridge
