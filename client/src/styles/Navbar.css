@@ -55,27 +55,30 @@
   }
   
   .burger .open {
+	transform: translateX(0);
 	display: block;
   }
+
+
   
-  @media (max-width: 1050px) {
-	.menu {
-	  display: none;
-	}
-  
-	.burger {
-	  display: flex;
-	}
-  
-	.burger-menu {
-	  display: flex;
-	  flex-direction: column;
-	  align-items: center;
-	  gap: 20px;
-	}
-  
-	.burger-menu a {
-	  color: white;
-	}
-  }
-  
+@media (max-width: 1050px) {
+.menu {
+	display: none;
+}
+
+.burger {
+	display: flex;
+}
+
+.burger-menu {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+	background-color: #FF79AF;
+}
+
+.burger-menu a {
+	color: white;
+}
+}

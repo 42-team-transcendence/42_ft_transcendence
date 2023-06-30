@@ -6,6 +6,7 @@ import Logout from '../logout/Logout';
 import '../../styles/Navbar.css';
 import { IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Navbar() {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -28,7 +29,7 @@ function Navbar() {
   }, []);
 
   return (
-    <header className="header">
+    <header className={`header ${isBurgerOpen ? 'menu-open' : ''}`}>
       <h2>PONG</h2>
       {(isMobile && !isBurgerOpen) ? (
         <IconButton
@@ -36,7 +37,7 @@ function Navbar() {
           color="inherit"
           onClick={toggleBurgerMenu}
         >
-          <MenuIcon />
+          {isBurgerOpen ? <CloseIcon /> : <MenuIcon />}
         </IconButton>
       ) : (
         <nav className={`menu ${isBurgerOpen ? 'burger-menu' : ''}`}>
