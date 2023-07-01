@@ -1,8 +1,4 @@
-import React from "react";
-import { useRef, useEffect } from "react";
-import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { styled } from '@mui/system';
+import { useEffect } from "react";
 import TextField from '@mui/material/TextField';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;

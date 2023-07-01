@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 
+import '../../styles/Navbar.css';
+
 export default function Logout () {
 
     const from_signup = "/register"; 
