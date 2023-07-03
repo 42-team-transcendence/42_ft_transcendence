@@ -14,10 +14,15 @@ function Homepage() {
         navigate(from_leaderboard, { replace: false});
     }
 
+	const [showLinks, setShowLinks] = useState(false)
+
+	const handleShowLinks = () => {
+		setShowLinks(!showLinks)
+	}
 
 	return (
 		<div className="column">
-			<Navbar/>
+			<Navbar showLinks={showLinks} handleShowLinks={handleShowLinks}/>
 			<div className="backgroundTop">
 				<div className="welcomeHome">
 					<h1 className="welcome"> Welcome </h1>
@@ -26,12 +31,10 @@ function Homepage() {
 				</div>
 			</div>
 		
-			<div className="backgroundBottom">
-			<div className="ButtonHomePage ">
+			<div className={`${showLinks ? "hide_button" : "show_button"}`}>
 					<CustomButton > PLAY </CustomButton>
 					<CustomButton > How to Play </CustomButton>
 					<CustomButton onClick={handleLeaderboard}> Leaderboard </CustomButton>
-				</div>
 			</div>
 		</div>
 	)

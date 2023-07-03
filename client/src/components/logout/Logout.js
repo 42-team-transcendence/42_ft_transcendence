@@ -21,6 +21,6 @@ export default function Logout () {
     }
 
     return (
-		<Link onClick={handleClick} className="textMenu">Log out</Link>
+		<Link onClick={handleClick} className="textLogout">Log out</Link>
     )
 }

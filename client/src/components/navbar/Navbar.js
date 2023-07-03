@@ -8,35 +8,29 @@ import { IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 
-function Navbar() {
-	const [showLinks, setShowLinks] = useState(false)
-
-	const handleShowLinks = () => {
-		setShowLinks(!showLinks)
-	}
-
+function Navbar({showLinks, handleShowLinks}) {
 	return (
 
 		<nav className={`navbar  ${showLinks ? "show_nav" : "hide_nav"}`}>
 			<div className='navbar_logo'> PONG </div>
 			<ul className='navbar_links'>
-				<li className='navbat_items'>
+				<li className='navbar_items'>
 				<a href='/' className='navbar_link'>Play</a>
 				</li>
-				<li className='navbat_items'>
+				<li className='navbar_items'>
 				<a href='/' className='navbar_link'>Chat & Channels</a>
 				</li>
-				<li className='navbat_items'>
+				<li className='navbar_items'>
 				<a href='/' className='navbar_link'>Friends List</a>
 				</li>
-				<li className='navbat_items'>
+				<li className='navbar_items'>
 				<a href='/' className='navbar_link'>View/Change profile</a>
 				</li>
-				<li className='navbat_items'>
+				<li className='navbar_items'>
 					<SearchAppBar />
 				</li>
-				<li className='navbat_items'>
-					<Logout />
+				<li className='navbar_items'>
+					<Logout className='logout_item'/>
 				</li>
     	 		
 			</ul>

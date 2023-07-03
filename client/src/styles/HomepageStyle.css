@@ -3,29 +3,17 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center; 
-	/* justify-content: flex-end; */
-	/* gap: 70px; */
-	/* margin-top: auto; 
-	margin-bottom: auto;  */
-}
-
-.backgroundBottom {
-	border: 2px solid blue;
-
 }
 
 .welcomeHome
 {
-	
-		margin-top: auto; 
-		margin-bottom: auto; 
+	margin-top: auto; 
+	margin-bottom: auto; 
 	display: flex;
 	flex-direction: column;
 	align-items: center; 
 	justify-content: center;
-	/* margin-top: 100px; */
-	border: 2px solid red;
-	
+	border: 2px solid red;	
 }
 
 .welcome {
@@ -53,14 +41,15 @@
 }
 
 
-
-.ButtonHomePage{
-	z-index: 0;
-	border: 2px solid black;
-	/* margin-top: 80px; */
-	/* padding-top: 50px; */
+.show_button {
+	border: 2px solid blue;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center; /* Modification de la propriété "end" à "center" */
+	display: flex;
+}
+
+.hide_button {
+	display: none;
 }
