@@ -11,7 +11,7 @@ function useRefreshToken() {
 				{},
 				{
 					headers: { 'Content-Type': 'application/json' },
-					withCredentials: true,
+					withCredentials: true,//utilisation de cookies
 				});
 				
 				setAuth(prev => {

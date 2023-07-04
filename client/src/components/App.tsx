@@ -26,7 +26,6 @@ function App() {
               <Route path="leaderboard" element={<Leaderboard />} />
             </Route>
           </Route>
-        
         </Route>
       </Routes>
     </main>

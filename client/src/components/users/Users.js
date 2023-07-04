@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from '../../api/axios';
+import axios from '../../api/axios'; //n'est plus utile
 import Logout from "../logout/Logout";
 
 /*

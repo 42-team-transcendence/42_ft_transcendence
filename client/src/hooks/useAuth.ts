@@ -14,3 +14,23 @@ const useAuth = () => {
 }
 
 export default useAuth;
+
+/*
+import { useContext } from "react";
+import AuthContext from "../context/AuthProvider";
+
+interface AuthData {
+  // Définir les types pour les informations d'authentification
+  accessToken: string;
+  email: string;
+  // Ajouter d'autres propriétés si nécessaire
+}
+
+// Utiliser l'interface pour spécifier le type de retour
+const useAuth = (): AuthData => {
+  return useContext(AuthContext);
+}
+
+export default useAuth;
+
+*/
