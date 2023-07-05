@@ -39,6 +39,7 @@
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "passport": "^0.6.0",
+    "passport-42": "^1.2.6",
     "passport-jwt": "^4.0.1",
     "prisma": "^4.14.1",
     "reflect-metadata": "^0.1.13",

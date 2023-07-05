@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDto, SignInAuthDto } from "./dto";
 import * as argon from 'argon2';
@@ -6,6 +6,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Tokens } from "./types";
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,10 @@ export class AuthService {
         private jwt: JwtService,
         private config: ConfigService
     ) {}
+
+        
+    // =============================================================================
+	// SIGN UP =====================================================================
     async signup(dto: AuthDto, res) {
 
         // generate the password hash
@@ -50,6 +55,9 @@ export class AuthService {
         }
     }
 
+
+    // =============================================================================
+	// SIGN IN =====================================================================
     async signin(dto : SignInAuthDto, res) {
         //find user by email
         const user = await this.prisma.user.findUnique({
@@ -82,6 +90,61 @@ export class AuthService {
         return res.json({accessToken : tokens.accessToken});
     }
 
+
+    // =============================================================================
+	// AUTH 42 =====================================================================
+    async login_42() {
+        let url = 'https://api.intra.42.fr/oauth/authorize';
+        url += '?client_id=';
+        url += this.config.get('OAUTH_INTRA_CLIENT_ID');
+        url += '&redirect_uri=http://localhost:3333/auth/callback/42';
+        url += '&response_type=code';
+        console.log("url =" + url);
+        return ({ url: url });
+    }
+
+    async callback42(user, res) {
+        console.log("user42 =" + user.profile.name);
+		if (user == undefined)
+			throw (new UnauthorizedException('profile is undefined'));
+		const user42 = await this.prisma.user.findFirst({
+			where: {
+				nickname: user.profile.name,
+			},
+		});
+		if (!user42) {
+            const new_hash = crypto.randomBytes(50).toString('hex');
+            await this.prisma.user.create({
+                data: {
+                    nickname: user.profile.name,
+                    email: user.profile.email,
+                    hash: new_hash,
+                }
+            });
+		}
+        const new_user = await this.prisma.user.findFirst({
+			where: {
+				nickname: user.profile.name,
+			},
+		});
+        // Creation du accessToken et du refreshToken
+        const tokens = await this.getToken(new_user.id, user.profile.email);
+        // Stockage du refreshToken dans la DB
+        await this.updateRtHash(new_user.id, tokens.refreshToken);
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        });
+		res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken);
+	}
+
+
+    // =============================================================================
+	// JWT & REFRESH TOKEN =========================================================
+    
     //Création du JWT à partir des infos du user
     //qui servira à authentifier la personne après qu'elle se soit connectée une 1ere fois
     //this is an asynchroneous function returning a promise
@@ -107,6 +170,8 @@ export class AuthService {
     }
 
 
+    // =============================================================================
+	// UPDATE DATABASE =============================================================
     async updateRtHash(userId: number, rt: string) {
         // Transforme le refreshToken en hash
         const hash = await argon.hash(rt);
@@ -122,6 +187,8 @@ export class AuthService {
     }
 
 
+    // =============================================================================
+	// LOGOUT ======================================================================
     async logout(userId: number, res) {
            await this.prisma.user.updateMany({
                 where: {
@@ -139,6 +206,9 @@ export class AuthService {
         return res.send('Vous êtes déconnecté.');
     }
 
+
+    // =============================================================================
+	// REFRESH  ====================================================================
     async refresh(userId: number, rt: string, res) {
         // console.log({userId, rt})
         const user = await this.prisma.user.findUnique({

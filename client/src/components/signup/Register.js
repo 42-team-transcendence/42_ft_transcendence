@@ -7,6 +7,7 @@ import Email from "./Email";
 import Password from "./Password";
 import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
+import AuthPage from "../0Auth42/AuthPage";
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -135,13 +136,18 @@ export default function Register() {
             <form onSubmit={handleSubmit} id="myForm">
 				<Box
 					sx={{
-						display: 'flex',
+                        display: 'flex',
 						flexDirection: 'column',
 						alignItems: 'center',
 						'& .MuiTextField-root': { m: 1, width: '25ch' },
 					}}
 					autoComplete="off"
 				>
+                    <AuthPage />
+                    <p>
+                        <br/>
+                        or signup with email adress
+                    </p>
 					<Username stateUser={stateUser} fonctionUpdate={fonctionUpdate}/>
 					<Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail}/>
 					<Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd}/>
