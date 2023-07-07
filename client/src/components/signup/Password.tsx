@@ -3,7 +3,21 @@ import TextField from '@mui/material/TextField';
 
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 
-function Password ({ statePwd, fonctionUpdatePwd }) {
+interface PasswordProps {
+	statePwd: {
+	  user: string;
+	  pwd: string;
+	  matchPwd: string;
+	  validPwd: boolean;
+	};
+	fonctionUpdatePwd: {
+	  updatePwd: (newValue: string) => void;
+	  updateValidePwd: (isValid: boolean) => void;
+	  updateValideMatch: (isValid: boolean) => void;
+	};
+  }
+
+function Password ({ statePwd, fonctionUpdatePwd }: PasswordProps) {
     
     const {user, pwd, matchPwd, validPwd} = statePwd;
     const {updatePwd, updateValidePwd, updateValideMatch} = fonctionUpdatePwd;

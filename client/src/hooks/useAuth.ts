@@ -1,36 +1,42 @@
-import { useContext } from "react";
-import AuthContext from "../context/AuthProvider";
+// import { useContext } from "react";
+// import AuthContext from '../context/AuthProvider';
 
-/* lorsque nous appelons useAuth() dans notre code, nous obtenons les détails sur l'authentification de l'utilisateur. Si nous avons besoin de savoir si un utilisateur est authentifié ou non, nous utilisons cette fonction useAuth et elle nous dit la réponse.
+// /* lorsque nous appelons useAuth() dans notre code, nous obtenons les détails sur l'authentification de l'utilisateur. Si nous avons besoin de savoir si un utilisateur est authentifié ou non, nous utilisons cette fonction useAuth et elle nous dit la réponse.
 
-LE CONTEXTE 
-En React, le contexte est un moyen de partager des données entre différents composants sans avoir à les passer explicitement de parent en enfant à travers les props. Le contexte est particulièrement utile lorsque plusieurs composants ont besoin d'accéder aux mêmes données.
+// LE CONTEXTE 
+// En React, le contexte est un moyen de partager des données entre différents composants sans avoir à les passer explicitement de parent en enfant à travers les props. Le contexte est particulièrement utile lorsque plusieurs composants ont besoin d'accéder aux mêmes données.
 
-AuthContext est le contexte que vous avez importé à partir du fichier "AuthProvider". Ce contexte contient des informations sur l'authentification de l'utilisateur, telles que son statut de connexion ou ses données d'identification
-*/
+// AuthContext est le contexte que vous avez importé à partir du fichier "AuthProvider". Ce contexte contient des informations sur l'authentification de l'utilisateur, telles que son statut de connexion ou ses données d'identification
+// */
 
-const useAuth = () => {
-    return useContext(AuthContext);
-}
+// const useAuth = () => {
+//     return useContext(AuthContext);
+// }
 
-export default useAuth;
+// export default useAuth;
 
-/*
-import { useContext } from "react";
-import AuthContext from "../context/AuthProvider";
+
+import { useContext, Dispatch, SetStateAction } from "react";
+import {AuthContext} from "../context/AuthProvider";
 
 interface AuthData {
-  // Définir les types pour les informations d'authentification
   accessToken: string;
   email: string;
-  // Ajouter d'autres propriétés si nécessaire
+}
+
+interface AuthContextType {
+  auth: AuthData;
+  setAuth: Dispatch<SetStateAction<AuthData>>;
 }
 
 // Utiliser l'interface pour spécifier le type de retour
-const useAuth = (): AuthData => {
-  return useContext(AuthContext);
+const useAuth = (): AuthContextType => {
+  const authProvider = useContext(AuthContext);
+  if (!authProvider) {
+    throw new Error("AuthContext is not provided");
+  }
+
+  return authProvider;
 }
 
 export default useAuth;
-
-*/

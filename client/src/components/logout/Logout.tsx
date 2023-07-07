@@ -28,7 +28,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
-import AuthContext, { AuthContextType } from "../context/AuthProvider";
+//import AuthContext, { AuthContextType } from "../context/AuthProvider";
 
 const Logout: React.FC = () => {
   const from_signup = "/register";

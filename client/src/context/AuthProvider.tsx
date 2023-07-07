@@ -23,21 +23,26 @@
 
 // export default AuthContext;
 
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useState, useEffect, ReactNode, Dispatch, SetStateAction } from "react";
 
-interface AuthContextType {
-  auth: any;
-  setAuth: React.Dispatch<React.SetStateAction<any>>;
+interface AuthData {
+  accessToken: string;
+  email: string;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+interface AuthContextType {
+  auth: AuthData;
+  setAuth: Dispatch<SetStateAction<AuthData>>;
+}
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [auth, setAuth] = useState({});
+  const [auth, setAuth] = useState<AuthData>({ accessToken: "", email: "" });
 
   useEffect(() => {
     localStorage.setItem("auth", JSON.stringify(auth));
@@ -50,4 +55,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-export default AuthContext;
+export default AuthProvider;
+
+
+/**
+ utilisation des types Dispatch et SetStateAction
+ fournis par React pour typer la fonction setAuth
+ Dispatch et SetStateAction sont des types fournis par React pour aider à typer les fonctions de mise à jour d'état (setState) 
+ dans les hooks de gestion de l'état (useState, useReducer, etc.). */
