@@ -6,17 +6,18 @@ export class ScoreService {
   constructor(private prisma: PrismaService) {}
 
   async updateScore(score: number, userId: number) {
-  //   try {
-  //     // Perform some logic with the user ID and score
-  //     // For example, you can update the user's score in the database using the PrismaService
-  //     await this.prisma.user.update({
-  //       where: { id: userId },
-  //       data: { score : score },
-  //     });
+    try {
+      // Perform some logic with the user ID and score
+      // For example, you can update the user's score in the database using the PrismaService
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { score : score },
+        // data: { score : { set : score} },
+      });
 
-  //     console.log(`Score updated successfully for user with ID: ${userId}`);
-  //   } catch (error) {
-  //     console.error('Error updating score:', error);
-  //   }
+      console.log(`Score updated successfully for user with ID: ${userId}`);
+    } catch (error) {
+      console.error('Error updating score:', error);
+    }
   }
 }
