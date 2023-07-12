@@ -1,16 +1,21 @@
-import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { JwtGuard } from "../auth/guard";
 import { ScoreService } from './score.service';
-import { Request } from 'express';
-import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from "../auth/decorator"
 
+@UseGuards(JwtGuard)
 @Controller('score')
-@UseGuards(AuthGuard())
 export class ScoreController {
   constructor(private readonly scoreService: ScoreService) {}
 
-  @Post('score')
-  async updateScore(@Body() body: { score: number }, @Req() request: Request) {
+  @HttpCode(HttpStatus.OK)
+  @Post()
+  async updateScore(
+    @Body() body: { score: number },
+    @GetUser() user) {
     const { score } = body;
-    await this.scoreService.updateScore(score, request);
+    console.log({score});
+    console.log({user});
+    await this.scoreService.updateScore(score, user.sub);
   }
 }
