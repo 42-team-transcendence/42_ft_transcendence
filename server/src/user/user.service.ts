@@ -1,9 +1,7 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
-import { JwtService } from "@nestjs/jwt";
-import { ConfigService } from "@nestjs/config";
+import { Prisma, User } from "@prisma/client";
+
 
 @Injectable()
 export class UserService {
@@ -15,4 +13,5 @@ export class UserService {
 		const users = await this.prisma.user.findMany();
 		return (users);
 	}
+
 }

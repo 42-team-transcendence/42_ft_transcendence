@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from "../navbar/Navbar";
 import HomepageStyle from '../../styles/HomepageStyle.css';
 import CustomButton from "../../styles/buttons/CustomButton";
+import ScoreButton from "../scorebutton/Score";
 
 
 function Homepage() {
@@ -23,6 +24,7 @@ function Homepage() {
 				<h1 className="titleHomePage"> PONG </h1>
 			</div>
 				<div className="ButtonHomePage">
+					<ScoreButton />
 					<CustomButton > PLAY </CustomButton>
 					<CustomButton > How to Play </CustomButton>
 					<CustomButton onClick={handleLeaderboard}> Leaderboard </CustomButton>

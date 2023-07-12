@@ -7,6 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { Tokens } from "./types";
 import * as crypto from 'crypto';
+import { readlink } from "fs";
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,8 @@ export class AuthService {
                 data: {
                     nickname: dto.nickname,
                     email: dto.email,
-                    hash }
+                    hash
+				 }
             });
             
             // Creation du accessToken et du refreshToken

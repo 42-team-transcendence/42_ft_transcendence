@@ -19,7 +19,11 @@ model User {
   email	   	String @unique
   hash	  	String
 
+  rank		Int @default(0)
+  score		Int @default(0)
+
   hashedRt  String?
+
 
   @@map("users")
 }
