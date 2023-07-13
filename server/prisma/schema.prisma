@@ -24,6 +24,20 @@ model User {
 
   hashedRt  String?
 
-
+  matchHistory MatchHistory[]
+  
   @@map("users")
+}
+
+
+model MatchHistory {
+	id			Int @id @default(autoincrement())
+	winnerId	Int
+	looserId	Int
+	date		String
+
+	winner      User @relation("Winner", fields: [winnerId], references: [id])
+ 	looser      User @relation("Looser", fields: [looserId], references: [id])
+
+	@@map ("match_history")
 }

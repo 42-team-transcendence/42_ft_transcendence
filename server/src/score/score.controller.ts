@@ -11,11 +11,12 @@ export class ScoreController {
   @HttpCode(HttpStatus.OK)
   @Post()
   async updateScore(
-    @Body() body: { score: number },
-    @GetUser() user) {
-    const { score } = body;
-    console.log({score});
-    console.log({user});
-    await this.scoreService.updateScore(score, user.sub);
-  }
+		@Body() body: { score: number },
+		@GetUser() user
+	) {
+		const { score } = body;
+		console.log({score});
+		console.log({user});
+		await this.scoreService.updateScore(score, user.sub);
+  	}
 }
