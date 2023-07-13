@@ -120,9 +120,12 @@
 //     )
 // }
 
-// export default Login;
+//export default Login;
 
-import { useState, useEffect } from 'react';
+
+//========= version ts2 ===========
+//import { useState, useEffect } from 'react';
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import useAuth from '../../hooks/useAuth';
@@ -135,113 +138,122 @@ import CustomButton from "../../styles/buttons/CustomButton";
 import Box from '@mui/material/Box';
 import '../../styles/Register_Login.css';
 
+const LOGIN_URL = '/auth/signin';
 
+interface State {
+  email: string;
+  pwd: string;
+}
 
- // =============================================================================
- // =============================================================================
-const LOGIN_URL = '/auth/signin'
+const Login: React.FC = () => {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
-function Login () {
+  const [email, setEmail] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [errMsg, setErrMsg] = useState('');
 
-    const { setAuth } = useAuth();
+  useEffect(() => {
+    setErrMsg('');
+  }, [email, pwd]);
 
-    const navigate = useNavigate(); //useNavigate retourne une fct qui permet de naviguer vers d'autres pages de l'appli
-    const location = useLocation(); // useLocation retourne un objet qui contient des éléments sur l'URL de la page actuelle
-    const from = location.state?.from?.pathname || "/"; //from = chemin de la page précédente à partir de laquelle l'utilisateur est arrivé sur la page de connexion
+//   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
 
-    // =============================================================================
-	// EMAIL =======================================================================
-    const [email, setEmail] = useState<string>('');
+//     try {
+//       const response = await axios.post(
+//         LOGIN_URL,
+//         JSON.stringify({ email, password: pwd }),
+//         {
+//           headers: { 'Content-Type': 'application/json' },
+//           withCredentials: true
+//         }
+//       );
+      
+//       const accessToken = response?.data?.accessToken;
 
-    const stateEmail: EmailProps = {email};
+//       setAuth({ email, accessToken });
+//       setEmail('');
+//       setPwd('');
+//       navigate(from, { replace: true });
+//     } catch (err: any) {
+//       if (!err?.response) {
+//         setErrMsg('No Server Response');
+//       } else if (err.response) {
+//         //setErrMsg(`${err.status}: ${err.response} Sign In failed`);
+// 		setErrMsg(`${err.response.status}: ${err.response.data} Sign In failed`);
+//         console.log(err);
+//       }
+//     }
+//   };
 
-    const updateEmail = (newValue: string) => {
-        setEmail(newValue);
-    }
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+	e.preventDefault();
+  
+	axios.post(
+	  LOGIN_URL,
+	  JSON.stringify({ email, password: pwd }),
+	  {
+		headers: { 'Content-Type': 'application/json' },
+		withCredentials: true
+	  }
+	)
+	  .then(response => {
+		const accessToken = response?.data?.accessToken;
+		setAuth({ email, accessToken });
+		setEmail('');
+		setPwd('');
+		navigate(from, { replace: true });
+	  })
+	  .catch(err => {
+		if (!err?.response) {
+		  setErrMsg('No Server Response');
+		} else if (err.response) {
+		  setErrMsg(`${err.response.status}: ${err.response.data} Sign In failed`);
+		  console.log(err);
+		}
+	  });
+  };
+  
 
-    const fonctionUpdateEmail = {updateEmail};
+  return (
+    <section className="Register">
+      <h1 className="title">PONG</h1>
+      <form className="formLogin" onSubmit={handleSubmit} autoComplete="off">
+        <Box
+			component="div"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            '& .MuiTextField-root': { m: 1, width: '25ch' },
+          }}
+        >
+          <Email
+            stateEmail={{ email }}
+            fonctionUpdateEmail={{updateEmail:setEmail}}
+          />
+          <Password
+            statePwd={{ pwd }}
+            fonctionUpdatePwd={{ updatePwd: setPwd}}
+          />
 
-    // =============================================================================
-	// PASSWORD ====================================================================
-    const [pwd, setPwd] = useState<string>('');
-
-    const statePwd: PasswordProps = {pwd};
-
-    const updatePwd = (newValue: string) => {
-        setPwd(newValue);
-    }
-
-    const fonctionUpdatePwd = {updatePwd};
-
-    /// =============================================================================
-	// 	=============================================================================
-    const [errMsg, setErrMsg] = useState<string>('');
-
-    useEffect(() => {
-        setErrMsg('');
-    }, [email, pwd])
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        try {
-            const response = await axios.post(LOGIN_URL, 
-                JSON.stringify({email, 'password': pwd}),
-                {
-                    headers: { 'Content-Type': 'application/json'},
-                    withCredentials: true
-                }
-            );
-            // console.log({"test": response?.data})
-            const accessToken = response?.data?.accessToken;
-            //TODO est ce important de set l'email et le pwd dans auth ? 
-            setAuth({email, pwd, accessToken});
-            setEmail('');
-            setPwd('');
-            navigate(from, { replace: true});
-        } catch (err) {
-            if (!err?.response) {
-                setErrMsg('No Server Response');
-            } else if (err.response) {
-                setErrMsg(err.status + ' : ' +  err.response + 'Sign In failed');
-                console.log(err);
-            }
-        }
-    }
-    return (
-        <section className="Register">
-            <h1 className="title">PONG</h1>
-            <form className="formLogin" onSubmit={handleSubmit}>
-				<Box
-						sx={{
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-							'& .MuiTextField-root': { m: 1, width: '25ch' },
-						}}
-						autoComplete="off"
-				>
-                
-                <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail} />
-                <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd} />
-
-					<CustomButton
-						onClick={handleSubmit}
-						disabled={ !email || !pwd  ? true : false }
-					>
-						Sign in
-					</CustomButton>
-				</Box>
-            <p>
-                Need an Account ?<br />
-        
-                    {/* TODO Put router link here */}
-                    {/* // placeholder link */}
-                    <Link to="/register" className="line">Sign Up</Link>
-            </p>
-            </form>
-        </section>
-    )
+          <CustomButton
+            onClick={handleSubmit}
+            disabled={!email || !pwd}
+          >
+            Sign in
+          </CustomButton>
+        </Box>
+        <p>
+          Need an Account ?<br />
+          <Link to="/register" className="line">Sign Up</Link>
+        </p>
+      </form>
+    </section>
+  );
 }
 
 export default Login;

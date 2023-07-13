@@ -27,18 +27,17 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import useAuth from "../../hooks/useAuth";
-//import AuthContext, { AuthContextType } from "../context/AuthProvider";
+import useAuth, { AuthData } from "../../hooks/useAuth";
 
 const Logout: React.FC = () => {
   const from_signup = "/register";
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
+const { setAuth } = useAuth();
 
   const handleClick = () => {
     axiosPrivate.post("/auth/logout");
-    setAuth({});
+    setAuth({} as AuthData);
     navigate(from_signup, { replace: true });
   };
 

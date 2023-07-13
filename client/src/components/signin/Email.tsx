@@ -29,9 +29,11 @@
 // export default Email;
 
 import TextField from '@mui/material/TextField';
+import { type } from 'os';
 import React, { ChangeEvent } from 'react';
 
 
+// export type EmailProps = {
 interface EmailProps {
 	stateEmail: {
 	  email: string;

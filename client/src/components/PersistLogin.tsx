@@ -49,7 +49,7 @@ import { useState, useEffect } from "react";
 import useRefreshToken from "../hooks/useRefreshToken";
 import useAuth from "../hooks/useAuth";
 
-interface AUthData{
+interface AuthData{
     accesToken: string;
 }
 

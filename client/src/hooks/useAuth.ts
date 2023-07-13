@@ -16,10 +16,11 @@
 // export default useAuth;
 
 
+import { type } from "os";
 import { useContext, Dispatch, SetStateAction } from "react";
 import {AuthContext} from "../context/AuthProvider";
 
-interface AuthData {
+export type AuthData = {
   accessToken: string;
   email: string;
 }

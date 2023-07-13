@@ -24,7 +24,10 @@
 // export default Password;
 
 import TextField from '@mui/material/TextField';
+import { type } from 'os';
+import React, { ChangeEvent } from 'react';
 
+// export type PasswordProps = {
 interface PasswordProps {
 	statePwd: {
 	  pwd: string;
@@ -34,9 +37,14 @@ interface PasswordProps {
 	};
   }
   
-  function Password({ statePwd, fonctionUpdatePwd }: PasswordProps) {
+  const Password: React.FC<PasswordProps> = ({ statePwd, fonctionUpdatePwd }) => {
 	const { pwd } = statePwd;
 	const { updatePwd } = fonctionUpdatePwd;
+
+	const handlePwdChange = (e: ChangeEvent<HTMLInputElement>) => {
+		updatePwd(e.target.value);
+	  };
+	
 
     return (
 		<>

@@ -59,8 +59,8 @@
 
 // export default CustomButton;
 
-import React, {ReactNode} from 'react';
-import Button from '@mui/material/Button';
+import React, {ReactNode, MouseEvent} from 'react';
+import Button, {ButtonProps} from '@mui/material/Button';
 import { styled } from '@mui/system';
 
 
@@ -82,12 +82,19 @@ const CustomButtonWrapper = styled(Button)(({ theme }) => ({
 
 interface CustomButtonProps {
 	children: ReactNode;
-	onClick?: () => void;
+	//onClick?: () => void;
+	onClick?: (event:MouseEvent<HTMLButtonElement>) => void;
   }
 
-const CustomButton: React.FC<CustomButtonProps> = ({ children, onClick }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ children, onClick, ...rest }) => {
+	const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+		if (onClick) {
+		  onClick(event);
+		}
+	  };
+
 	return (
-	  <CustomButtonWrapper onClick={onClick}>
+	  <CustomButtonWrapper onClick={handleClick} {...rest}>
 		<div
 		  style={{
 			background: '#FFF',
