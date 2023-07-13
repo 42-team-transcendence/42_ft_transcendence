@@ -24,20 +24,23 @@ model User {
 
   hashedRt  String?
 
-  matchHistory MatchHistory[]
+  games_player_1 Game[] @relation(name: "GamePlayer1")
+  games_player_2 Game[] @relation(name: "GamePlayer2")
   
   @@map("users")
 }
 
+model Game {
+	id			        Int @id @default(autoincrement())
+	player_1_id     Int
+	player_2_id     Int
+  player_1_score  Int @default(0)
+  player_2_score  Int @default(0)
+  winnerId        Int? 
+	createdAt DateTime @default(now())
 
-model MatchHistory {
-	id			Int @id @default(autoincrement())
-	winnerId	Int
-	looserId	Int
-	date		String
+  player_1    User @relation(name: "GamePlayer1", fields: [player_1_id], references: [id])
+ 	player_2    User @relation(name: "GamePlayer2", fields: [player_2_id], references: [id])
 
-	winner      User @relation("Winner", fields: [winnerId], references: [id])
- 	looser      User @relation("Looser", fields: [looserId], references: [id])
-
-	@@map ("match_history")
+	@@map ("games")
 }
