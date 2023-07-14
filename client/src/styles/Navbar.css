@@ -72,7 +72,7 @@
 /*******************************************/
 /************** MEDIA QUERIES **************/
 
-@media screen and (max-width:1226px) {
+@media screen and (max-width:1324px) {
 	.navbar_links {
 		margin-right: 0px;
 		flex-direction: column;
