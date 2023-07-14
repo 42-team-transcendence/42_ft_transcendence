@@ -8,6 +8,7 @@ import Homepage from './homepage/HomePage';
 import Leaderboard from './leaderboard/Leaderboard';
 import PersistLogin from './PersistLogin';
 import Callback42 from './0Auth42/Callback42';
+import Chat from './chat/Chat';
 
 function App() {
 //Contient toutes les URLS / Routes de notre app front.
@@ -20,6 +21,8 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="callback42" element={<Callback42 />} />
+          <Route path="chat" element={<Chat />} />
+
 
           {/* Routes protégées avec JWT */}
           <Route element={<PersistLogin />}>

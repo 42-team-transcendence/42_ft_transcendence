@@ -15,7 +15,16 @@ import { Server, Socket, ServerOptions } from 'socket.io';
 //The WebSocket gateway is responsible for handling WebSocket connections and events in NestJS.
 // the OnGatewayInit interface is a part of the WebSockets module.
 // It is used to define a lifecycle hook that is triggered when a WebSocket gateway is initialized.
-@WebSocketGateway()
+@WebSocketGateway(
+  // 4444,
+  {
+    cors: {
+      origin: ["http://localhost:3000", "http://localhost:3000/chat"],
+      credentials: true
+    },
+    // path: "/chat"
+  },
+) //listen on indicated port, allow all frontend connexions
 export default class ChatGateway implements OnGatewayInit {
     
     // Déclare une instance du Server de socket.io
@@ -35,7 +44,7 @@ export default class ChatGateway implements OnGatewayInit {
 
     //The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate 
     //that a particular method should be invoked when a specific WebSocket message is received.
-    @SubscribeMessage('chat')
+    @SubscribeMessage('message')
     handleChatMessage(
             @MessageBody() data: string, //It instructs NestJS to inject the message body directly into the data parameter.
             @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
@@ -46,14 +55,14 @@ export default class ChatGateway implements OnGatewayInit {
         const clientIpAddress = client.handshake.address;
         console.log({client});
 
-        this.emitTest('chat');
+        this.emitTest('message');
         
         return data;
     }
 
     emitTest(event : string): void {
         // Emit a message to all connected clients
-        this.server.emit(event, { message: 'Hello, clients!' });
+        this.server.emit(event, { message: 'Hello, clients! message received' });
       }
 
 }
