@@ -10,7 +10,9 @@ function Homepage() {
     const navigate = useNavigate();
     const from_leaderboard = "/leaderboard";
 	const from_how_to_play = "/rules";
-	const from_play = "/play"; 
+	const from_play = "/play";
+	const profile = "/profile";
+	const friend_list = "/friendlist";
 
 	const handlePlay = () => {
 		navigate(from_play, {replace: false});
@@ -25,7 +27,6 @@ function Homepage() {
 	}
 
 	
-
 	return (
 		<div className="column">
 			<Navbar />

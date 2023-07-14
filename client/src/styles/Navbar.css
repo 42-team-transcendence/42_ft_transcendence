@@ -58,9 +58,7 @@
 	transform: translateX(0);
 	display: block;
   }
-
-
-  
+ 
 @media (max-width: 1050px) {
 .menu {
 	display: none;
@@ -82,3 +80,11 @@
 	color: white;
 }
 }
+
+.nav-link {
+	color: #FF79AF;
+	font-size: 16px;
+	text-decoration: underline;
+	font-weight: 700;
+  }
+  

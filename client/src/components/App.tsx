@@ -10,6 +10,8 @@ import PersistLogin from './PersistLogin';
 import Callback42 from './0Auth42/Callback42';
 import Rules from './Play/Rules';
 import Play from './Play/Play'
+import Profile from './profile/Profile';
+import FriendList from './friends/FriendList';
 
 function App() {
 //Contient toutes les URLS / Routes de notre app front.
@@ -30,6 +32,8 @@ function App() {
 			  <Route path="play" element={<Play />} />
               <Route path="leaderboard" element={<Leaderboard />} />
 			  <Route path="rules" element={<Rules />} />
+			  <Route path="profile" element={<Profile />} />
+			  <Route path="friendlist" element={<FriendList />} />
             </Route>
           </Route>
         

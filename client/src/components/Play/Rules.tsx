@@ -3,7 +3,7 @@ import React from "react";
 const Rules:React.FC = () => {
 	return (
 	  <div>
-		  <h1>Ping Pong Game Rules</h1>
+		  <h2>Ping Pong Game Rules</h2>
 	  </div>
 	)
   }
