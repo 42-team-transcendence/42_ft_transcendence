@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from "@nestjs/config";
-
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +19,18 @@ async function bootstrap() {
   // axiosInstance.defaults.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
 
   // app.enableCors();
+
+  const options = new DocumentBuilder()
+    .setTitle('Transcendence 42 project')
+    .setDescription('our API to play PONG game')
+    .setVersion('1.0')
+    .addTag('transcendence')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, options);
+
+  //URL : http://localhost:3333/api
+  SwaggerModule.setup('api', app, document);
 
   app.use(cors({
     origin: 'http://localhost:3000',
