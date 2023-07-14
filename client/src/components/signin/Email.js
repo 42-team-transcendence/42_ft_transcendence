@@ -2,8 +2,8 @@ import TextField from '@mui/material/TextField';
 
 function Email ({ stateEmail, fonctionUpdateEmail}) {
 
-  const {email}  = stateEmail;
-   const {updateEmail} = fonctionUpdateEmail;
+  	const {email}  = stateEmail;
+	const {updateEmail} = fonctionUpdateEmail;
 
     // const emailRef = useRef();
 
