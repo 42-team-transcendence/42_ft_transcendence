@@ -13,6 +13,7 @@ import Rules from './Play/Rules';
 import Play from './Play/Play'
 import Profile from './profile/Profile';
 import FriendList from './friends/FriendList';
+import ChatChannels from './chat/ChatChannels'
 
 function App() {
 //Contient toutes les URLS / Routes de notre app front.
@@ -35,7 +36,7 @@ function App() {
               <Route path="rules" element={<Rules />} />
               <Route path="profile" element={<Profile />} />
               <Route path="friendlist" element={<FriendList />} />
-              <Route path="chat" element={<Chat />} />
+              <Route path="chat" element={<ChatChannels />} />
             </Route>
           </Route>
         
