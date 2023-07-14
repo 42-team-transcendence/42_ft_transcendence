@@ -7,19 +7,19 @@ import ChatMiniature from "./ChatMiniature";
 export default function ChatChannels() {
 
     return (
-        <Stack
+        <Stack 
+        // sx={{width:'1800px', height:'100%'}}
             spacing={1}
             direction="row"
             justifyContent="center"
             alignItems="center"
         >
-            <Container>
-                <h1>Chat & Channels</h1>
+            <Box sx={{backgroundColor : '#FF79AF'}}>
                 <ChatMiniature></ChatMiniature>
-            </Container>
-            <Container>
+            </Box>
+            <Box sx={{backgroundColor : '#FF8100'}}>
                 <Chat></Chat>
-            </Container>
+            </Box>
         </Stack>
     )
 }
