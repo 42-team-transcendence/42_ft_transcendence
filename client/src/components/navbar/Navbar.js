@@ -70,34 +70,86 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import Profile from '../profile/Profile';
 
-function Navbar() {
-  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+function Navbar({showLinks, handleShowLinks}) {
+	return (
 
-  const toggleBurgerMenu = () => {
-    setIsBurgerOpen(!isBurgerOpen);
-  };
+		<nav className={`navbar  ${showLinks ? "show_nav" : "hide_nav"}`}>
+			<div className='navbar_logo'> PONG </div>
+			<ul className='navbar_links'>
+				<li className='navbar_items'>
+				<a href='/' className='navbar_link'>Play</a>
+				</li>
+				<li className='navbar_items'>
+				<a href='/' className='navbar_link'>Chat & Channels</a>
+				</li>
+				<li className='navbar_items'>
+				<a href='/' className='navbar_link'>Friends List</a>
+				</li>
+				<li className='navbar_items'>
+				<a href='/' className='navbar_link'>View/Change profile</a>
+				</li>
+				<li className='navbar_items'>
+					<SearchAppBar />
+				</li>
+				<li className='navbar_items'>
+					<Logout className='logout_item'/>
+				</li>
+    	 		
+			</ul>
+			<button className='navbar_burger' onClick={handleShowLinks}>
+				<span className='burger_bar'></span>
+			</button>
+		</nav>
+	)
 
-  return (
-    <header className={`header ${isBurgerOpen ? 'menu-open' : ''}`}>
-      <h2>PONG</h2>
-      <nav className={`menu ${isBurgerOpen ? 'burger-menu' : ''}`}>
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/play" className="nav-link">Play</Link>
-        <Link to="/chat" className="nav-link">Chat & Channels</Link>
-        <Link to="/friendlist" className="nav-link">Friends List</Link>
-        <Link to="/profile" className="nav-link">View/Change Profile</Link>
-        <SearchAppBar />
-        <Logout />
-      </nav>
-      <IconButton
-        className={`burger ${isBurgerOpen ? 'open' : ''}`}
-        color="inherit"
-        onClick={toggleBurgerMenu}
-      >
-        {isBurgerOpen ? <CloseIcon /> : <MenuIcon />}
-      </IconButton>
-    </header>
-  );
 }
 
 export default Navbar;
+
+
+
+
+// function Navbar() {
+//   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+//   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1050);
+
+//   const toggleBurgerMenu = () => {
+//     setIsBurgerOpen(!isBurgerOpen);
+//   };
+
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsMobile(window.innerWidth <= 1050);
+//     };
+
+//     window.addEventListener('resize', handleResize);
+
+//     return () => {
+//       window.removeEventListener('resize', handleResize);
+//     };
+//   }, []);
+
+//   return (
+//     <header className={`header ${isBurgerOpen ? 'menu-open' : ''}`}>
+//       <h2>PONG</h2>
+//       {(isMobile && !isBurgerOpen) ? (
+//         <IconButton
+//           className={`burger ${isBurgerOpen ? 'open' : ''}`}
+//           color="inherit"
+//           onClick={toggleBurgerMenu}
+//         >
+//           {isBurgerOpen ? <CloseIcon /> : <MenuIcon />}
+//         </IconButton>
+//       ) : (
+//         <nav className={`menu ${isBurgerOpen ? 'burger-menu' : ''}`}>
+//           <a className='textMenu'>Play</a>
+//           <a className='textMenu'>Chat & Channels</a>
+//           <a className='textMenu'>Friends List</a>
+//           <a className='textMenu'>View/Change profile</a>
+//           <SearchAppBar />
+//           <Logout />
+//         </nav>
+//       )}
+//     </header>
+//   );
+// }
