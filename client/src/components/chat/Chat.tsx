@@ -12,13 +12,12 @@ function Chat() {
     }
 
     useEffect(() => {
-        const newSocket = io("http://localhost:3333");
-            // const newSocket = io(
-            //     "http://localhost:4444",
-            //     {
-            //         path: "/chat",
-            //         withCredentials: true
-            //     });
+        const newSocket = io(
+            "http://localhost:3333", //dès que j'essaie de changer le port j'ai une erreur
+            {
+                path: "/chat",
+                withCredentials: true
+            });
         setSocket(newSocket)
     }, [setSocket])
 

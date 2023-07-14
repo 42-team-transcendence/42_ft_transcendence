@@ -16,13 +16,13 @@ import { Server, Socket, ServerOptions } from 'socket.io';
 // the OnGatewayInit interface is a part of the WebSockets module.
 // It is used to define a lifecycle hook that is triggered when a WebSocket gateway is initialized.
 @WebSocketGateway(
-  // 4444,
+  // 4444, //Dès que j'essaie de changer le port j'ai une erreur réseau Connexion refused / CORS
   {
     cors: {
-      origin: ["http://localhost:3000", "http://localhost:3000/chat"],
-      credentials: true
+      origin: ["http://localhost:3000"],
+      credentials: true,
     },
-    // path: "/chat"
+    path: "/chat",
   },
 ) //listen on indicated port, allow all frontend connexions
 export default class ChatGateway implements OnGatewayInit {
