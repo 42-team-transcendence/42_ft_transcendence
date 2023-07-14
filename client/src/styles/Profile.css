@@ -1,0 +1,30 @@
+.profile-container {
+	display: flex;
+	align-items: flex-start;
+	background-color: white;
+	border-radius: 10px;
+	padding: 20px;
+	border: 2px solid black;
+}
+
+.profile-picture-container {
+	margin-right: 20px;
+	border: 2px solid black;
+	border-radius: 10px;
+}
+
+.profile-picture {
+	width: 200px;
+	height: 250px;
+	border-radius: 10px;
+}
+
+.profile-info {
+	color: black;
+	text-align: left;
+}
+
+.profile-info h2 {
+	text-align: center;
+	margin: 0;
+  } 

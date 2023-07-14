@@ -28,8 +28,8 @@ const Play: React.FC = () => {
 		textAlign: "justify",
 		}}
 	>
-        <h1>Start your Game now!</h1>
-			<p>	About Pong</p>
+        <h2> Game </h2>
+			<h3>	About Pong</h3>
 			<p> Pong is one of the first computer games that were ever created. This simple "tennis-like" game features two paddles and a ball. The goal is to defeat your opponent by being the first one to gain 10 points. A player gets a point once the opponent misses a ball.
 			The game can be played with two human players or one player against a computer-controlled paddle. The game was originally developed by Allan Alcorn and released in 1972 by Atari corporations.
 			Soon, Pong became a huge success and became the first commercially successful game. In 1975, Atari released a home edition of Pong (the first version was played on Arcade machines), which sold 150,000 units.
