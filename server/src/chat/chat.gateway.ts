@@ -11,6 +11,8 @@ import {
 //@nestjs/platform-socket.io is the specific package for socket.io integration
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { Server, Socket, ServerOptions } from 'socket.io';
+import { UseGuards } from '@nestjs/common';
+import { JwtGuard } from 'src/auth/guard';
 
 //The WebSocket gateway is responsible for handling WebSocket connections and events in NestJS.
 // the OnGatewayInit interface is a part of the WebSockets module.
@@ -21,10 +23,16 @@ import { Server, Socket, ServerOptions } from 'socket.io';
     cors: {
       origin: ["http://localhost:3000"],
       credentials: true,
+      cookie: {
+        name: "io",
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax"
+      }
     },
-    path: "/chat",
+    path: "/chat", //replace http://localhost:3333/socket.io/ with http://localhost:3333/chat/
   },
-) //listen on indicated port, allow all frontend connexions
+)
 export default class ChatGateway implements OnGatewayInit {
     
     // Déclare une instance du Server de socket.io
@@ -39,7 +47,6 @@ export default class ChatGateway implements OnGatewayInit {
     afterInit(server: Server) {
         // Perform initialization tasks here
         console.log('WebSocket gateway initialized!');
-    
       }
 
     //The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate 
@@ -53,16 +60,17 @@ export default class ChatGateway implements OnGatewayInit {
 
         // Access client-specific information
         const clientIpAddress = client.handshake.address;
-        console.log({client});
-
-        this.emitTest('message');
+        console.log({client_id : client.id});
+        console.log({clientIpAddress});
+        
+        this.emitTest('message', data);
         
         return data;
     }
 
-    emitTest(event : string): void {
+    emitTest(event:string, message:string): void {
         // Emit a message to all connected clients
-        this.server.emit(event, { message: 'Hello, clients! message received' });
+        this.server.emit(event, { message: `Hello, clients! message received : ${message}` });
       }
 
 }

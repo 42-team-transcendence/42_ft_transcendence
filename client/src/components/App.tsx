@@ -21,14 +21,13 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="callback42" element={<Callback42 />} />
-          <Route path="chat" element={<Chat />} />
-
 
           {/* Routes protégées avec JWT */}
           <Route element={<PersistLogin />}>
             <Route element= {<RequireAuth />}>
               <Route path="/" element={<Homepage />} />
               <Route path="leaderboard" element={<Leaderboard />} />
+              <Route path="chat" element={<Chat />} />
             </Route>
           </Route>
         
