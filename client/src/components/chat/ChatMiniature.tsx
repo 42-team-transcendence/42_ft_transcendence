@@ -6,7 +6,7 @@ export default function ChatMiniature({notif}:{notif:boolean}) {
     return (
         <Box sx={{
                 backgroundColor: notif ? 'white' : '#00000021',
-                border: notif ? '1px solid black' : 'none',
+                border: notif ? '2px solid black' : 'none',
                 borderRadius: '10px'
             }}
             mt={3} pt={1} pb={1}

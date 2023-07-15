@@ -19,7 +19,7 @@ export default function ChatChannels() {
                 <ChatMiniature notif={false}></ChatMiniature>
             </Box>
             <Box sx={{backgroundColor : 'white', width:'2%', height:'100%'}}></Box>
-            <Box sx={{backgroundColor : '#FF8100', width:'40%', height:'100%'}}>
+            <Box p={5} sx={{backgroundColor : '#FF8100', width:'40%', height:'100%'}}>
                 <Chat></Chat>
             </Box>
         </Stack>
