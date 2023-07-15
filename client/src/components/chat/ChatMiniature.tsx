@@ -1,15 +1,15 @@
 import { Container, Box } from "@mui/material";
 import Miniature from "../miniature/Miniature";
 
-export default function ChatMiniature() {
+export default function ChatMiniature({notif}:{notif:boolean}) {
 
     return (
         <Box sx={{
-                backgroundColor: 'white',
-                border: '1px solid black',
+                backgroundColor: notif ? 'white' : '#00000021',
+                border: notif ? '1px solid black' : 'none',
                 borderRadius: '10px'
             }}
-            pt={1} pb={1}
+            mt={3} pt={1} pb={1}
         >
             <Miniature></Miniature>
             {/* margin left margin top */}
