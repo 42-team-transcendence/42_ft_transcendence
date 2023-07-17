@@ -23,9 +23,9 @@ export class UserController {
     }
 
 	@Get(':id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
-	getUser(@Param(':id') id: string) {
-		console.log({id});
-		const userId = parseInt(id);
+	getUser(@Param() params: any) {
+		console.log({params});
+		const userId = parseInt(params.id);
 		if ((isNaN(userId))) throw new ForbiddenException("incorrect id sent : not a number");
 		console.log(this.userService.getUser(userId));
 		return (this.userService.getUser(userId));

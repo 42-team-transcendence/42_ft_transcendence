@@ -54,7 +54,7 @@ function Users() {
 		</h2>
 		{ users?.length
 			? (
-				<ul>
+				<ul style={{display: "flex", flexDirection:'column'}}>
 					{users.map((user, i) => {
 						return (
 						<button key={i}

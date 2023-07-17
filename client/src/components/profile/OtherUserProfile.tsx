@@ -11,20 +11,20 @@ function OtherUserProfile() {
 
   let { userId } = useParams();
   console.log(useParams());
-  console.log(userId);
+  console.log({userId});
 
-  // useEffect(() => {
-	// 	const getUser = async () => { //definition de la fonction
-	// 		try {
-	// 			const response = await axiosPrivate.get('/user');
-	// 			console.log(response.data);
-	// 			setUser(response.data);
-	// 		} catch (error) {
-	// 			console.log(error);
-	// 		}
-	// 	}
-	// 	getUser(); //appel de la fonction
-	// }, [])
+  useEffect(() => {
+		const getUser = async () => { //definition de la fonction
+			try {
+				const response = await axiosPrivate.get(`/users/${userId}`);
+				console.log(response.data);
+				setUser(response.data);
+			} catch (error:any) {
+				console.log(error.response );
+			}
+		}
+		getUser(); //appel de la fonction
+	}, [])
 
   return (
     <div className="profile-container">

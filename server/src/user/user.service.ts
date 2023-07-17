@@ -17,6 +17,9 @@ export class UserService {
 
 	async getUser(userId:number) {
 		const user = await this.prisma.user.findFirst({where: {id: userId}});
+		// if (!user) {
+		// 	throw new ForbiddenException("No user found with given id");
+		// }
 		return (user);
 	}
 }
