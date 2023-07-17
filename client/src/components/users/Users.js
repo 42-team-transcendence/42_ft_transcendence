@@ -20,7 +20,6 @@ function Users() {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-
 	useEffect(() => {
 		let isMounted = true;
 		const controller = new AbortController();
@@ -38,28 +37,33 @@ function Users() {
 			}
 		}
 		getUsers();
-
 		return () => {
 			isMounted = false;
 			// controller.abort();
-		}
-		
+		}		
 	}, [])
 
+	const goToUserProfile = (user) => {
+		navigate('/otherUserProfile', {replace: false});
+	}
+
   return (
-	<article>
+	<article style={{marginBottom:"90px"}}>
 		<h2>
 			Users List
 		</h2>
 		{ users?.length
 			? (
 				<ul>
-					{users.map((user, i) => <li key={i}>{user?.nickname}</li>)}
+					{users.map((user, i) => {
+						return (
+						<button key={i}
+							onClick={() => goToUserProfile(user)}
+						>{user?.nickname}</button>
+					)})}
 				</ul>
 			): <p> No users to display</p>
 		}
-		<Logout />
-		{/* <button onClick={() => refresh()}>Refresh</button> */}
 	</article>
   );
 };

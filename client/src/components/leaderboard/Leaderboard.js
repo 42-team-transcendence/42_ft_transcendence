@@ -1,12 +1,14 @@
-import React from 'react'
 import Users from '../users/Users'
+import Logout from '../logout/Logout'
+import {Box} from '@mui/material'
 
 function Leaderboard() {
   return (
-	<div>
+	<Box >
 		<h1>Leaderboard</h1>
-		< Users />
-	</div>
+		<Users />
+		<Logout />
+	</Box>
   )
 }
 
