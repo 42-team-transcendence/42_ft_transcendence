@@ -1,7 +1,9 @@
 import React from "react";
+import PageWrapper from "../navbar/pageWrapper";
 
 const Play: React.FC = () => {
   return (
+	<PageWrapper>
 	<div
 	style={{
 	  display: "flex",
@@ -39,6 +41,7 @@ const Play: React.FC = () => {
       </div>
     </div>
 	</div>
+	</PageWrapper>
   );
 };
 
