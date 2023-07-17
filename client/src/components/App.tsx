@@ -36,7 +36,10 @@ function App() {
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="rules" element={<Rules />} />
               <Route path="friendlist" element={<FriendList />} />
-              <Route path="chat" element={<ChatChannels />} />
+              <Route path="chat">
+                <Route path="" element={<ChatChannels />} />
+                <Route path=":userId" element={<ChatChannels />} />
+              </Route>
               <Route path="profile" element={<Profile />} />
               <Route path="profile">
                 <Route path=":userId" element={<OtherUserProfile />} />
