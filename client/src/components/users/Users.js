@@ -44,7 +44,7 @@ function Users() {
 	}, [])
 
 	const goToUserProfile = (user) => {
-		navigate('/otherUserProfile', {replace: false});
+		navigate(`/profile/${user.id}`, {replace: false});
 	}
 
   return (
