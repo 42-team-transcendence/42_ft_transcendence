@@ -4,10 +4,11 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import '../../styles/Profile.css';
 
 function OtherUserProfile() {
-	const [user, setUser] = useState();
 	const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();
 	const location = useLocation();
+
+	const [user, setUser] = useState();
 
   let { userId } = useParams();
   console.log(useParams());
@@ -17,7 +18,10 @@ function OtherUserProfile() {
 		const getUser = async () => { //definition de la fonction
 			try {
 				const response = await axiosPrivate.get(`/users/${userId}`);
-				console.log(response.data);
+				console.log({user : response.data});
+				if (!response.data) {
+					navigate('/', {replace: false});
+				}
 				setUser(response.data);
 			} catch (error:any) {
 				console.log(error.response );

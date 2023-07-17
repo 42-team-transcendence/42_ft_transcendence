@@ -27,7 +27,11 @@ export class UserController {
 		console.log({params});
 		const userId = parseInt(params.id);
 		if ((isNaN(userId))) throw new ForbiddenException("incorrect id sent : not a number");
-		console.log(this.userService.getUser(userId));
-		return (this.userService.getUser(userId));
+		const user = this.userService.getUser(userId);
+		if (!user) {
+			throw new ForbiddenException("No user found with given id");
+		}
+		console.log({user});
+		return (user);
 	}
 }
