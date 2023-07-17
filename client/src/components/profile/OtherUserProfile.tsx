@@ -10,7 +10,6 @@ interface User {
 	id: number;
 	nickname: string;
 	picture: string;
-	rank: string;
 	level: string;
 }
 
@@ -34,7 +33,6 @@ function OtherUserProfile() {
 				setUser({
 					...response.data,
 					picture:"https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg",
-					rank : "2",
 					level : "200"
 					
 				});
@@ -63,7 +61,7 @@ function OtherUserProfile() {
 				<div className="profile-info">
 					<h2>Profile</h2>
 					<h3>{user?.nickname}</h3>
-					<p>Rank {user?.rank} | Lvl {user?.level}</p>
+					<p>Rank 2 | Lvl {user?.level}</p>
 					<h4>Email</h4>
 					<h4>Password</h4>
 					<h4>Double factors</h4>

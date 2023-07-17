@@ -22,21 +22,23 @@ function Chat() {
     const [messages, setMessages] = useState<string[]>([]);
     const [otherUser, setOtherUser] = useState<User>();
 
-    const { userId } = useParams();
+    let { userId } = useParams();
     console.log("chat userId : " + userId);
 
     //récupération des données de l'autre user du chat
     useEffect(() => {
 		const getUser = async () => { //definition de la fonction
 			try {
-				const response = await axiosPrivate.get(`/users/${userId}`);
-				console.log({user : response.data});
-				if (!response.data) {
-					navigate('/', {replace: false});
-				}
-				setOtherUser({
-					...response.data,					
-				});
+                if (userId) {
+                    const response = await axiosPrivate.get(`/users/${userId}`);
+                    console.log({user : response.data});
+                    if (!response.data) {
+                        navigate('/', {replace: false});
+                    }
+                    setOtherUser({
+                        ...response.data,					
+                    });
+                }
 			} catch (error:any) {
 				console.log(error.response );
 			}
@@ -56,6 +58,7 @@ function Chat() {
                 withCredentials: true
             });
         setSocket(newSocket)
+        console.log(socket);
     }, [setSocket])
 
     //Réception et stockage des messages par le client
