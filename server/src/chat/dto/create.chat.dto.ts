@@ -1,15 +1,10 @@
+import { Message, User } from "@prisma/client";
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+// import { Participant } from "../chat";
 
 export class CreateChatDto {
-    @IsNumber()
-    @IsNotEmpty()
-    authorId: number; //id of the user creating the chat
+    // @IsString()
+    // messages?: Message[];
 
-    @IsNumber()
-    @IsNotEmpty()
-    recipientId: number;
-
-    @IsNotEmpty()
-    @IsString()
-    message: string;
+    participantIds : number[];
 }

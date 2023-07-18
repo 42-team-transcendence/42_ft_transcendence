@@ -1,9 +1,15 @@
-export type CreateChatParams = {
-    authorId: number;
-    recipientId: number;
-    message: string;
-}
+import { Message, User } from "@prisma/client";
 
-export interface IChatService {
-    createChat(chatParams : CreateChatParams);
-}
+// export type Participant = {
+//     participantId : number
+// }
+
+// export type CreateChatParams = {
+//     creatorId: number;
+//     message?: Message;
+//     participants : User[]
+// }
+
+// export interface IChatService {
+//     createChat(chatParams : CreateChatParams);
+// }

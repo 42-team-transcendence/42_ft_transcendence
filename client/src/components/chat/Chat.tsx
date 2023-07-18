@@ -20,31 +20,28 @@ function Chat() {
 
     const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<string[]>([]);
-    const [otherUser, setOtherUser] = useState<User>();
 
-    let { userId } = useParams();
-    console.log("chat userId : " + userId);
 
-    //récupération des données de l'autre user du chat
+    const recipientId = parseInt(useParams().userId || '1');
+    console.log("chat recipientId : " + recipientId);
+
     useEffect(() => {
-		const getUser = async () => { //definition de la fonction
+		const createChat = async () => { //definition de la fonction
 			try {
-                if (userId) {
-                    const response = await axiosPrivate.get(`/users/${userId}`);
-                    console.log({user : response.data});
-                    if (!response.data) {
-                        navigate('/', {replace: false});
-                    }
-                    setOtherUser({
-                        ...response.data,					
-                    });
-                }
+                const response = await axiosPrivate.post('/chats/create',
+                    JSON.stringify({'recipients': [recipientId]}),
+                    {
+                        headers: { 'Content-Type': 'application/json'},
+                        withCredentials: true
+                    })
+                console.log({response : response.data});
 			} catch (error:any) {
 				console.log(error.response );
 			}
 		}
-		getUser(); //appel de la fonction
+		createChat(); //appel de la fonction
 	}, [])
+
 
     const send = (value : string) => {
         socket?.emit("message", value)
@@ -97,3 +94,28 @@ function Chat() {
 }
 
 export default Chat
+
+
+
+// const [otherUser, setOtherUser] = useState<User>();
+    //récupération des données de l'autre user du chat
+    // useEffect(() => {
+	// 	const getUser = async () => { //definition de la fonction
+	// 		try {
+    //             if (userId) {
+    //                 const response = await axiosPrivate.get(`/users/${userId}`);
+    //                 console.log({user : response.data});
+    //                 if (!response.data) {
+    //                     navigate('/', {replace: false});
+    //                 }
+    //                 setOtherUser({
+    //                     ...response.data,					
+    //                 });
+    //                 console.log({otherUser});
+    //             }
+	// 		} catch (error:any) {
+	// 			console.log(error.response );
+	// 		}
+	// 	}
+	// 	getUser(); //appel de la fonction
+	// }, [])
