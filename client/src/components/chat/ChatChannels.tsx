@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Chat from "./Chat";
 import {Stack, Box, Container, Divider} from '@mui/material';
-import ChatMiniature from "./ChatMiniature";
+import ChatSidebar from "./ChatSidebar";
 
 
 export default function ChatChannels() {
@@ -14,10 +14,7 @@ export default function ChatChannels() {
             justifyContent="center"
             alignItems="center"
         >
-            <Box p={10} sx={{backgroundColor : '#FF79AF', width:'58%', height:'100%'}}>
-                <ChatMiniature notif={true}></ChatMiniature>
-                <ChatMiniature notif={false}></ChatMiniature>
-            </Box>
+            <ChatSidebar></ChatSidebar>
             <Box sx={{backgroundColor : 'white', width:'2%', height:'100%'}}></Box>
             <Box p={5} sx={{backgroundColor : '#FF8100', width:'40%', height:'100%'}}>
                 <Chat></Chat>
