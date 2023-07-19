@@ -34,4 +34,15 @@ export class ChatController {
 		return (this.chatService.findChatByParticipants(participantIds));
 	}
 
+	@Post('findOrCreate')
+	findOrCreateChat(
+		@GetUser() creator,
+        @Body() payload,
+    ) {
+		console.log({payload});
+		console.log({creator});
+		const participantIds = [...payload.recipients, creator.sub];
+		return (this.chatService.findOrCreateChat(participantIds, creator.sub));
+	}
+
 }

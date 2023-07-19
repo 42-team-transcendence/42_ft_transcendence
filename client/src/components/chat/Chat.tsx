@@ -28,7 +28,7 @@ function Chat() {
     useEffect(() => {
 		const findOrCreateChat = async () => { //definition de la fonction
 			try {
-                const response = await axiosPrivate.post('/chats/findByParticipants',
+                const response = await axiosPrivate.post('/chats/findOrCreate',
                     JSON.stringify({'recipients': [recipientId]}),
                     {
                         headers: { 'Content-Type': 'application/json'},

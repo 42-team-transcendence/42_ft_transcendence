@@ -22,18 +22,16 @@ export class ChatService {
 				participants: {
 					connect: participantsArray, // connect: [{ id: 8 }, { id: 9 }, { id: 10 }],
 				},
-				participantsCount: participantsArray.length()
+				participantsCount: participantsArray.length
 			},
 			include: {
 				participants: true, // Include all participants in the returned object
 			},
 		})
-		console.log(chat);
 		return chat;
 	}
 
 	async findChatByParticipants(participantIds) {
-		console.log({participantIds})
 		//find chats that include exactly the specified participants 
 		const chat = await this.prisma.chat.findFirst({
 			where: {
@@ -46,8 +44,19 @@ export class ChatService {
 				participants: true, // Include all participants in the returned object
 			},
 		})
-		console.log({chat});
 		return chat;
+	}
+
+	//if the chat exists, return it. If it does not, create it
+	async findOrCreateChat(participantIds, creatorId) {
+		const findChat = await this.findChatByParticipants(participantIds);
+		if (!findChat) {
+			const newChat = await this.createChat(participantIds, creatorId);
+			console.log({newChat});
+			return newChat;
+		}
+		console.log({findChat});
+		return findChat;
 	}
 }
 
