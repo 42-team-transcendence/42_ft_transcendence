@@ -1,0 +1,20 @@
+.container {
+	display: flex;
+	align-items: flex-start;
+	background-color: white;
+	border-radius: 10px;
+	padding: 20px;
+	border: 2px solid black;
+	width: 100%; /* Adjust the width as needed */
+	margin-right: 70%; /* Adjust the left margin as needed */
+	margin-top: 10%; /* Adjust the top margin as needed */
+}
+
+h2 {
+	text-align: center;
+}
+
+.FriendItem {
+	justify-content: space-between; /* Justify the content inside the FriendItem component */
+	margin-bottom: 10px; /* Add spacing between friend items */
+  }

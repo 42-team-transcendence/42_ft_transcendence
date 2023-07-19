@@ -1,30 +1,95 @@
-.profile-container {
+  .profile-container_1 {
 	display: flex;
 	align-items: flex-start;
 	background-color: white;
 	border-radius: 10px;
 	padding: 20px;
 	border: 2px solid black;
+	width: 100%;
+	/*margin-right: 200%; 
+	margin-top: 100%;*/ 
 }
 
-.profile-picture-container {
+.rose-section {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	background-color: white;
+	border-radius: 10px;
+	padding: 20px;
+	flex: 2; 
+  }
+  
+  .orange-section {
+	background-color:white;
+	color: rgb(5, 5, 5);
+	border-radius: 10px;
+	padding: 20px;
+	flex: 1; 
+  }
+
+  .profile-container_2 {
+	display: flex;
+	background-color: white;
+	border-radius: 10px;
+	padding: 20px;
+	border: 2px solid black;
+	width: 100%; 
+	margin-left: 200%; 
+  }
+  
+  .profile-picture-container {
 	margin-right: 20px;
 	border: 2px solid black;
 	border-radius: 10px;
-}
-
-.profile-picture {
+  }
+  
+  .profile-picture {
 	width: 200px;
 	height: 250px;
 	border-radius: 10px;
-}
-
-.profile-info {
+  }
+  
+  .profile-info {
 	color: black;
 	text-align: left;
-}
-
-.profile-info h2 {
+  }
+  
+  .profile-info h2 {
 	text-align: center;
 	margin: 0;
-  } 
+	font-family: 'Lato';
+  }
+  
+  .profile-info h5 {
+	color: blue;
+	text-decoration: underline;
+	cursor: pointer;
+  }
+  
+  .game-list {
+	list-style: none;
+	padding: 0;
+  }
+  
+  .game-list li {
+	font-size: 16px;
+	margin-bottom: 5px;
+  }
+
+  .page{
+   background: linear-gradient(to right, #FF79AF 0%,#FF79AF 52%, white 52%, white 54%, #FF8100 54%, #FF8100 100%);
+  }
+
+  .game-table {
+	width: 100%; 
+	border-collapse: collapse;
+	border: 1px solid black; 
+  }
+  
+  .game-table th,
+  .game-table td {
+	border: 1px solid black;
+	padding: 8px; 
+	text-align: center; 
+  }

@@ -45,6 +45,10 @@
 	text-decoration-line: underline;
 }
 
+.navbar .navbar_links .navbar_link:hover{
+	color:#FF8100
+}
+
 .navbar_burger {
 	width: 40px;
 	height: 40px;
