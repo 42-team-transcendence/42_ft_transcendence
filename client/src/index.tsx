@@ -10,7 +10,7 @@ const root = createRoot(container!); // createRoot(container!) if you use TypeSc
 root.render(
 	// React.StrictMode renders components twice (on dev but not production)
 	//  in order to detect any problems with your code and warn you about them
-	<React.StrictMode>
+	// <React.StrictMode>
 		<BrowserRouter>
 		<AuthProvider>
 			<Routes>
@@ -18,5 +18,5 @@ root.render(
 			</Routes>
 		</AuthProvider>
 		</BrowserRouter>
-	</React.StrictMode>
+	// </React.StrictMode>
 );
