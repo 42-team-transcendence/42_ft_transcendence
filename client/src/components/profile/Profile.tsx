@@ -11,6 +11,7 @@ function Profile() {
 	  ];
   return (
     <PageWrapper>
+		<div className="cont">
     	<div className="profile-container_1">
         	<div className="profile-picture-container">
             <img
@@ -58,6 +59,7 @@ function Profile() {
               ))}
             </tbody>
           </table>
+		</div>
 		</div>
     </PageWrapper>
   );

@@ -1,3 +1,8 @@
+ .cont{
+	display: flex;
+	justify-content: space-between;
+ }
+
   .profile-container_1 {
 	display: flex;
 	align-items: flex-start;
@@ -6,28 +11,9 @@
 	padding: 20px;
 	border: 2px solid black;
 	width: 100%;
-	/*margin-right: 200%; 
-	margin-top: 100%;*/ 
+
 }
-
-.rose-section {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	background-color: white;
-	border-radius: 10px;
-	padding: 20px;
-	flex: 2; 
-  }
   
-  .orange-section {
-	background-color:white;
-	color: rgb(5, 5, 5);
-	border-radius: 10px;
-	padding: 20px;
-	flex: 1; 
-  }
-
   .profile-container_2 {
 	display: flex;
 	background-color: white;
@@ -35,7 +21,6 @@
 	padding: 20px;
 	border: 2px solid black;
 	width: 100%; 
-	margin-left: 200%; 
   }
   
   .profile-picture-container {
@@ -84,12 +69,12 @@
   .game-table {
 	width: 100%; 
 	border-collapse: collapse;
-	border: 1px solid black; 
+	border: 1px solid #FF79AF; 
   }
   
   .game-table th,
   .game-table td {
-	border: 1px solid black;
+	border: 2px solid #FF79AF;
 	padding: 8px; 
 	text-align: center; 
   }
