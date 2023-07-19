@@ -26,6 +26,7 @@ export class ChatService {
 			},
 			include: {
 				participants: true, // Include all participants in the returned object
+				messages : true
 			},
 		})
 		return chat;
@@ -42,6 +43,7 @@ export class ChatService {
 			},
 			include: {
 				participants: true, // Include all participants in the returned object
+				messages : true
 			},
 		})
 		return chat;

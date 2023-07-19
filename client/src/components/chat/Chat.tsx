@@ -16,7 +16,10 @@ interface User {
 
 function Chat() {
     const axiosPrivate = useAxiosPrivate();
-	const navigate = useNavigate();
+
+    const [isMounted, setIsMounted] = useState<boolean>(false);
+    const [chat, setChat] = useState<any>();
+    const [recipient, setRecipient] = useState<any>();
 
     const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<string[]>([]);
@@ -25,7 +28,13 @@ function Chat() {
     const recipientId = parseInt(useParams().userId || '1');
     console.log("chat recipientId : " + recipientId);
 
+    const renderChatInfos = () => {
+        setMessages(chat?.messages);
+        setRecipient(chat?.participants.find((e:any) => e.id === recipientId));
+    }
+
     useEffect(() => {
+        let isMounted = true;
 		const findOrCreateChat = async () => { //definition de la fonction
 			try {
                 const response = await axiosPrivate.post('/chats/findOrCreate',
@@ -35,12 +44,19 @@ function Chat() {
                         withCredentials: true
                     })
                 console.log({response : response.data});
+                isMounted && setChat(response.data);
 			} catch (error:any) {
 				console.log(error.response );
 			}
 		}
 		findOrCreateChat(); //appel de la fonction
-	}, [])
+        renderChatInfos();
+        setIsMounted(true);
+
+        return () => {
+			isMounted = false;
+		}	
+    }, [])
 
 
     const send = (value : string) => {
@@ -70,26 +86,26 @@ function Chat() {
     }, [messageListener]);
 
     return (
-		<PageWrapper>
-			<Box p={3}
-				sx={{
-					backgroundColor:'white',
-					height:'100%',
-					border: '2px solid black',
-					borderRadius:'10px',
-					display:'flex',
-					flexDirection: 'column',
-					justifyContent: 'space-between' 
-					
-				}}
-			>
-				<Miniature></Miniature>
-				<Messages messages={messages}></Messages>
-				<Box>
-					<MessageInput send={send}></MessageInput>
-				</Box>
-			</Box>
-		</PageWrapper>
+            <Box p={3}
+                sx={{
+                    backgroundColor:'white',
+                    height:'100%',
+                    border: '2px solid black',
+                    borderRadius:'10px',
+                    display:'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between' 
+                    
+                }}
+            >
+            {/* { chat ? ( */}
+                <Miniature nickname={recipient?.nickname}></Miniature>
+                <Messages messages={messages}></Messages>
+                <Box>
+                    <MessageInput send={send}></MessageInput>
+                </Box>
+            </Box>
+        // ): <p> No chat to display</p>}
     )
 }
 

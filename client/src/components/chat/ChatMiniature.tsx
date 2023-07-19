@@ -11,7 +11,7 @@ export default function ChatMiniature({notif}:{notif:boolean}) {
             }}
             mt={3} pt={1} pb={1}
         >
-            <Miniature></Miniature>
+            <Miniature nickname={'Tchoupi'}></Miniature>
             {/* margin left margin top */}
             <Box ml={0} mt={0}>
                 <div>blah blah blah</div>
