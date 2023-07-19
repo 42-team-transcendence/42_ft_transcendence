@@ -29,16 +29,17 @@ model User {
 }
 
 model Chat {
-  id            Int       @id @default(autoincrement())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  creator       User      @relation(fields: [creatorId], references: [id])
-  creatorId     Int
+  creator           User      @relation(fields: [creatorId], references: [id])
+  creatorId         Int
 
-  participants  User[]    @relation("chatParticipants")
-  
-  messages      Message[]
+  participants      User[]    @relation("chatParticipants")
+  participantsCount Int       @default(2)
+
+  messages          Message[]
 
   @@map("chats")
 }

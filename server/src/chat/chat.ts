@@ -1,4 +1,4 @@
-import { Message, User } from "@prisma/client";
+// import { Message, User } from "@prisma/client";
 
 // export type Participant = {
 //     participantId : number

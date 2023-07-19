@@ -21,7 +21,8 @@ export class ChatService {
 				creatorId,
 				participants: {
 					connect: participantsArray, // connect: [{ id: 8 }, { id: 9 }, { id: 10 }],
-				}
+				},
+				participantsCount: participantsArray.length()
 			},
 			include: {
 				participants: true, // Include all participants in the returned object
@@ -31,4 +32,29 @@ export class ChatService {
 		return chat;
 	}
 
+	async findChatByParticipants(participantIds) {
+		console.log({participantIds})
+		//find chats that include exactly the specified participants 
+		const chat = await this.prisma.chat.findFirst({
+			where: {
+				AND : [
+					{participants : {every : {id : {in: participantIds}}}},
+					{participantsCount : participantIds.length}
+				]
+			},
+			include: {
+				participants: true, // Include all participants in the returned object
+			},
+		})
+		console.log({chat});
+		return chat;
+	}
 }
+
+// AND : [{
+// 	participants : {
+// 	none: {id : {notIn: participantIds}}
+// }},
+// { 
+// 	participantsCount : participantIds.length()
+// }]
