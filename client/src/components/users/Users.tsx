@@ -70,7 +70,7 @@ import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios, { CancelTokenSource } from 'axios';
-import Logout from "../logout/Logout";
+import Miniature from "../miniature/Miniature";
 
 interface User {
   nickname: string;
@@ -129,7 +129,9 @@ function Users() {
 						return (
               <button key={i}
                 onClick={() => goToUserProfile(user)}
-              >{user?.nickname}</button>
+              ><Miniature nickname={user?.nickname}></Miniature>
+                {/* {user?.nickname} */}
+              </button>
             )})}
         </ul>
       ) : (
