@@ -13,7 +13,7 @@ WORKDIR /app
 
 
 # Change ownership of /app directory to the node user (non-root user within the Node.js Docker image)
-RUN chown root:root . 
+# RUN chown root:root . 
 # RUN chown -R node:node /app
 
 # Switch to the node user
