@@ -1,20 +1,35 @@
+import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Box } from "@mui/material";
 import Miniature from "../miniature/Miniature";
 
-export default function ChatMiniature({notif}:{notif:boolean}) {
+export default function ChatMiniature(
+    {notif, nickname, lastMessage, userId}:{
+        notif:boolean,
+        nickname:string,
+        lastMessage:string,
+        userId:number
+    }) {
+        const navigate = useNavigate();
+        const location = useLocation();
 
     return (
-        <Box sx={{
+        <Box 
+            onClick={() => navigate(`/chat/${userId}`, {replace: false})}
+            sx={{
                 backgroundColor: notif ? 'white' : '#00000021',
                 border: notif ? '2px solid black' : 'none',
-                borderRadius: '10px'
+                borderRadius: '10px',
+                "&:hover": {
+                    border: "1px solid #FF8100",
+                    color: '#FF8100',
+                },
             }}
             mt={3} pt={1} pb={1}
         >
-            <Miniature></Miniature>
+            <Miniature nickname={nickname}></Miniature>
             {/* margin left margin top */}
             <Box ml={0} mt={0}>
-                <div>blah blah blah</div>
+                <div>{lastMessage}</div>
             </Box>
         </Box>
     )

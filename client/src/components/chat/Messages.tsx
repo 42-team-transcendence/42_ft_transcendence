@@ -13,7 +13,7 @@ export default function Messages({messages}:{messages : string[]}) {
     return (
         <Box>
             <ul>
-                {messages.map((msg, index) => {
+                {messages?.map((msg, index) => {
                     return <Message key={index}>{msg}</Message>
                 })}
             </ul>

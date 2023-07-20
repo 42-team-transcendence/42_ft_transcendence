@@ -12,23 +12,79 @@ export class ChatService {
 
 	// async createChat(params: CreateChatParams, creator:User) {
 	async createChat(participants, creatorId) {
-		let participantsArray = participants.map((id: number) => {return {id : id}});
-		
-		//création du chat dans la DB : ajout dans la table et connexion
-		// avec les participants (table User)
-		const chat = await this.prisma.chat.create({
-			data: {
-				creatorId,
-				participants: {
-					connect: participantsArray, // connect: [{ id: 8 }, { id: 9 }, { id: 10 }],
-				}
+		try {
+			let participantsArray = participants.map((id: number) => {return {id : id}});
+			
+			//création du chat dans la DB : ajout dans la table et connexion
+			// avec les participants (table User)
+			const chat = await this.prisma.chat.create({
+				data: {
+					creatorId,
+					participants: {
+						connect: participantsArray, // connect: [{ id: 8 }, { id: 9 }, { id: 10 }],
+					},
+					participantsCount: participantsArray.length
+				},
+				include: {
+					participants: true, // Include all participants in the returned object
+					messages : true
+				},
+			})
+			return chat;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+	}
+
+	async findChatByParticipants(participantIds) {
+		//find chats that include exactly the specified participants 
+		const chat = await this.prisma.chat.findFirst({
+			where: {
+				AND : [
+					{participants : {every : {id : {in: participantIds}}}},
+					{participantsCount : participantIds.length}
+				]
 			},
 			include: {
 				participants: true, // Include all participants in the returned object
+				messages : true
 			},
 		})
-		console.log(chat);
 		return chat;
 	}
 
+	//if the chat exists, return it. If it does not, create it
+	async findOrCreateChat(participantIds, creatorId) {
+		try {
+			const findChat = await this.findChatByParticipants(participantIds);
+			if (!findChat) {
+				const newChat = await this.createChat(participantIds, creatorId);
+				console.log({newChat});
+				return newChat;
+			}
+			console.log({findChat});
+			return findChat;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+	}
+
+	async findAllMyChats(me) {
+		//find all the chats where I am 
+		const myChats = await this.prisma.chat.findMany({
+			where: {
+				participants : {
+					some : {id : {in: [me.sub]}}
+				},
+			},
+			include: {
+				participants: true, // Include all participants in the returned object
+				messages : true // Include all messages in the returned object
+			},
+		})
+		console.log({myChats : myChats});
+		return myChats;
+	}
 }
