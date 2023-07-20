@@ -49,6 +49,7 @@ export class ChatController {
 	findAllMyChats(
 		@GetUser() me,
     ) {
+		console.log("enter controller chat/findAllMyChats");
 		console.log({me});
 		return (this.chatService.findAllMyChats(me));
 	}

@@ -12,9 +12,10 @@ function Conversation({chat}:{chat:any}) {
     const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<string[]>([...chat.messages]);
 
-    const recipientId = parseInt(useParams().userId || '1'); //TO DO: A MODIFIER
+    //TO DO: A MODIFIER POUR RENDRE PLUS SOLIDE
+    const recipientId = parseInt(useParams().userId || '');
     console.log("chat recipientId : " + recipientId);
-    const recipient = chat?.participants.find((e:any) => e.id === recipientId)
+    const recipient = (chat?.participants.find((e:any) => e.id === recipientId))
 
     const send = (value : string) => {
         socket?.emit("message", value)
@@ -51,15 +52,19 @@ function Conversation({chat}:{chat:any}) {
                 borderRadius:'10px',
                 display:'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between' 
-                
+                justifyContent: recipient? 'space-between': 'center',
+                alignItems: 'center'
             }}
         >
-            <Miniature nickname={recipient.nickname}></Miniature>
-            <Messages messages={messages}></Messages>
-            <Box>
-                <MessageInput send={send}></MessageInput>
-            </Box>
+            {recipient? (
+            <>
+                <Miniature nickname={recipient.nickname}></Miniature>
+                <Messages messages={messages}></Messages>
+                <Box>
+                    <MessageInput send={send}></MessageInput>
+                </Box>
+            </>
+            ) : <div>Select conversation</div>}
         </Box>
     )
 }
