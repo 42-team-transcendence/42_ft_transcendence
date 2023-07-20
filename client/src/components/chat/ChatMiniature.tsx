@@ -1,7 +1,12 @@
 import { Container, Box } from "@mui/material";
 import Miniature from "../miniature/Miniature";
 
-export default function ChatMiniature({notif}:{notif:boolean}) {
+export default function ChatMiniature(
+    {notif, nickname, lastMessage}:{
+        notif:boolean,
+        nickname:string,
+        lastMessage:string,
+    }) {
 
     return (
         <Box sx={{
@@ -11,10 +16,10 @@ export default function ChatMiniature({notif}:{notif:boolean}) {
             }}
             mt={3} pt={1} pb={1}
         >
-            <Miniature nickname={'Tchoupi'}></Miniature>
+            <Miniature nickname={nickname}></Miniature>
             {/* margin left margin top */}
             <Box ml={0} mt={0}>
-                <div>blah blah blah</div>
+                <div>{lastMessage}</div>
             </Box>
         </Box>
     )
