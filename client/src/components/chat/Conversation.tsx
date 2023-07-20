@@ -11,11 +11,11 @@ function Conversation({chat}:{chat:any}) {
 
     const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<string[]>([...chat.messages]);
-
+    
     //TO DO: A MODIFIER POUR RENDRE PLUS SOLIDE
     const recipientId = parseInt(useParams().userId || '');
-    console.log("chat recipientId : " + recipientId);
     const recipient = (chat?.participants.find((e:any) => e.id === recipientId))
+    console.log("chat recipientId : " + recipientId);
 
     const send = (value : string) => {
         socket?.emit("message", value)
@@ -70,3 +70,21 @@ function Conversation({chat}:{chat:any}) {
 }
 
 export default Conversation
+
+
+// useEffect(() => { //Fetch chat data
+//     const findOrCreateChat = async () => { //definition de la fonction
+//         try {
+//             const response = await axiosPrivate.post('/chats/findOrCreate',
+//                 JSON.stringify({'recipients': [recipientId]}),
+//                 {
+//                     headers: { 'Content-Type': 'application/json'},
+//                     withCredentials: true
+//                 })
+//             setChat(response.data);
+//         } catch (error:any) {
+//             console.log(error.response );
+//         }
+//     }
+//     findOrCreateChat(); //appel de la fonction
+// }, [recipientId])

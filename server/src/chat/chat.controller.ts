@@ -11,7 +11,7 @@ export class ChatController {
 	constructor (
 		private chatService: ChatService
 	) {}
-	
+
 	@Post('create')
 	createChat(
 		@GetUser() creator,
@@ -39,10 +39,18 @@ export class ChatController {
 		@GetUser() creator,
         @Body() payload,
     ) {
-		console.log({payload});
-		console.log({creator});
-		const participantIds = [...payload.recipients, creator.sub];
-		return (this.chatService.findOrCreateChat(participantIds, creator.sub));
+		try {
+
+			console.log({payload});
+			console.log({creator});
+			const participantIds = [...payload.recipients, creator.sub];
+			const participantIdsNoDuplicates = [...new Set(participantIds)]
+			if (participantIdsNoDuplicates.length < 2)
+			throw new ForbiddenException('Cannot findOrCreate Chat with 1 user',);
+			return (this.chatService.findOrCreateChat(participantIdsNoDuplicates, creator.sub));
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	@Get('findAllMyChats')
