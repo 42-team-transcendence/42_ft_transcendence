@@ -25,7 +25,7 @@ function Chat() {
     const [messages, setMessages] = useState<string[]>([]);
 
 
-    const recipientId = parseInt(useParams().userId || '1');
+    const recipientId = parseInt(useParams().userId || '1'); //TO DO: A MODIFIER
     console.log("chat recipientId : " + recipientId);
 
     const renderChatInfos = () => {
@@ -33,8 +33,7 @@ function Chat() {
         setRecipient(chat?.participants.find((e:any) => e.id === recipientId));
     }
 
-    useEffect(() => {
-        let isMounted = true;
+    useEffect(() => { //Fetch chat data
 		const findOrCreateChat = async () => { //definition de la fonction
 			try {
                 const response = await axiosPrivate.post('/chats/findOrCreate',
@@ -43,20 +42,21 @@ function Chat() {
                         headers: { 'Content-Type': 'application/json'},
                         withCredentials: true
                     })
-                console.log({response : response.data});
-                isMounted && setChat(response.data);
+                setChat(response.data);
 			} catch (error:any) {
 				console.log(error.response );
 			}
 		}
 		findOrCreateChat(); //appel de la fonction
-        renderChatInfos();
         setIsMounted(true);
+    }, [recipientId])
 
-        return () => {
-			isMounted = false;
-		}	
-    }, [])
+    useEffect(() => {// When chat state is updated, render chat infos
+        if (chat) {
+            renderChatInfos(); // Call the function when chat is updated
+            console.log({ chatInUseEffect: chat }); // Now the chat state will be updated
+        }
+    }, [chat]);
 
 
     const send = (value : string) => {
@@ -86,26 +86,28 @@ function Chat() {
     }, [messageListener]);
 
     return (
-            <Box p={3}
-                sx={{
-                    backgroundColor:'white',
-                    height:'100%',
-                    border: '2px solid black',
-                    borderRadius:'10px',
-                    display:'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between' 
-                    
-                }}
-            >
-            {/* { chat ? ( */}
-                <Miniature nickname={recipient?.nickname}></Miniature>
-                <Messages messages={messages}></Messages>
-                <Box>
-                    <MessageInput send={send}></MessageInput>
-                </Box>
-            </Box>
-        // ): <p> No chat to display</p>}
+        <Box p={3}
+            sx={{
+                backgroundColor:'white',
+                height:'100%',
+                border: '2px solid black',
+                borderRadius:'10px',
+                display:'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between' 
+                
+            }}
+        >
+            { recipient ? ( // Conditionally render the components only when recipient is available
+                <>
+                    <Miniature nickname={recipient?.nickname}></Miniature>
+                    <Messages messages={messages}></Messages>
+                    <Box>
+                        <MessageInput send={send}></MessageInput>
+                    </Box>
+                </>
+            ): <p> Loading Recipient</p>}
+        </Box>
     )
 }
 
