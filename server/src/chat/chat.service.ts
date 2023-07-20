@@ -60,12 +60,21 @@ export class ChatService {
 		console.log({findChat});
 		return findChat;
 	}
-}
 
-// AND : [{
-// 	participants : {
-// 	none: {id : {notIn: participantIds}}
-// }},
-// { 
-// 	participantsCount : participantIds.length()
-// }]
+	async findAllMyChats(me) {
+		//find all the chats where I am 
+		const myChats = await this.prisma.chat.findMany({
+			where: {
+				participants : {
+					some : {id : {in: [me.sub]}}
+				},
+			},
+			include: {
+				participants: true, // Include all participants in the returned object
+				messages : true // Include all messages in the returned object
+			},
+		})
+		console.log({myChats : myChats});
+		return myChats;
+	}
+}

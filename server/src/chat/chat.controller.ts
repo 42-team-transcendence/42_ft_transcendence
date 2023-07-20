@@ -45,4 +45,12 @@ export class ChatController {
 		return (this.chatService.findOrCreateChat(participantIds, creator.sub));
 	}
 
+	@Get('findAllMyChats')
+	findAllMyChats(
+		@GetUser() me,
+    ) {
+		console.log({me});
+		return (this.chatService.findAllMyChats(me));
+	}
+
 }
