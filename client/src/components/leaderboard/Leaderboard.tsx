@@ -1,15 +1,17 @@
-import React from 'react'
 import Users from '../users/Users'
 import PageWrapper from '../navbar/pageWrapper'
+import Logout from '../logout/Logout'
+import {Box} from '@mui/material'
 
 function Leaderboard() {
   return (
 	<PageWrapper>
-		<div>
+		<Box >
 			<h1>Leaderboard</h1>
-			< Users />
-		</div>
-	</PageWrapper>	
+			<Users />
+			<Logout />
+		</Box>
+	</PageWrapper>
   )
 }
 
