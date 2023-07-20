@@ -74,6 +74,7 @@ import Logout from "../logout/Logout";
 
 interface User {
   nickname: string;
+  id: number
   // Autres propriétés de l'utilisateur si nécessaire
 }
 
@@ -115,20 +116,25 @@ function Users() {
     };
   }, [axiosPrivate, navigate, location]);
 
+	const goToUserProfile = (user:User) => {
+		navigate(`/profile/${user.id}`, {replace: false});
+	}
+
   return (
-    <article>
+    <article style={{marginBottom:"90px"}}>
       <h2>Users List</h2>
       {users.length ? (
-        <ul>
-          {users.map((user, i) => (
-            <li key={i}>{user?.nickname}</li>
-          ))}
+        <ul style={{display: "flex", flexDirection:'column'}}>
+          {users.map((user, i) => {
+						return (
+              <button key={i}
+                onClick={() => goToUserProfile(user)}
+              >{user?.nickname}</button>
+            )})}
         </ul>
       ) : (
         <p>No users to display</p>
       )}
-      <Logout />
-      {/* <button onClick={() => refresh()}>Refresh</button> */}
     </article>
   );
 }
