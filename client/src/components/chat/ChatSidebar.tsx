@@ -15,6 +15,7 @@ export default function ChatSidebar(
                     <ChatMiniature 
                         key={i}
                         notif={true}
+                        userId={recipient?.id}
                         nickname={recipient?.nickname}
                         lastMessage={chat?.messages[chat?.messages.length - 1]}
                     ></ChatMiniature>

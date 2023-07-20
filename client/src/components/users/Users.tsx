@@ -130,7 +130,6 @@ function Users() {
               <button key={i}
                 onClick={() => goToUserProfile(user)}
               ><Miniature nickname={user?.nickname}></Miniature>
-                {/* {user?.nickname} */}
               </button>
             )})}
         </ul>
