@@ -11,7 +11,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ showLinks, handleShowLinks }) => {
   return (
     <nav className={`navbar ${showLinks ? "show_nav" : "hide_nav"}`}>
-      <div className='navbar_logo'> PONG </div>
+      <Link to="/" className='navbar_logo'> PONG </Link>
       <div className='navbar_links'>
         <Link to="/" className="navbar_link">Home</Link>
         <Link to="/play" className="navbar_link">Play</Link>
@@ -19,12 +19,10 @@ const Navbar: React.FC<NavbarProps> = ({ showLinks, handleShowLinks }) => {
         <Link to="/friendlist" className="navbar_link">Friends List</Link>
         <Link to="/profile" className="navbar_link">View/Change Profile</Link>
         <SearchAppBar />
-      </div>
-      <div className="logout_item"> {/* Utiliser une div pour entourer le composant Logout */}
         <Logout />
       </div>
       <button className='navbar_burger' onClick={handleShowLinks}>
-        <span className='burger_bar'></span>
+    	<span className='burger_bar'></span>
       </button>
     </nav>
   );
