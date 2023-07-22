@@ -96,7 +96,7 @@ export default function ChatChannels() {
                         display : 'flex'
                     }}>
                         { currentChat ? (
-                            <Conversation chat={currentChat}></Conversation>
+                            <Conversation chat={currentChat} currentUser={currentUser}></Conversation>
                         ) : <p> Select Chat</p>}
                     </Box>
                 </>
