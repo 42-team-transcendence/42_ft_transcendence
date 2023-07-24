@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import PageWrapper from "../navbar/pageWrapper";
-
+import '../../styles/Profile.css';
 
 function Profile() {
   // Sample game history data
