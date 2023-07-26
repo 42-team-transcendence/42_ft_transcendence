@@ -3,7 +3,18 @@ import TextField from '@mui/material/TextField';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 
-function Username ({ stateUser, fonctionUpdate }) {
+interface UsernameProps {
+    stateUser: {
+        user: string;
+        validName: boolean;
+    };
+    fonctionUpdate: {
+        updateUser: (value: string) => void;
+        updateValideName: (isValid: boolean) => void;
+    };
+}
+
+const Username: React.FC<UsernameProps> = ({ stateUser, fonctionUpdate }) => {
 
    const {user, validName} = stateUser;
    const {updateUser, updateValideName} = fonctionUpdate;
