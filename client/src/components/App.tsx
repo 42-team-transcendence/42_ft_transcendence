@@ -18,6 +18,7 @@ import OtherUserProfile from './profile/OtherUserProfile';
 function App() {
 //Contient toutes les URLS / Routes de notre app front.
   return (
+	<main className="App">
       <Routes>
         <Route path="/" element={<Layout />}>
 
@@ -49,6 +50,7 @@ function App() {
         
         </Route>
       </Routes>
+	  </main>
   );
 }
 
