@@ -6,7 +6,18 @@ import TextField from '@mui/material/TextField';
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-function Email ({ stateEmail, fonctionUpdateEmail }) {
+interface EmailProps {
+    stateEmail: {
+        email: string;
+        validEmail: boolean;
+    };
+    fonctionUpdateEmail: {
+        updateEmail: (value: string) => void;
+        updateValideEmail: (value: boolean) => void;
+    };
+}
+
+const Email: React.FC<EmailProps> = ({ stateEmail, fonctionUpdateEmail }) => {
 
     const {email, validEmail} = stateEmail;
     const {updateEmail, updateValideEmail} = fonctionUpdateEmail;

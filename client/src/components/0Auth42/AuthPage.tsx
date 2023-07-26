@@ -1,7 +1,7 @@
 import axios from "../../api/axios"
 import CustomButton from "../../styles/buttons/CustomButton";
 
-export default function AuthPage() {
+const AuthPage:React.FC = () => {
 
     const handleClick = () => {
         try{
@@ -23,3 +23,5 @@ export default function AuthPage() {
         </CustomButton>
     )
 }
+
+export default AuthPage;

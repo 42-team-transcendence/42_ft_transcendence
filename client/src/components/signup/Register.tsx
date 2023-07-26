@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
-
+import { AxiosError } from 'axios';
 import axios from "../../api/axios";
 import Username from "./Username";
 import Email from "./Email";
@@ -32,10 +32,10 @@ export default function Register() {
     
     const stateUser = {user, validName};
 
-    const updateUser = (newValue) => {
+    const updateUser = (newValue: string) => {
         setUser(newValue);
     }
-    const updateValideName = (newValue) => {
+    const updateValideName = (newValue: boolean) => {
         setValidName(newValue);
     }
     const fonctionUpdate = {updateUser, updateValideName};
@@ -48,10 +48,10 @@ export default function Register() {
 
     const stateEmail = {email, validEmail};
 
-    const updateEmail = (newValue) => {
+    const updateEmail = (newValue: string) => {
         setEmail(newValue);
     }
-    const updateValideEmail = (newValue) => {
+    const updateValideEmail = (newValue: boolean) => {
         setValidEmail(newValue);
     }
     const fonctionUpdateEmail = {updateEmail, updateValideEmail};
@@ -64,10 +64,10 @@ export default function Register() {
     
     const stateMatchPwd = {matchPwd, validMatch, user};
     
-    const updateMatchPwd = (newValue) => {
+    const updateMatchPwd = (newValue: string) => {
         setMatchPwd(newValue);
     }
-    const updateValideMatch = (newValue) => {
+    const updateValideMatch = (newValue: boolean) => {
         setValidMatch(newValue);
     }
     
@@ -81,10 +81,10 @@ export default function Register() {
     
     const statePwd = {user, pwd, matchPwd, validPwd};
     
-    const updatePwd = (newValue) => {
+    const updatePwd = (newValue: string) => {
         setPwd(newValue);
     }
-    const updateValidePwd = (newValue) => {
+    const updateValidePwd = (newValue: boolean) => {
         setValidPwd(newValue);
     }
     const fonctionUpdatePwd = {updatePwd, updateValidePwd, updateValideMatch};
@@ -92,14 +92,14 @@ export default function Register() {
     
 	// =============================================================================
 	// =============================================================================
-    const [errMsg, setErrMsg] = useState('');
+    const [errMsg, setErrMsg] = useState<string>('');
 
     useEffect(() => {
         setErrMsg('');
     }, [user, email, pwd, matchPwd])
 
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); //on enlève le comportement par défaut du bouton pour mettre le n$otre
         
         try {
@@ -115,7 +115,7 @@ export default function Register() {
             setAuth({email, pwd, accessToken});
             navigate(from, { replace: false});
             //TODO if needed : clear input fields avec les setStates
-        } catch (err) {
+        } catch (err: AxiosError | any) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response) {
@@ -141,7 +141,6 @@ export default function Register() {
 						alignItems: 'center',
 						'& .MuiTextField-root': { m: 1, width: '25ch' },
 					}}
-					autoComplete="off"
 				>
                     <AuthPage />
                     <p>

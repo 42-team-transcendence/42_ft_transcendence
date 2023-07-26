@@ -2,7 +2,18 @@ import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TextField from '@mui/material/TextField';
 
-function MatchPwd ({ stateMatchPwd, fonctionUpdateMatchPwd }) {
+interface MatchPwdProps {
+    stateMatchPwd: {
+        matchPwd: string;
+        validMatch: boolean;
+        user: string; // what's its actual type?
+    };
+    fonctionUpdateMatchPwd: {
+        updateMatchPwd: (value: string) => void;
+    };
+}
+
+const MatchPwd: React.FC<MatchPwdProps> = ({ stateMatchPwd, fonctionUpdateMatchPwd }) => {
 
    const {matchPwd, validMatch, user} = stateMatchPwd;
    const {updateMatchPwd} = fonctionUpdateMatchPwd;
@@ -40,7 +51,7 @@ function MatchPwd ({ stateMatchPwd, fonctionUpdateMatchPwd }) {
 	autoComplete="off"
 	onChange={(e) => updateMatchPwd(e.target.value)}
 	value={matchPwd}
-	error={!validMatch && matchPwd }
+	error={!validMatch && matchPwd.length > 0}
 	helperText={
 		!validMatch && (
 			<>	password not identical </>
