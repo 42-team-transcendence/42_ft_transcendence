@@ -5,6 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 import Email from './Email';
 import Password from './Password';
+import { AxiosError } from 'axios';
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -17,7 +18,9 @@ import '../../styles/Register_Login.css';
  // =============================================================================
 const LOGIN_URL = '/auth/signin'
 
-function Login () {
+interface LoginProps {}
+
+const Login: React.FC<LoginProps> = () => {
 
     const { setAuth } = useAuth();
 
@@ -31,7 +34,7 @@ function Login () {
 
     const stateEmail = {email};
 
-    const updateEmail = (newValue) => {
+    const updateEmail = (newValue: string) => {
         setEmail(newValue);
     }
 
@@ -43,7 +46,7 @@ function Login () {
 
     const statePwd = {pwd};
 
-    const updatePwd = (newValue) => {
+    const updatePwd = (newValue: string) => {
         setPwd(newValue);
     }
 
@@ -57,7 +60,7 @@ function Login () {
         setErrMsg('');
     }, [email, pwd])
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
@@ -75,7 +78,7 @@ function Login () {
             setEmail('');
             setPwd('');
             navigate(from, { replace: true});
-        } catch (err) {
+        } catch (err: AxiosError | any) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response) {
@@ -88,15 +91,13 @@ function Login () {
         <section className="Register">
             <h1 className="title">PONG</h1>
             <form className="formLogin" onSubmit={handleSubmit}>
-				<Box
-						sx={{
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-							'& .MuiTextField-root': { m: 1, width: '25ch' },
-						}}
-						autoComplete="off"
-				>
+				<Box 
+					sx={{
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						'& .MuiTextField-root': { m: 1, width: '25ch' },
+					}}>
                 
                 <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail} />
                 <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd} />

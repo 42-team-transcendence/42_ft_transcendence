@@ -1,6 +1,15 @@
 import TextField from '@mui/material/TextField';
 
-function Email ({ stateEmail, fonctionUpdateEmail}) {
+interface EmailProps {
+	stateEmail: {
+	  email: string;
+	};
+	fonctionUpdateEmail: {
+	  updateEmail: (email: string) => void;
+	};
+  }
+
+const Email: React.FC<EmailProps> = ({ stateEmail, fonctionUpdateEmail}) =>{
 
   	const {email}  = stateEmail;
 	const {updateEmail} = fonctionUpdateEmail;
