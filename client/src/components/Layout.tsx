@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-const Layout = () => {
+const Layout: React.FC = () => {
     return (
         <main className="App">
             <Outlet />
