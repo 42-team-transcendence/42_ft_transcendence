@@ -1,9 +1,9 @@
 import React from 'react';
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import { styled } from '@mui/system';
 
 
-const CustomButtonWrapper = styled(Button)(({ theme }) => ({
+const CustomButtonWrapper = styled(Button)<ButtonProps>(({ theme }) => ({
 	zIndex: 1,
 	display: 'flex',
 	// textTransform: 'lowercase !important',
@@ -12,7 +12,6 @@ const CustomButtonWrapper = styled(Button)(({ theme }) => ({
 	color: 'white',
 	font: 'Lato',
 	textAlign: 'center',
-	color: 'white',
 	fontFamily: 'Lato',
 	fontSize: '28px',
 	fontWeight: 900,
@@ -21,8 +20,7 @@ const CustomButtonWrapper = styled(Button)(({ theme }) => ({
 
 }));
 
-
-const CustomButton = ({ children, onClick }) => {
+const CustomButton:React.FC<ButtonProps> = ({ children, onClick }) => {
 	return (
 	  <CustomButtonWrapper onClick={onClick}>
 		<div

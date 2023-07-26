@@ -28,7 +28,9 @@ import { createContext, useState, useEffect } from "react";
 interface Auth {
   // Define the structure of the auth object
   accessToken: string;
-  refreshToken: string;
+  //refreshToken: string;
+  email:string;
+  pwd:string;
 }
 
 interface AuthContextProps {

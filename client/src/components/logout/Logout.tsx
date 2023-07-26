@@ -15,7 +15,7 @@ const Logout: React.FC = () => {
     const handleClick = () => {
 
         axiosPrivate.post('/auth/logout');
-        setAuth({ accessToken: '', refreshToken: '' });// supprime l'accessToken du state auth.
+        setAuth({ accessToken: '', email: '', pwd: ''});// supprime l'accessToken du state auth.
         navigate(from_signup, { replace: true});//redirige vers la page register en remplacant l'historique.
     }
 
