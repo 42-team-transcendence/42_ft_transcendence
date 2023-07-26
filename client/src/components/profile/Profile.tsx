@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import PageWrapper from "../navbar/pageWrapper";
-
+import '../../styles/Profile.css';
 
 function Profile() {
   // Sample game history data
@@ -23,7 +23,7 @@ function Profile() {
             borderRadius: 10,
             padding: 2,
             border: "2px solid black",
-            width: "100%",
+            
           }}
         >
           <Box sx={{ marginRight: 2, border: "2px solid black", borderRadius: 10 }}>
@@ -33,29 +33,33 @@ function Profile() {
               style={{ width: 180, height: 230, borderRadius: 10 }}
             />
           </Box>
-          <Box sx={{ color: "black", textAlign: "left" }}>
-            <Typography variant="h3" align="center">
-              Profile
-            </Typography>
-            <br />
-            <Typography variant="h4">Alf</Typography>
-            <Typography variant="h6" sx={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}>
-              modifier
-            </Typography>
-            <br />
-            <Typography variant="h5">Rank 1 | Lvl 800</Typography>
-            <br />
-            <Typography variant="h5">Email</Typography>
-            <Typography variant="h6" sx={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}>
-              modifier
-            </Typography>
-            <br />
-            <Typography variant="h5">Password</Typography>
-            <Typography variant="h6" sx={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}>
-              modifier
-            </Typography>
-            <br />
-            <Typography variant="h5">Double factors</Typography>
+          <Box sx={{ color: "black", textAlign: "left" }}>    
+			<Box>
+				<Typography variant="h5">Alf</Typography>
+				<span style={{ fontSize:"0.9rem", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
+				modifier
+				</span>		
+				<Typography variant="h6">Rank 1 | Lvl 800</Typography>
+			</Box>
+           
+			<Box sx={{
+				display: "flex",
+				flexDirection: "column",
+				backgroundColor: "white",
+				padding: 2
+			}}>
+				<Typography variant="h6">Email</Typography>
+				<span style={{ fontSize:"0.9rem", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
+				modifier
+				</span>
+				<br/>
+				<Typography variant="h6">Password</Typography>
+				<span style={{ fontSize:"0.9rem", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
+				modifier
+				</span>
+				
+				<Typography variant="h6">Double factors</Typography>
+			</Box>
           </Box>
         </Box>
 
@@ -67,11 +71,10 @@ function Profile() {
             borderRadius: 10,
             padding: 2,
             border: "2px solid black",
-            width: "100%",
           }}
         >
           <Box sx={{ width: "100%" }}>
-            <Typography variant="h2">Game History</Typography>
+            <Typography variant="h4">Game History</Typography>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }}>
                 <TableHead>

@@ -1,4 +1,4 @@
- .cont{
+ /*.cont{
 	display: flex;
 	justify-content: space-between;
  }
@@ -77,4 +77,8 @@
 	border: 2px solid #FF79AF;
 	padding: 8px; 
 	text-align: center; 
-  }
+  }*/
+
+  /*.App{
+	background: linear-gradient(to right, #FF79AF 0%,#FF79AF 52%, white 52%, white 54%, #FF8100 54%, #FF8100 100%);
+  }*/

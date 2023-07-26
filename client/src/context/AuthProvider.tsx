@@ -27,10 +27,8 @@ import { createContext, useState, useEffect } from "react";
 
 interface Auth {
   // Define the structure of the auth object
-  // Adjust the types accordingly based on the actual structure
   accessToken: string;
   refreshToken: string;
-  // ... other properties
 }
 
 interface AuthContextProps {
