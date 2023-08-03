@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import Navbar from "../navbar/Navbar";
 import CustomButton from "../../styles/buttons/CustomButton";
+import  "../../styles/HomepageStyle.css";
+
 
 const Homepage: React.FC = () => {
     const navigate = useNavigate();

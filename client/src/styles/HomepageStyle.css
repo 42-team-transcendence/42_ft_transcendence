@@ -1,14 +1,16 @@
 .column {
 	text-align: center;
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh; 
 	background: linear-gradient(to bottom, #FF79AF 0%,#FF79AF 52%, white 52%, white 54%, #FF8100 54%, #FF8100 100%);
   }
 
-
+.h1 {
+	font-family: 'Alfa Slab One';
+}
 .backgroundTop {
 
 	display: flex;
@@ -18,6 +20,7 @@
 
 .welcomeHome
 {
+	font-family: Alfa Slab One;
 	margin-top: auto; 
 	margin-bottom: auto; 
 	display: flex;
