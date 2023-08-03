@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Navbar from "../navbar/Navbar";
 import CustomButton from "../../styles/buttons/CustomButton";
 import  "../../styles/HomepageStyle.css";
+import ScoreButton from '../scorebutton/Score';
 
 
 const Homepage: React.FC = () => {
@@ -41,6 +42,7 @@ const Homepage: React.FC = () => {
 
             {!showLinks && (
                 <div className="show_button">
+					<ScoreButton/>
                     <CustomButton onClick={handlePlay}> PLAY </CustomButton>
                     <CustomButton onClick={handleRules}> How to Play </CustomButton>
                     <CustomButton onClick={handleLeaderboard}> Leaderboard </CustomButton>

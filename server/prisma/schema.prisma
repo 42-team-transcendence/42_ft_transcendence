@@ -11,20 +11,23 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+	id        		Int       @id @default(autoincrement())
+	createdAt 		DateTime  @default(now())
+	updatedAt 		DateTime  @updatedAt
 
-  nickname	String    @unique
-  email	   	String    @unique
-  hash	  	String
-  hashedRt  String?
+	nickname		String    @unique
+	email	   		String    @unique
+	hash	  		String
+	hashedRt  		String?
 
-  chats     Chat[]    @relation("chatParticipants")
-  messages  Message[]
+	chats     		Chat[]    @relation("chatParticipants")
+	messages  		Message[]
 
-  chatsCreated  Chat[]
+	chatsCreated  	Chat[]
 
+	rank			Int @default(0)
+	score			Int @default(0)
+	
   @@map("users")
 }
 
