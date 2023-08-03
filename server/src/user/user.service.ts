@@ -19,4 +19,26 @@ export class UserService {
 		const user = await this.prisma.user.findFirst({where: {id: userId}});
 		return (user);
 	}
+
+	async getScore(userId: number) {
+		const user = await this.prisma.user.findUnique({
+		  where: { id: userId },
+		  select: { score: true },
+		});
+		console.log('---------ICI---------');
+		return user?.score ?? 0;
+	}
+	
+	async updateScore(score: number, userId: number) {
+		try {
+			await this.prisma.user.update({
+				where: { id: userId },
+				data: { score : score },
+		  });
+	
+		console.log(`Score updated successfully for user with ID: ${userId}`);
+		} catch (error) {
+		  	console.error('Error updating score:', error);
+		}
+	}
 }
