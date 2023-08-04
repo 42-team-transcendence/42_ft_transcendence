@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import PageWrapper from "../navbar/pageWrapper";
 import '../../styles/Profile.css';
+import GameHistory from "./GameHistory";
 
 function Profile() {
   // Sample game history data
@@ -64,53 +65,8 @@ function Profile() {
         </Box>
 
         {/* Profile Container 2 */}
-        <Box
-          sx={{
-            display: "flex",
-            backgroundColor: "white",
-            borderRadius: 10,
-            padding: 2,
-            border: "2px solid black",
-          }}
-        >
-          <Box sx={{ width: "100%" }}>
-            <Typography variant="h4">Game History</Typography>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }}>
-                <TableHead>
-                  <TableRow
-                    sx={{
-                      "& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
-                      "& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },
-                    }}
-                  >
-                    <TableCell>Name</TableCell>
-                    <TableCell>Score</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Result</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {gameHistory.map((game, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        "& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
-                        "& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },
-                      }}
-                    >
-                      <TableCell>{game.name}</TableCell>
-                      <TableCell>{game.score}</TableCell>
-                      <TableCell>{game.date}</TableCell>
-                      <TableCell>{game.result}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        </Box>
-      </Box>
+		</Box>
+		<GameHistory/>
     </PageWrapper>
   );
 }
