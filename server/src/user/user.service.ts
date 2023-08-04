@@ -41,4 +41,5 @@ export class UserService {
 		  	console.error('Error updating score:', error);
 		}
 	}
+
 }

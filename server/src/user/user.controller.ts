@@ -56,4 +56,7 @@ export class UserController {
 		  console.log({user});
 		  await this.userService.updateScore(score, user.sub);
 	}
+
+
+
 }
