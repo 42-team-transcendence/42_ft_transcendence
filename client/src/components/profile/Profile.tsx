@@ -4,6 +4,8 @@ import PageWrapper from "../navbar/pageWrapper";
 import '../../styles/Profile.css';
 import GameHistory from "./GameHistory";
 
+import Checkbox from '@mui/material/Checkbox';
+
 function Profile() {
   // Sample game history data
   const gameHistory = [
@@ -14,59 +16,47 @@ function Profile() {
 
   return (
     <PageWrapper>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        {/* Profile Container 1 */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "flex-start",
-            backgroundColor: "white",
-            borderRadius: 10,
-            padding: 2,
-            border: "2px solid black",
-            
-          }}
-        >
-          <Box sx={{ marginRight: 2, border: "2px solid black", borderRadius: 10 }}>
-            <img
-              src="https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg"
-              alt="Profile"
-              style={{ width: 180, height: 230, borderRadius: 10 }}
-            />
-          </Box>
-          <Box sx={{ color: "black", textAlign: "left" }}>    
-			<Box>
-				<Typography variant="h5">Alf</Typography>
-				<span style={{ fontSize:"0.9rem", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
-				modifier
-				</span>		
-				<Typography variant="h6">Rank 1 | Lvl 800</Typography>
-			</Box>
-           
-			<Box sx={{
-				display: "flex",
-				flexDirection: "column",
-				backgroundColor: "white",
-				padding: 2
-			}}>
-				<Typography variant="h6">Email</Typography>
-				<span style={{ fontSize:"0.9rem", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
-				modifier
-				</span>
-				<br/>
-				<Typography variant="h6">Password</Typography>
-				<span style={{ fontSize:"0.9rem", color: "blue", cursor: "pointer", textDecoration: "underline" }}>
-				modifier
-				</span>
-				
-				<Typography variant="h6">Double factors</Typography>
-			</Box>
-          </Box>
-        </Box>
+		<div className="main-container">
+			<div className="container-wrap">
+				<div className="avatar">
+					<img 
+						className="img-profile"
+						src="https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg"
+						alt="image du profile"
+					/>
+					<div className="avater-info">
+						<h1 className="name">Alf</h1>
+						<span className="modifier"> modifier </span>	
+						<p className="rank"> Rank 1 | Lvl 800</p>
+					</div>
+				</div>
+			
+				<div className="element-profile">
+					<h2>Email</h2>
+					<div className="a-modifier">
+						<p> aaaaaaaaa@222222222.fr</p>
+						<span className="modifier"> modifier </span>
+					</div>
+				</div>
 
-        {/* Profile Container 2 */}
-		</Box>
-		<GameHistory/>
+				<div className="element-profile">
+					<h2>Password</h2>
+					<div className="a-modifier">
+						<p> ########</p>
+						<span className="modifier"> modifier </span>
+					</div>
+				</div>
+
+				<div className="element-profile">
+					<div className="a-modifier">
+						<h2> Double factors </h2>
+						<Checkbox />
+					</div>
+				</div>
+		
+			</div>
+			<GameHistory/>
+		</div>
     </PageWrapper>
   );
 }
@@ -74,73 +64,3 @@ function Profile() {
 export default Profile;
 
 
-
-
-// import React from "react";
-// import "../../styles/Profile.css";
-// import PageWrapper from "../navbar/pageWrapper";
-
-// function Profile() {
-// 	// Sample game history data
-// 	const gameHistory = [
-// 		{ name: "User 1", score: 100, date: "2023-07-19", result: "Win" },
-// 		{ name: "User 2", score: 150, date: "2023-07-20", result: "Loss" },
-// 		{ name: "User 3", score: 120, date: "2023-07-21", result: "Win" },
-// 	  ];
-//   return (
-//     <PageWrapper>
-// 		<div className="cont">
-//     	<div className="profile-container_1">
-//         	<div className="profile-picture-container">
-//             <img
-//               src="https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg"
-//               alt="Profile"
-//               className="profile-picture"
-//             />
-// 			</div>
-// 			<div className="profile-info">
-// 				<h2>Profile</h2>
-// 				<br />
-// 				<h3>Alf</h3>
-// 				<h5 className="blue-underline">modifier</h5>
-// 				<br />
-// 				<h4>Rank 1 | Lvl 800</h4>
-// 				<br />
-// 				<h4>Email</h4>
-// 				<h5 className="blue-underline">modifier</h5>
-// 				<br />
-// 				<h4>Password</h4>
-// 				<h5 className="blue-underline">modifier</h5>
-// 				<br />
-// 				<h4>Double factors</h4>
-//           </div>
-//     	</div>
-// 		<div className="profile-container_2">
-//           <h2>Game History</h2>
-//           <table className="game-table">
-//             <thead>
-//               <tr>
-//                 <th>Name</th>
-//                 <th>Score</th>
-//                 <th>Date</th>
-//                 <th>Result</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {gameHistory.map((game, index) => (
-//                 <tr key={index}>
-//                   <td>{game.name}</td>
-//                   <td>{game.score}</td>
-//                   <td>{game.date}</td>
-//                   <td>{game.result}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-// 		</div>
-// 		</div>
-//     </PageWrapper>
-//   );
-// }
-
-// export default Profile;
