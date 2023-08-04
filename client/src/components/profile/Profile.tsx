@@ -4,6 +4,8 @@ import PageWrapper from "../navbar/pageWrapper";
 import '../../styles/Profile.css';
 import GameHistory from "./GameHistory";
 
+import Checkbox from '@mui/material/Checkbox';
+
 function Profile() {
   // Sample game history data
   const gameHistory = [
@@ -46,7 +48,10 @@ function Profile() {
 				</div>
 
 				<div className="element-profile">
-					<h2> Double factors </h2>
+					<div className="a-modifier">
+						<h2> Double factors </h2>
+						<Checkbox />
+					</div>
 				</div>
 		
 			</div>
