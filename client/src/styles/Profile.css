@@ -1,3 +1,76 @@
+.main-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 70px
+}
+	
+
+.img-profile {
+	border: 2px solid black;
+}
+
+.container-wrap {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	border: 2px solid black;
+	border-radius: 20px;
+	background-color: white;
+	padding: 10vh;
+}
+
+.avatar {
+	display: flex;
+	align-items: center;
+	gap: 70px;
+	
+}
+
+.avatar-name {
+
+}
+
+.modifier {
+	font-size:0.9rem;
+	color: #0018F4;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.element-profile {
+	display: flex;
+	flex-direction: column;
+	/* justify-content: flex-start; */
+	align-items: flex-start;
+
+}
+
+.a-modifier {
+	display: flex;
+	gap: 50px;
+}
+
+.rank {
+	margin-top: 50px;
+}
+
+
+.name {
+	font-family: Alfa Slab One;
+	font-size: 70px;
+	-webkit-text-stroke: 1px black;
+	color: #FF8100;
+	text-shadow: -4px -0px 0 rgba(0, 0, 0, .20),  
+				0px -0px 0 rgba(0, 0, 0, .20),
+				-4px 0px 0 rgba(0, 0, 0, .20),
+				0px 0px 0 rgba(0, 0, 0, .20);
+}
+
+.element-profile .h2 {
+	font-family: Lato;
+	font-size: 22px;
+}
+ 
  /*.cont{
 	display: flex;
 	justify-content: space-between;

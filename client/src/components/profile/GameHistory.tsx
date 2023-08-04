@@ -15,25 +15,23 @@ function GameHistory() {
     <PageWrapper>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box
-          sx={{
-            display: "flex",
-            backgroundColor: "white",
-            borderRadius: "20px",
-            padding: 2,
-            border: "2px solid black",
-          }}
+			sx={{
+				display: "flex",
+				backgroundColor: "white",
+				borderRadius: "20px",
+				padding: "5vh",
+				border: "2px solid black",
+			}}
         >
           <Box sx={{ width: "100%" }}>
-            {/* <Typography variant="h4">Game History</Typography> */}
 			<h1 className="typo-game"> Game History</h1>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }}>
                 <TableHead>
 					<TableRow
 						sx={{
-						"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
-						"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },
-						}}>
+							"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
+							"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}}>
 						<TableCell>Name</TableCell>
 						<TableCell>Score</TableCell>
 						<TableCell>Date</TableCell>
@@ -43,12 +41,10 @@ function GameHistory() {
                 <TableBody>
                   {gameHistory.map((game, index) => (
                     <TableRow
-                      key={index}
-                      sx={{
-                        "& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
-                        "& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },
-                      }}
-                    >
+						key={index}
+						sx={{
+							"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
+							"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
                       <TableCell>{game.name}</TableCell>
                       <TableCell>{game.score}</TableCell>
                       <TableCell>{game.date}</TableCell>
