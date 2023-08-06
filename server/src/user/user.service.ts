@@ -42,4 +42,31 @@ export class UserService {
 		}
 	}
 
+	async updateEmail(email: string, userId: number) {
+		try {
+			await this.prisma.user.update({
+				where: { id: userId },
+				data: { email : email },
+		  });
+	
+		console.log(`Email updated successfully for user with ID: ${userId}`);
+		} catch (error) {
+		  	console.error('Error updating email:', error);
+		}
+	}
+
+	async updatePwd(pwd: string, userId: number) {
+		try {
+			const hash = await argon.hash(pwd);
+			await this.prisma.user.update({
+				where: { id: userId },
+				data: { hash : hash },
+		  });
+	
+		console.log(`Pwd updated successfully for user with ID: ${userId}`);
+		} catch (error) {
+		  	console.error('Error updating pwd:', error);
+		}
+	}
+
 }

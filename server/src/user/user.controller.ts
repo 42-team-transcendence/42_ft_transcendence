@@ -57,6 +57,28 @@ export class UserController {
 		  await this.userService.updateScore(score, user.sub);
 	}
 
+	@HttpCode(HttpStatus.OK)
+	@Post('email')
+	async updateEmail(
+	  @Body() body: { email: string },
+	  @GetUser() user
+	) {
+	  const { email } = body;
+	  console.log(`new Email = ${email}`);
+	  await this.userService.updateEmail(email, user.sub);
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@Post('pwd')
+	async updatePwd(
+	  @Body() body: { pwd: string },
+	  @GetUser() user
+	) {
+	  const { pwd } = body;
+	  console.log(`new Pwd = ${pwd}`);
+	  await this.userService.updateEmail(pwd, user.sub);
+	}
+	
 
 
 }
