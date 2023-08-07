@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -13,12 +14,26 @@ interface PwdModalProps {
   onSave: (newPwd: string) => void;
 }
 
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
 const PwdModal: React.FC<PwdModalProps> = ({ open, onClose, onSave }) => {
   const [newPwd, setNewPwd] = React.useState('');
+  const [validPwd, setValidPwd] = useState(true); // Initialize with true
+
+
+  const validatePwd = (pwd: string) => {
+    setValidPwd(PWD_REGEX.test(pwd));
+  };
+
+  useEffect(() => {
+    validatePwd(newPwd);
+  }, [newPwd]);
 
   const handleSave = () => {
-    onSave(newPwd);
-    handleClose();
+	if (validPwd) {
+		onSave(newPwd);
+		handleClose();
+	}
   };
 
   const handleClose = () => {
@@ -47,6 +62,8 @@ const PwdModal: React.FC<PwdModalProps> = ({ open, onClose, onSave }) => {
           variant="standard"
           value={newPwd}
           onChange={handleChange}
+		  error={!validPwd && newPwd.length > 0}
+          helperText={!validPwd && newPwd.length > 0 && "Invalid password"}
         />
       </DialogContent>
       <DialogActions>

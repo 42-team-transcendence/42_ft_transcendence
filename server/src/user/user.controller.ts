@@ -76,7 +76,7 @@ export class UserController {
 	) {
 	  const { pwd } = body;
 	  console.log(`new Pwd = ${pwd}`);
-	  await this.userService.updateEmail(pwd, user.sub);
+	  await this.userService.updatePwd(pwd, user.sub);
 	}
 	
 

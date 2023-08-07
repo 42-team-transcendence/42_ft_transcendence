@@ -49,7 +49,7 @@ export class UserService {
 				data: { email : email },
 		  });
 	
-		console.log(`Email updated successfully for user with ID: ${userId}`);
+			console.log(`Email updated successfully for user with ID: ${userId}`);
 		} catch (error) {
 		  	console.error('Error updating email:', error);
 		}
@@ -63,7 +63,7 @@ export class UserService {
 				data: { hash : hash },
 		  });
 	
-		console.log(`Pwd updated successfully for user with ID: ${userId}`);
+			console.log(`Pwd updated successfully for user with ID: ${userId}`);
 		} catch (error) {
 		  	console.error('Error updating pwd:', error);
 		}
