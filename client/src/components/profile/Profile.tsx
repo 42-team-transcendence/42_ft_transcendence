@@ -124,8 +124,8 @@ function Profile() {
 						/>
 						<div className="avater-info">
 							<h1 className="name"> ALF </h1>
-							<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>	
-							<p className="rank"> Rank 1 | Lvl 800</p>
+							<span className="modifier">modifier</span>	
+							<p className="rank"> Rank 1 | Lvl 800 </p>
 						</div>
 					</div>
 					
