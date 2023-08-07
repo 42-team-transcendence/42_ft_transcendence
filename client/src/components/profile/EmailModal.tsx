@@ -1,4 +1,5 @@
-import React from 'react';
+// EmailModal.tsx
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -13,16 +14,29 @@ interface EmailModalProps {
   onSave: (newEmail: string) => void;
 }
 
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
 const EmailModal: React.FC<EmailModalProps> = ({ open, onClose, onSave }) => {
-  const [newEmail, setNewEmail] = React.useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [validEmail, setValidEmail] = useState(true); // Initialize with true
+
+  const validateEmail = (email: string) => {
+    setValidEmail(EMAIL_REGEX.test(email));
+  };
+
+  useEffect(() => {
+    validateEmail(newEmail);
+  }, [newEmail]);
 
   const handleSave = () => {
-    onSave(newEmail);
-    handleClose();
+    if (validEmail) {
+      onSave(newEmail);
+      handleClose();
+    }
   };
 
   const handleClose = () => {
-    setNewEmail(''); // Reset the email input value when closing the modal
+    setNewEmail('');
     onClose();
   };
 
@@ -47,11 +61,13 @@ const EmailModal: React.FC<EmailModalProps> = ({ open, onClose, onSave }) => {
           variant="standard"
           value={newEmail}
           onChange={handleChange}
+          error={!validEmail && newEmail.length > 0}
+          helperText={!validEmail && newEmail.length > 0 && "Invalid email"}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={handleSave} disabled={!validEmail}>Save</Button>
       </DialogActions>
     </Dialog>
   );
