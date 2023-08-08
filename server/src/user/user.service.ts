@@ -69,4 +69,26 @@ export class UserService {
 		}
 	}
 
+	async getNick(userId: number) {
+		const user = await this.prisma.user.findUnique({
+		  where: { id: userId },
+		  select: { nickname: true },
+		});
+		console.log('---------Nick---------');
+		return user?.nickname;
+	}
+
+	async updateNick(nickname: string, userId: number) {
+		try {
+			await this.prisma.user.update({
+				where: { id: userId },
+				data: { nickname : nickname },
+		  });
+	
+			console.log(`Nick updated successfully for user with ID: ${userId}`);
+		} catch (error) {
+		  	console.error('Error updating Nick:', error);
+		}
+	}
+
 }

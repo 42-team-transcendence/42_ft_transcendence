@@ -78,6 +78,27 @@ export class UserController {
 	  console.log(`new Pwd = ${pwd}`);
 	  await this.userService.updatePwd(pwd, user.sub);
 	}
+
+	@HttpCode(HttpStatus.OK)
+	@Post('updateNick')
+	async updateNick(
+	  @Body() body: { nickname: string },
+	  @GetUser() user
+	) {
+	  const { nickname } = body;
+	  console.log(`new Nick = ${nickname}`);
+	  await this.userService.updateNick(nickname, user.sub);
+	}
+
+	@HttpCode(HttpStatus.OK)
+	@Get('nickname')
+	async getNick(
+		@GetUser() user
+	) {
+		console.log({user});
+		const nickname = await this.userService.getNick(user.sub);
+  		return { nickname: nickname }; 
+	}
 	
 
 
