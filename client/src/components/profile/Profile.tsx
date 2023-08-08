@@ -1,14 +1,21 @@
 import React, { useState, useContext } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import PageWrapper from "../navbar/pageWrapper";
-import '../../styles/Profile.css';
 import GameHistory from "./GameHistory";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-
-import Checkbox from '@mui/material/Checkbox';
-import EmailModal from "./EmailModal"; // Import the EmailModal component
+import EmailModal from "./EmailModal"; 
 import PwdModal from "./PasswordModal";
 import AuthContext, { AuthProvider } from '../../context/AuthProvider';
+import UserProfile from "./UserProfile";
+import NickModal from "./NicknameModal";
+
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import '../../styles/Profile.css';
+import Checkbox from '@mui/material/Checkbox';
 
 
 
@@ -36,6 +43,7 @@ function Profile() {
 
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);
+	
 
 	// =============================================================================
 	// EMAIL MODAL =================================================================
@@ -58,8 +66,8 @@ function Profile() {
 			// Call your backend API to update the email
 			const response = await axiosPrivate.post('/users/email',  JSON.stringify({ email: newEmail }),
 			{
-			headers: { "Content-Type": "application/json" },
-			withCredentials: true,
+				headers: { "Content-Type": "application/json" },
+				withCredentials: true,
 			});
 		
 			if (response.status === 200) {
@@ -75,6 +83,51 @@ function Profile() {
 	
 		handleCloseEmailModal();
 	};
+
+
+	// =============================================================================
+	// NICKNAME MODAL =================================================================
+
+	const [nickname, setNickname] = useState<string>('');
+
+	const updateNickname = (newNickname:string) => {
+	  setNickname(newNickname);
+	};
+
+	// State for controlling the email modal
+	const [isNickModalOpen, setNickModalOpen] = useState(false);
+
+	// Handler for opening the email modal
+	const handleOpenNickModal = () => {
+		setNickModalOpen(true);
+	};
+
+	// Handler for closing the email modal
+	const handleCloseNickModal = () => {
+		setNickModalOpen(false);
+	};
+
+	const handleSaveNick = async (newNickname: string) => {
+		try {
+		  // Call your backend API to update the nickname
+		  const response = await axiosPrivate.post('/users/updateNick', JSON.stringify({ nickname: newNickname }), {
+			headers: { "Content-Type": "application/json" },
+			withCredentials: true,
+		  });
+	  
+		  if (response.status === 200) {
+			setNickname(newNickname); // Update the nickname in the state
+			console.log('Nickname update successful');
+		  } else {
+			console.error('Nickname update failed');
+		  }
+		} catch (error) {
+		  console.error('Error updating Nickname:', error);
+		}
+	  
+		handleCloseNickModal();
+	};
+	 
 
 	// =============================================================================
 	// PWD MODAL ===================================================================
@@ -110,8 +163,11 @@ function Profile() {
 		}
 	  
 		handleClosePwdModal();
-	  };
+	};
 
+	
+	// =============================================================================
+	// RETURN ======================================================================
   	return (
 		<PageWrapper>
 			<div className="main-container">
@@ -123,8 +179,9 @@ function Profile() {
 							alt="image du profile"
 						/>
 						<div className="avater-info">
-							<h1 className="name"> ALF </h1>
-							<span className="modifier">modifier</span>	
+							<UserProfile onNicknameChange={(newNickname) => setNickname(newNickname)} />
+							<h1 className="name">  {nickname} </h1>
+							<span className="modifier" onClick={handleOpenNickModal}>modifier</span>	
 							<p className="rank"> Rank 1 | Lvl 800 </p>
 						</div>
 					</div>
@@ -132,7 +189,7 @@ function Profile() {
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">
-							<p> {auth.email}</p>
+							<p> {auth.email} </p>
 							<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
 						</div>
 					</div>
@@ -167,6 +224,13 @@ function Profile() {
 				open={isPwdModalOpen}
 				onClose={handleClosePwdModal}
 				onSave={handleSavePwd}
+			/>
+
+			{/* Render the PwdModal component */}
+				<NickModal
+				open={isNickModalOpen}
+				onClose={handleCloseNickModal}
+				onSave={handleSaveNick}
 			/>
 		</PageWrapper>
  	);

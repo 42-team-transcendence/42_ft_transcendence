@@ -1,7 +1,9 @@
 .main-container {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 70px
+		gap: 70px;
+		/* align-items: center; */
+		border: 2px solid red;
 }
 	
 
@@ -16,7 +18,7 @@
 	border: 2px solid black;
 	border-radius: 20px;
 	background-color: white;
-	padding: 10vh;
+	padding: 2vh;
 }
 
 .avatar {
