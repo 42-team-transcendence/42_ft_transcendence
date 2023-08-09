@@ -2,23 +2,34 @@ import { useState, useEffect } from "react"
 import { Box, Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import GameHistory from "./GameHistory";
 
-import '../../styles/OtherUserProfile.css';
 import PageWrapper from "../navbar/pageWrapper";
+
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import '../../styles/OtherUserProfile.css';
 import CustomButtonSecond from "../../styles/buttons/CustomButtonSecond";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import PublicIcon from '@mui/icons-material/Public';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import BlockIcon from '@mui/icons-material/Block';
-import GameHistory from "./GameHistory";
 
+
+// =============================================================================
+// INTERFACES ==================================================================
 interface User {
 	id: number;
 	nickname: string;
 	picture: string;
 	level: string;
 }
+
+// =============================================================================
+// FUNCTION ====================================================================
 
 function OtherUserProfile() {
 	const axiosPrivate = useAxiosPrivate();
@@ -30,7 +41,7 @@ function OtherUserProfile() {
   console.log(useParams());
 
   useEffect(() => {
-		const getUser = async () => { //definition de la fonction
+		const getUser = async () => {
 			try {
 				const response = await axiosPrivate.get(`/users/${userId}`);
 				console.log({user : response.data});
@@ -47,7 +58,7 @@ function OtherUserProfile() {
 				console.log(error.response );
 			}
 		}
-		getUser(); //appel de la fonction
+		getUser();
 	}, [])
 
 	const startPrivateMessage = () => {
@@ -66,11 +77,11 @@ function OtherUserProfile() {
 						className="profile-picture"
 						/>
 					</div>
+
 					<div className="profile-info">
 						<h2>Profile</h2>
 						<h3>{user?.nickname}</h3>
 						<p>Rank 2 | Lvl {user?.level}</p>
-						{/* Add other profile information here */}
 					</div>
 				</div>
 			
@@ -88,6 +99,7 @@ function OtherUserProfile() {
 							onClick={startPrivateMessage}
 						/>
 					</div>
+
 					<div className="row-other-user">
 						<CustomButtonSecond
 							icon={<PersonRemoveIcon />}
