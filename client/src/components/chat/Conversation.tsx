@@ -34,7 +34,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             });
         console.log({newSocket});
         setSocket(newSocket)
-    }, [setSocket])
+    }, [])
 
     //On Connect : actions supplémentaires possibles à la connexion de la socket client
     useEffect(() => {

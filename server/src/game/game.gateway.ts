@@ -16,6 +16,15 @@ import { Server, Socket, ServerOptions } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 
+interface Paddle {
+    socketId: string | undefined,
+    Id: number,
+    width: number,
+    height: number,
+    x: number,
+    y: number,
+  }
+
 //The WebSocket gateway is responsible for handling WebSocket connections and events in NestJS.
 // the OnGatewayInit interface is a part of the WebSockets module.
 // It is used to define a lifecycle hook that is triggered when a WebSocket gateway is initialized.
@@ -32,10 +41,10 @@ import { JwtGuard } from 'src/auth/guard';
         sameSite: "lax"
       }
     },
-    path: "/chat", //replace http://localhost:3333/socket.io/ with http://localhost:3333/chat/
+    path: "/game", //replace http://localhost:3333/socket.io/ with http://localhost:3333/game/
   },
 )
-export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+export default class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     
   // Déclare une instance du Server de socket.io
   //this allows you to access the WebSocket server instance and utilize its methods,
@@ -43,14 +52,17 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
   @WebSocketServer() 
   server: Server;
 
-  private connectedClients = []; // Keep track of connected clients
+//   private players = []; // Keep track of connected clients
+    private players: Paddle[] = [];
+
+  /*-------------------------------------------------------------------------------------------------------------------------------*/
 
   //lifecycle method : it will be executed automatically (due to OnGatewayInit interface) once the gateway is initialized.
   //This provides an opportunity to perform any necessary 
   //setup or initialization tasks before the WebSocket server starts accepting connections.
   afterInit(server: Server) {
       // Perform initialization tasks here
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!WebSocket gateway initialized!!!!!!!!!!!');
+      console.log('Game WebSocket gateway initialized');
     }
 
   //lifecycle method : automatically called by NestJS when a new client establishes a WebSocket connection with the server, due to OnGatewayConnection Interface
@@ -58,63 +70,62 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     client: Socket,
   ) {
       console.log("handleConnection")
-      console.log({client_handshake : client.handshake});
   }
 
   //lifecycle method : automaticaly called on socket disconnection
   handleDisconnect(client: Socket) {
     console.log("disconnect")
-    console.log({client_handshake : client.handshake});
     
-    //Remove socket connection from connectedClients list
-    const userId = client.handshake.query.userId; // Assuming you pass userId as a query parameter while connecting
-    this.connectedClients = this.connectedClients.filter((e:any) => e.userId != userId);
-    console.log(this.connectedClients);
+    //Remove socket connection from players list
+    const Id = client.handshake.query.Id; // Assuming you pass Id as a query parameter while connecting
+    this.players = this.players.filter((e:any) => e.Id != Id);
+    console.log(this.players);
   }
 
-  //The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate 
-  //that a particular method should be invoked when a specific WebSocket message is received.
-  @SubscribeMessage('userData')
+  /*-------------------------------------------------------------------------------------------------------------------------------*/
+
+//   Player(paddle: Paddle) {
+
+//   }
+
+
+heartBeat() {
+    if (this.players.length > 1){
+        this.server.emit('heartBeat', this.players);
+    }
+}
+
+intervalID = setInterval(() => {
+    this.heartBeat();
+}, 500);
+
+  @SubscribeMessage('getCounter')
+  getCounter(@ConnectedSocket() client: any) {
+        console.log("COUNTER === " + this.players.length);
+        client.emit('counter', this.players.length);
+  }
+  
+//   The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate 
+//   that a particular method should be invoked when a specific WebSocket message is received.
+  @SubscribeMessage('playerData')
   handleUserData(
     @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
     @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ): string {
-    console.log('Received userData:', data);
-    console.log({client : client});
 
-    //Add new socket connection to connectedClients list
-    this.connectedClients.push({userId : data.userId, socketId : data.socketId});
-    console.log(this.connectedClients);
+    //Add new socket connection to players list
+    let paddle: Paddle;
+    paddle = {
+        socketId: data.socketId,
+        Id: data.Id,
+        width: data.width,
+        height: data.height,
+        x: data.x,
+        y: data.y,
+    };
+    this.players.push(paddle);
 
     return data;
-  }
-  
-  @SubscribeMessage('message')
-  handleChatMessage(
-    @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
-    @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
-  ): string {
-    console.log({clientId : client.id});
-    console.log('Received chat message:', data);
-
-    //search for the right recipient in connected clients
-    const recipient = this.connectedClients.find((e) => e.userId === data.to)
-    console.log({recipient})
-
-    if (recipient)
-      this.sendMessageToClient('message', data.message, recipient.socketId);
-    
-    return data;
-  }
-
-  sendMessageToClient(event:string, message:string, socketId:string): void {
-    // Emit a message to specific socket client id
-    this.server.to(socketId).emit(event, { message });
-  }
-
-  broadcastToAll(event:string, message:string): void {
-    // Emit a message to all connected clients
-    this.server.emit(event, { message: `Hello, clients! message received : ${message}` });
   }
 
 }
