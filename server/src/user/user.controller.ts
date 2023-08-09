@@ -21,8 +21,8 @@ export class UserController {
     getMe(@GetUser() user: User) {
         return user;
     }
-
-	@Get('users/:id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
+ 
+	@Get(':id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
 	getUser(@Param('id') id: string) {
 		console.log({id});
 		const userId = parseInt(id);
