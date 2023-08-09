@@ -40,7 +40,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
   // Déclare une instance du Server de socket.io
   //this allows you to access the WebSocket server instance and utilize its methods,
   //including the emit() method.
-  @WebSocketServer() 
+  @WebSocketServer()
   server: Server;
 
   private connectedClients = []; // Keep track of connected clients
@@ -102,14 +102,14 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     console.log({recipient})
 
     if (recipient)
-      this.sendMessageToClient('message', data.message, recipient.socketId);
+      this.sendMessageToClient('message', data.message, recipient.socketId, data.from);
     
     return data;
   }
 
-  sendMessageToClient(event:string, message:string, socketId:string): void {
-    // Emit a message to specific socket client id
-    this.server.to(socketId).emit(event, { message });
+  // Emit a message to specific socket client id
+  sendMessageToClient(event:string, content:string, socketId:string, senderId:number): void {
+    this.server.to(socketId).emit(event, { content, senderId });
   }
 
   broadcastToAll(event:string, message:string): void {

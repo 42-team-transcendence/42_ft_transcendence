@@ -15,8 +15,8 @@ export type User = {
 // }
 
 export type Message = {
-    message: string,
-
+    content: string,
+    senderId: number
 }
 
 export type Conversation = {

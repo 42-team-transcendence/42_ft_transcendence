@@ -3,15 +3,18 @@ import { useParams } from "react-router-dom";
 import io, {Socket} from "socket.io-client"
 import {Box} from "@mui/material";
 import MessageInput from "./MessageInput";
-import Messages from "./Messages";
+import MessageInConv from "./MessageInConv";
 import Miniature from "../miniature/Miniature";
+
+import type {Message} from "../../utils/types"
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     console.log({Conversation : chat})
 
     const [socket, setSocket] = useState<Socket>();
     const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
-    const [messages, setMessages] = useState<string[]>([...chat.messages]);
+    // const [messages, setMessages] = useState<string[]>([...chat.messages]);
+    const [messages, setMessages] = useState<Message[]>([]);
     
 
 
@@ -19,6 +22,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     const recipientId = parseInt(useParams().userId || '');
     const recipient = (chat?.participants.find((e:any) => e.id === recipientId))
     console.log("chat recipientId : " + recipientId);
+    console.log({recipient});
 
 
     //Création de la socket client
@@ -29,7 +33,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 path: "/chat",
                 withCredentials: true,
                 autoConnect: true,
-                auth: {token: "TODO : gérer les tokens d'authentification ici"},
+                auth: {token: "//TODO : gérer les tokens d'authentification ici"},
                 query: {"userId": currentUser.sub}
             });
         console.log({newSocket});
@@ -58,13 +62,16 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     const send = (value:string) => {
         const payload = {
             message: value,
-            to: recipientId,   
+            to: recipientId,
+            from: currentUser.sub
         }
+        console.log({payload})
         socket?.emit("message", payload)
     }
 
     //Réception et stockage des messages par le client
-    const messageListener = ({message}:{message : string}) => {
+    const messageListener = (message:Message) => {
+        console.log({message});
         setMessages([...messages, message])
     }
     useEffect(() => {
@@ -90,7 +97,19 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             {recipient? (
             <>
                 <Miniature nickname={recipient.nickname}></Miniature>
-                <Messages messages={messages}></Messages>
+                <Box>
+                    <ul>
+                        {messages?.map((msg, index) => {
+                            return (
+                            <MessageInConv 
+                                key={index}
+                                content={msg.content}
+                                sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
+                            >
+                            </MessageInConv>)
+                        })}
+                    </ul>
+                </Box>
                 <Box>
                     <MessageInput send={send}></MessageInput>
                 </Box>
