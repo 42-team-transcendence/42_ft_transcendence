@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 // =============================================================================
@@ -29,6 +29,10 @@ interface PwdData {
 	pwd: string;
 }
 
+interface User {
+	email: string;
+}
+
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -43,6 +47,19 @@ function Profile() {
 
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);
+
+	const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        // Make an API request to fetch user details
+        axiosPrivate.get('/users/me')
+            .then(response => {
+                setUser(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching user details:', error);
+            });
+    }, []);
 	
 
 	// =============================================================================
@@ -189,8 +206,14 @@ function Profile() {
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">
-							<p> {auth.email} </p>
-							<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
+						{user ? (
+                    <>
+                        <p>{user.email}</p>
+                        <span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
+                    </>
+                ) : (
+                    <p>Loading user data...</p>
+                )}
 						</div>
 					</div>
 

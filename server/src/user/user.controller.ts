@@ -16,10 +16,15 @@ export class UserController {
 		// console.log(this.userService.getUsers())
 		return (this.userService.getUsers());
 	}
-
+	
+	@HttpCode(HttpStatus.OK)
 	@Get('me') // GET /users/me
-    getMe(@GetUser() user: User) {
-        return user;
+    async getMe(
+        @GetUser() user: User
+    ) {
+		console.log(use)
+        console.log({ user });
+        return await this.userService.getMe(user.id);
     }
 
 	@Get('users/:id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
