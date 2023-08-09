@@ -2,6 +2,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Box } from "@mui/material";
 import Miniature from "../miniature/Miniature";
 
+import tchoupi from '../../assets/tchoupi50x50.jpg'
+
+
+
 export default function ChatMiniature(
     {notif, nickname, lastMessage, userId}:{
         notif:boolean,
@@ -26,7 +30,7 @@ export default function ChatMiniature(
             }}
             mt={3} pt={1} pb={1}
         >
-            <Miniature nickname={nickname}></Miniature>
+            <Miniature nickname={nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
             {/* margin left margin top */}
             <Box ml={0} mt={0}>
                 <div>{lastMessage}</div>

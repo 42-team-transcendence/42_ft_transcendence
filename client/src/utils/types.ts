@@ -25,3 +25,8 @@ export type Conversation = {
     recipient: User,
     messages: Message[]
 }
+
+export type MiniAvatarPicture = {
+    url: string,
+    name: string
+}

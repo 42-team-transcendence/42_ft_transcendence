@@ -6,6 +6,8 @@ import MessageInput from "./MessageInput";
 import MessageInConv from "./MessageInConv";
 import Miniature from "../miniature/Miniature";
 
+import tchoupi from '../../assets/tchoupi50x50.jpg'
+
 import type {Message} from "../../utils/types"
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
@@ -97,7 +99,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         >
             {recipient? (
             <>
-                <Miniature nickname={recipient.nickname}></Miniature>
+                <Miniature nickname={recipient.nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
                 <Box sx={{ width:'100%'}}>
                     {messages?.map((msg, index) => {
                         return (
