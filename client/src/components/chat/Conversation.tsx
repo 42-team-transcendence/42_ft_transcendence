@@ -60,12 +60,13 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Emission d'un message via le bouton MessageInput
     const send = (value:string) => {
-        const payload = {
-            message: value,
+        const payload : {content:string, to:number, from:number} = {
+            content: value,
             to: recipientId,
             from: currentUser.sub
         }
         console.log({payload})
+        setMessages([...messages, {content: value, senderId: currentUser.sub}])
         socket?.emit("message", payload)
     }
 
@@ -97,18 +98,16 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             {recipient? (
             <>
                 <Miniature nickname={recipient.nickname}></Miniature>
-                <Box>
-                    <ul>
-                        {messages?.map((msg, index) => {
-                            return (
+                <Box sx={{ width:'100%'}}>
+                    {messages?.map((msg, index) => {
+                        return (
                             <MessageInConv 
                                 key={index}
                                 content={msg.content}
                                 sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
-                            >
-                            </MessageInConv>)
-                        })}
-                    </ul>
+                                currentUser={currentUser}
+                            ></MessageInConv>
+                    )})}
                 </Box>
                 <Box>
                     <MessageInput send={send}></MessageInput>

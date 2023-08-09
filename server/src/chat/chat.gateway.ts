@@ -102,7 +102,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     console.log({recipient})
 
     if (recipient)
-      this.sendMessageToClient('message', data.message, recipient.socketId, data.from);
+      this.sendMessageToClient('message', data.content, recipient.socketId, data.from);
     
     return data;
   }
