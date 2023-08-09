@@ -56,9 +56,7 @@ function OtherUserProfile() {
 
   return (
 	<PageWrapper>
-		<div className="container-wrap">
-
-		
+		<div className="container-wrap-other">
 			<div className="container-1">
 				<div className="profile-container">
 					<div className="profile-picture-container">
