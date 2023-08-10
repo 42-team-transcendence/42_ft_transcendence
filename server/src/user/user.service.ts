@@ -102,4 +102,25 @@ export class UserService {
 		}
 	}
 
+
+
+	async updateUser(userId: number, updateData: { score?: number, email?: string }) {
+		try {
+			await this.prisma.user.update({
+				where: { id: userId },
+				data: updateData,
+			});
+	
+			if (updateData.score !== undefined) {
+				console.log(`Score updated successfully for user with ID: ${userId}`);
+			}
+			if (updateData.email !== undefined) {
+				console.log (`USER data emil = ${updateData.email}`);
+				console.log(`Email updated successfully for user with ID: ${userId}`);
+			}
+		} catch (error) {
+			console.error('Error updating user:', error);
+		}
+	}
+
 }

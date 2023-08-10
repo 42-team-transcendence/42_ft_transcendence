@@ -20,11 +20,10 @@ export class UserController {
 	@HttpCode(HttpStatus.OK)
 	@Get('me') // GET /users/me
     async getMe(
-        @GetUser() user: User
+        @GetUser() user: any
     ) {
-		console.log(use)
         console.log({ user });
-        return await this.userService.getMe(user.id);
+        return await this.userService.getMe(user.sub);
     }
 
 	@Get('users/:id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
@@ -104,7 +103,30 @@ export class UserController {
 		const nickname = await this.userService.getNick(user.sub);
   		return { nickname: nickname }; 
 	}
-	
 
 
+	@HttpCode(HttpStatus.OK)
+	@Post('updateUser')
+	async updateUser(
+	  @Body() updateData: { score?: number, email?: string },
+	  @GetUser() user
+	) {
+	  const { score, email } = updateData;
+  
+	  try {
+		await this.userService.updateUser(user.sub, { score, email });
+  
+		if (score !== undefined) {
+		  console.log(`Score updated successfully for user with ID: ${user.sub}`);
+		}
+		if (email !== undefined) {
+		  console.log(`Email updated successfully for user with ID: ${user.sub}`);
+		}
+  
+		return { message: 'User updated successfully' };
+	  } catch (error) {
+		console.error('Error updating user:', error);
+		return { message: 'Error updating user' };
+	  }
+	}
 }

@@ -31,6 +31,9 @@ interface PwdData {
 
 interface User {
 	email: string;
+	password?: string
+	hash:string;
+	nickname: string;
 }
 
 
@@ -48,7 +51,12 @@ function Profile() {
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);
 
+
+
+	// =============================================================================
+	// USE EFFECT ==================================================================
 	const [user, setUser] = useState<User | null>(null);
+
 
     useEffect(() => {
         // Make an API request to fetch user details
@@ -80,16 +88,19 @@ function Profile() {
 
 	const handleSaveEmail = async (newEmail: string) => {
 		try {
-			// Call your backend API to update the email
-			const response = await axiosPrivate.post('/users/email',  JSON.stringify({ email: newEmail }),
-			{
-				headers: { "Content-Type": "application/json" },
-				withCredentials: true,
-			});
-		
+			const response = await axiosPrivate.post(
+				'/users/email',
+				JSON.stringify({ email: newEmail }),
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			);
+	
 			if (response.status === 200) {
-				// Update the email in the auth state on successful API call
-				setAuth((prevAuth) => ({ ...prevAuth, email: newEmail }));
+				// Update the user's email in the user state
+				// setUser((prevUser) => ({ ...prevUser, email: newEmail }));
+				setAuth((prevAuth) => ({ ...prevAuth, email: newEmail }))
 				console.log("Email update successful");
 			} else {
 				console.error("Email update failed");
@@ -106,9 +117,11 @@ function Profile() {
 	// NICKNAME MODAL =================================================================
 
 	const [nickname, setNickname] = useState<string>('');
+	const [key, setKey] = useState(0); // Add key state
 
 	const updateNickname = (newNickname:string) => {
 	  setNickname(newNickname);
+	  setKey((prevKey) => prevKey + 1);
 	};
 
 	// State for controlling the email modal
@@ -133,8 +146,8 @@ function Profile() {
 		  });
 	  
 		  if (response.status === 200) {
-			setNickname(newNickname); // Update the nickname in the state
-			console.log('Nickname update successful');
+				setNickname(newNickname); // Update the nickname in the state
+				console.log('Nickname update successful');
 		  } else {
 			console.error('Nickname update failed');
 		  }
@@ -196,9 +209,17 @@ function Profile() {
 							alt="image du profile"
 						/>
 						<div className="avater-info">
-							<UserProfile onNicknameChange={(newNickname) => setNickname(newNickname)} />
-							<h1 className="name">  {nickname} </h1>
-							<span className="modifier" onClick={handleOpenNickModal}>modifier</span>	
+							{/* <UserProfile onNicknameChange={(newNickname) => setNickname(newNickname)} />
+							<h1 className="name">  {nickname} </h1> */}
+									{user ? (
+									<>
+										<h1 className="name">{user.nickname}</h1>
+										<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
+									</>
+								) : (
+									<p>Loading user data...</p>
+								)}
+					
 							<p className="rank"> Rank 1 | Lvl 800 </p>
 						</div>
 					</div>
@@ -206,11 +227,12 @@ function Profile() {
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">
+						<p>{auth.email}</p>
 						{user ? (
-                    <>
-                        <p>{user.email}</p>
-                        <span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
-                    </>
+                    	<>
+                      	  	<p>{user.email}</p>
+                        	<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
+                    	</>
                 ) : (
                     <p>Loading user data...</p>
                 )}
@@ -220,8 +242,9 @@ function Profile() {
 					<div className="element-profile">
 						<h2>Password</h2>
 						<div className="a-modifier">
-							<p> {auth.pwd}</p>
+							<p>{auth.pwd}</p>
 							<span className="modifier"onClick={handleOpenPwdModal}>modifier</span>
+						
 						</div>
 					</div>
 
