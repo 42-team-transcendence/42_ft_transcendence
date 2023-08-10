@@ -18,20 +18,14 @@ import '../../styles/Profile.css';
 import Checkbox from '@mui/material/Checkbox';
 
 
-
 // =============================================================================
 // INTERFACES ==================================================================
-interface EmailData {
-	email: string;
-}
-
 interface PwdData {
 	pwd: string;
 }
 
 interface User {
 	email: string;
-	password?: string
 	hash:string;
 	nickname: string;
 }
@@ -55,9 +49,9 @@ function Profile() {
 
 	// =============================================================================
 	// USE EFFECT ==================================================================
-	const [user, setUser] = useState<User | null>(null);
+	// const [user, setUser] = useState<any>();
 
-
+	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '' });
     useEffect(() => {
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
@@ -99,10 +93,11 @@ function Profile() {
 	
 			if (response.status === 200) {
 				// Update the user's email in the user state
-				// setUser((prevUser) => ({ ...prevUser, email: newEmail }));
+				setUser((prevUser) => ({ ...prevUser, email: newEmail }));
 				setAuth((prevAuth) => ({ ...prevAuth, email: newEmail }))
 				console.log("Email update successful");
-			} else {
+			} 
+			else {
 				console.error("Email update failed");
 			}
 		} catch (error) {
@@ -115,14 +110,6 @@ function Profile() {
 
 	// =============================================================================
 	// NICKNAME MODAL =================================================================
-
-	const [nickname, setNickname] = useState<string>('');
-	const [key, setKey] = useState(0); // Add key state
-
-	const updateNickname = (newNickname:string) => {
-	  setNickname(newNickname);
-	  setKey((prevKey) => prevKey + 1);
-	};
 
 	// State for controlling the email modal
 	const [isNickModalOpen, setNickModalOpen] = useState(false);
@@ -140,19 +127,19 @@ function Profile() {
 	const handleSaveNick = async (newNickname: string) => {
 		try {
 		  // Call your backend API to update the nickname
-		  const response = await axiosPrivate.post('/users/updateNick', JSON.stringify({ nickname: newNickname }), {
-			headers: { "Content-Type": "application/json" },
-			withCredentials: true,
-		  });
+			const response = await axiosPrivate.post('/users/updateNick', JSON.stringify({ nickname: newNickname }), {
+				headers: { "Content-Type": "application/json" },
+				withCredentials: true,
+			});
 	  
-		  if (response.status === 200) {
-				setNickname(newNickname); // Update the nickname in the state
+			if (response.status === 200) {
+				setUser((prevUser) => ({ ...prevUser, nickname: newNickname }));
 				console.log('Nickname update successful');
-		  } else {
-			console.error('Nickname update failed');
-		  }
+			} else {
+				console.error('Nickname update failed');
+			}
 		} catch (error) {
-		  console.error('Error updating Nickname:', error);
+		  	console.error('Error updating Nickname:', error);
 		}
 	  
 		handleCloseNickModal();
@@ -209,16 +196,14 @@ function Profile() {
 							alt="image du profile"
 						/>
 						<div className="avater-info">
-							{/* <UserProfile onNicknameChange={(newNickname) => setNickname(newNickname)} />
-							<h1 className="name">  {nickname} </h1> */}
-									{user ? (
-									<>
-										<h1 className="name">{user.nickname}</h1>
-										<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
-									</>
-								) : (
-									<p>Loading user data...</p>
-								)}
+							{user ? (
+								<>
+									<h1 className="name">{user.nickname}</h1>
+									<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
+								</>
+							) : (
+								<p>Loading user data...</p>
+							)}
 					
 							<p className="rank"> Rank 1 | Lvl 800 </p>
 						</div>
@@ -227,7 +212,6 @@ function Profile() {
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">
-						<p>{auth.email}</p>
 						{user ? (
                     	<>
                       	  	<p>{user.email}</p>
@@ -244,7 +228,6 @@ function Profile() {
 						<div className="a-modifier">
 							<p>{auth.pwd}</p>
 							<span className="modifier"onClick={handleOpenPwdModal}>modifier</span>
-						
 						</div>
 					</div>
 
