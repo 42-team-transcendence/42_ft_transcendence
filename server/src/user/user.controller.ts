@@ -10,6 +10,10 @@ export class UserController {
 	constructor (
 		private userService: UserService
 	) {}
+
+
+	// =============================================================================
+	// GETTERS =====================================================================
 	
 	@Get()
 	getUsers() {
@@ -49,6 +53,9 @@ export class UserController {
   		return { score: score }; 
 	}
 
+
+	// =============================================================================
+	// UPDATES =====================================================================
 	@HttpCode(HttpStatus.OK)
 	@Post('score')
 	async updateScore(
@@ -95,17 +102,6 @@ export class UserController {
 	}
 
 	@HttpCode(HttpStatus.OK)
-	@Get('nickname')
-	async getNick(
-		@GetUser() user
-	) {
-		console.log({user});
-		const nickname = await this.userService.getNick(user.sub);
-  		return { nickname: nickname }; 
-	}
-
-
-	@HttpCode(HttpStatus.OK)
 	@Post('updateUser')
 	async updateUser(
 	  @Body() updateData: { score?: number, email?: string },
@@ -113,20 +109,20 @@ export class UserController {
 	) {
 	  const { score, email } = updateData;
   
-	  try {
-		await this.userService.updateUser(user.sub, { score, email });
-  
-		if (score !== undefined) {
-		  console.log(`Score updated successfully for user with ID: ${user.sub}`);
+		try {
+			await this.userService.updateUser(user.sub, { score, email });
+	
+			if (score !== undefined) {
+				console.log(`Score updated successfully for user with ID: ${user.sub}`);
+			}
+			if (email !== undefined) {
+				console.log(`Email updated successfully for user with ID: ${user.sub}`);
+			}
+	
+			return { message: 'User updated successfully' };
+		} catch (error) {
+				console.error('Error updating user:', error);
+				return { message: 'Error updating user' };
 		}
-		if (email !== undefined) {
-		  console.log(`Email updated successfully for user with ID: ${user.sub}`);
-		}
-  
-		return { message: 'User updated successfully' };
-	  } catch (error) {
-		console.error('Error updating user:', error);
-		return { message: 'Error updating user' };
-	  }
 	}
 }

@@ -10,7 +10,8 @@ export class UserService {
 	constructor(
         private prisma: PrismaService,
     ) {}
-
+	// =============================================================================
+	// GETTERS =====================================================================
 	async getUsers() {
 		const users = await this.prisma.user.findMany();
 		return (users);
@@ -41,6 +42,9 @@ export class UserService {
 		return user?.score ?? 0;
 	}
 	
+
+	// =============================================================================
+	// UPDATES =====================================================================
 	async updateScore(score: number, userId: number) {
 		try {
 			await this.prisma.user.update({
@@ -51,19 +55,6 @@ export class UserService {
 		console.log(`Score updated successfully for user with ID: ${userId}`);
 		} catch (error) {
 		  	console.error('Error updating score:', error);
-		}
-	}
-
-	async updateEmail(email: string, userId: number) {
-		try {
-			await this.prisma.user.update({
-				where: { id: userId },
-				data: { email : email },
-		  });
-	
-			console.log(`Email updated successfully for user with ID: ${userId}`);
-		} catch (error) {
-		  	console.error('Error updating email:', error);
 		}
 	}
 
@@ -81,30 +72,6 @@ export class UserService {
 		}
 	}
 
-	async getNick(userId: number) {
-		const user = await this.prisma.user.findUnique({
-		  where: { id: userId },
-		  select: { nickname: true },
-		});
-		console.log('---------Nick---------');
-		return user?.nickname;
-	}
-
-	// async updateNick(nickname: string, userId: number) {
-	// 	try {
-	// 		await this.prisma.user.update({
-	// 			where: { id: userId },
-	// 			data: { nickname : nickname },
-	// 	  });
-	
-	// 		console.log(`Nick updated successfully for user with ID: ${userId}`);
-	// 	} catch (error) {
-	// 	  	console.error('Error updating Nick:', error);
-	// 	}
-	// }
-
-
-	
 	async updateNick(nickname: string, userId: number) {
 	  try {
 		await this.prisma.user.update({
@@ -125,6 +92,27 @@ export class UserService {
 	  }
 	}
 	
+	async updateEmail(email: string, userId: number) {
+		try {
+			await this.prisma.user.update({
+				where: { id: userId },
+				data: { email : email },
+		  });
+	
+			console.log(`Email updated successfully for user with ID: ${userId}`);
+		} catch (error) {
+			if (
+				error instanceof Prisma.PrismaClientKnownRequestError &&
+				error.code === 'P2002' &&
+				Array.isArray((error.meta as any)?.target) &&
+				(error.meta as any)?.target.includes('email')
+			  ) {
+				throw new Error('Email is already taken. Please choose a different email.');
+			  }
+			  // Handle other errors or re-throw if needed.
+			  throw error;
+		}
+	}
 	  
 	  
 

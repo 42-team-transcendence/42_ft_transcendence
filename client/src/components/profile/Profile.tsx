@@ -9,7 +9,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import EmailModal from "./EmailModal"; 
 import PwdModal from "./PasswordModal";
 import AuthContext, { AuthProvider } from '../../context/AuthProvider';
-import UserProfile from "./UserProfile";
 import NickModal from "./NicknameModal";
 
 // =============================================================================
@@ -109,7 +108,7 @@ function Profile() {
 
 
 	// =============================================================================
-	// NICKNAME MODAL =================================================================
+	// NICKNAME MODAL ==============================================================
 
 	// State for controlling the email modal
 	const [isNickModalOpen, setNickModalOpen] = useState(false);
