@@ -11,21 +11,20 @@ import tchoupi from '../../assets/tchoupi50x50.jpg'
 import type {Message} from "../../utils/types"
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
-    console.log({Conversation : chat})
-
     const [socket, setSocket] = useState<Socket>();
     const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
-    // const [messages, setMessages] = useState<string[]>([...chat.messages]);
+    // const [messages, setMessages] = useState<Message[]>([...chat.messages]);
     const [messages, setMessages] = useState<Message[]>([]);
-    
-
 
     // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
     const recipientId = parseInt(useParams().userId || '');
     const recipient = (chat?.participants.find((e:any) => e.id === recipientId))
     console.log("chat recipientId : " + recipientId);
     console.log({recipient});
+    console.log({chat});
 
+
+    //**************************************** SOCKETS *****************************************//
 
     //Création de la socket client
     useEffect(() => {
@@ -47,7 +46,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         function onConnect() {
             console.log("socket onConnect useEffect")
             setSocketIsConnected(true);
-            
+
             const userData = {
                 userId : currentUser.sub,
                 socketId : socket?.id
@@ -62,13 +61,14 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Emission d'un message via le bouton MessageInput
     const send = (value:string) => {
-        const payload : {content:string, to:number, from:number} = {
+        const payload : {content:string, to:number, from:number, chatId: number} = {
             content: value,
             to: recipientId,
-            from: currentUser.sub
+            from: currentUser.sub,
+            chatId: chat.id
         }
         console.log({payload})
-        setMessages([...messages, {content: value, senderId: currentUser.sub}])
+        setMessages([...messages, {content: value, senderId: currentUser.sub, chatId: chat.id}])
         socket?.emit("message", payload)
     }
 
@@ -103,7 +103,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 <Box sx={{ width:'100%'}}>
                     {messages?.map((msg, index) => {
                         return (
-                            <MessageInConv 
+                            <MessageInConv
                                 key={index}
                                 content={msg.content}
                                 sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}

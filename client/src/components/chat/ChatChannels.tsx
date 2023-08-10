@@ -16,7 +16,7 @@ export default function ChatChannels() {
     const [currentUser, setCurrentUser] = useState<any>();
 
     // Cas Chat en 1v1 : il faut checker le paramètre de l'URL
-    //pour avoir l'id du user avec qui on veut chater 
+    //pour avoir l'id du user avec qui on veut chater
     let recipientId = parseInt(useParams().userId || ''); //vérifie si on a un userId dans l'URL
     console.log({recipientId});
 
@@ -72,7 +72,6 @@ export default function ChatChannels() {
 		getCurrentUser(); //appel de la fonction
     }, [])
 
-
     return (
         <PageWrapper>
             <Stack
@@ -84,7 +83,7 @@ export default function ChatChannels() {
             >
                 { myChats && currentUser ? ( // Conditionally render the components only when recipient is available
                 <>
-                    <ChatSidebar 
+                    <ChatSidebar
                         myChats={myChats}
                         currentUser={currentUser}
                     ></ChatSidebar>

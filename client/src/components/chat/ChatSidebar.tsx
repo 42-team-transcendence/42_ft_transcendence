@@ -12,12 +12,12 @@ export default function ChatSidebar(
                 //Find first user id which is not mine
                 const recipient = chat?.participants.find((e:any) => e.id != currentUser.sub)
                 return (
-                    <ChatMiniature 
+                    <ChatMiniature
                         key={i}
                         notif={true}
                         userId={recipient?.id}
                         nickname={recipient?.nickname}
-                        lastMessage={chat?.messages[chat?.messages.length - 1]}
+                        lastMessage={chat?.messages[chat?.messages.length - 1].message}
                     ></ChatMiniature>
                 )
             })}
