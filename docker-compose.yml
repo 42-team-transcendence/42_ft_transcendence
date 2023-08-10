@@ -47,25 +47,24 @@ services:
     volumes:
       - ./server:/app
     command: ["npm", "run", "start:dev"]
-      #- ./scripts/wait.sh:/wait.sh
-      #- /app/node_modules
 
-  # client:
-  #   container_name: client
-  #   build:
-  #     context: ./client
-  #     dockerfile: Dockerfile
-  #   restart: on-failure
-  #   env_file: .env
-  #   networks:
-  #     - transcendence-network
-  #   ports: # Exposes container ports : HOST_PORT:CONTAINER_PORT 
-  #     - ${FRONTEND_PORT}:${FRONTEND_PORT} 
-  #   depends_on:
-  #     - dev-db
-  #     - server
-  #   volumes:
-  #     - ./client:/app
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file: .env
+    networks:
+      - transcendence-network
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT} 
+    depends_on:
+      - dev-db
+      - server
+    volumes:
+      - ./client:/app
+    command: ["npm", "run", "start"]
 
 volumes:
   db-data:
