@@ -3,6 +3,7 @@
 
 generator client {
   	provider = "prisma-client-js"
+	binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -30,7 +31,7 @@ model User {
 
 	games_player_1 Game[] @relation(name: "GamePlayer1")
   	games_player_2 Game[] @relation(name: "GamePlayer2")
-	
+
   @@map("users")
 }
 
@@ -60,7 +61,7 @@ model Message {
 	chatId        Int
 
 	sender        User @relation(fields: [senderId], references: [id])
-	senderId      Int 
+	senderId      Int
 }
 
 model Game {
@@ -69,7 +70,7 @@ model Game {
 	player_2_id     Int
 	player_1_score  Int @default(0)
 	player_2_score  Int @default(0)
-	winnerId        Int? 
+	winnerId        Int?
 	createdAt DateTime @default(now())
 
   	player_1    User @relation(name: "GamePlayer1", fields: [player_1_id], references: [id])
