@@ -17,7 +17,7 @@ export default function ChatSidebar(
                         notif={true}
                         userId={recipient?.id}
                         nickname={recipient?.nickname}
-                        lastMessage={chat?.messages[chat?.messages.length - 1].message}
+                        lastMessage={chat?.messages.length > 0 ? chat?.messages[chat?.messages.length - 1].message : ""}
                     ></ChatMiniature>
                 )
             })}

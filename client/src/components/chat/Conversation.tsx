@@ -11,10 +11,13 @@ import tchoupi from '../../assets/tchoupi50x50.jpg'
 import type {Message} from "../../utils/types"
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
+    const oldMessages: Message[] = chat.messages.map((msg:any) => {
+            return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId}})
+    console.log({oldMessages});
+
     const [socket, setSocket] = useState<Socket>();
     const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
-    // const [messages, setMessages] = useState<Message[]>([...chat.messages]);
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<Message[]>([...oldMessages]);
 
     // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
     const recipientId = parseInt(useParams().userId || '');
