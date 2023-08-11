@@ -38,7 +38,7 @@ export class UserService {
 		  where: { id: userId },
 		  select: { score: true },
 		});
-		console.log('---------ICI---------');
+		console.log('---------GET SCORE---------');
 		return user?.score ?? 0;
 	}
 	
@@ -50,9 +50,9 @@ export class UserService {
 			await this.prisma.user.update({
 				where: { id: userId },
 				data: { score : score },
-		  });
+		  	});
 	
-		console.log(`Score updated successfully for user with ID: ${userId}`);
+			console.log(`Score updated successfully for user with ID: ${userId}`);
 		} catch (error) {
 		  	console.error('Error updating score:', error);
 		}
@@ -64,7 +64,7 @@ export class UserService {
 			await this.prisma.user.update({
 				where: { id: userId },
 				data: { hash : hash },
-		  });
+			});
 	
 			console.log(`Pwd updated successfully for user with ID: ${userId}`);
 		} catch (error) {
@@ -74,22 +74,22 @@ export class UserService {
 
 	async updateNick(nickname: string, userId: number) {
 	  try {
-		await this.prisma.user.update({
-		  where: { id: userId },
-		  data: { nickname: nickname },
-		});
-	  } catch (error) {
-		if (
-		  error instanceof Prisma.PrismaClientKnownRequestError &&
-		  error.code === 'P2002' &&
-		  Array.isArray((error.meta as any)?.target) &&
-		  (error.meta as any)?.target.includes('nickname')
-		) {
-		  throw new Error('Nickname is already taken. Please choose a different nickname.');
-		}
-		// Handle other errors or re-throw if needed.
-		throw error;
-	  }
+			await this.prisma.user.update({
+				where: { id: userId },
+				data: { nickname: nickname },
+			});
+	  	} catch (error) {
+			if (
+				error instanceof Prisma.PrismaClientKnownRequestError &&
+				error.code === 'P2002' &&
+				Array.isArray((error.meta as any)?.target) &&
+				(error.meta as any)?.target.includes('nickname')
+			) {
+				throw new Error('Nickname is already taken. Please choose a different nickname.');
+			}
+			// Handle other errors or re-throw if needed.
+			throw error;
+	  	}
 	}
 	
 	async updateEmail(email: string, userId: number) {
@@ -106,11 +106,11 @@ export class UserService {
 				error.code === 'P2002' &&
 				Array.isArray((error.meta as any)?.target) &&
 				(error.meta as any)?.target.includes('email')
-			  ) {
+			) {
 				throw new Error('Email is already taken. Please choose a different email.');
-			  }
-			  // Handle other errors or re-throw if needed.
-			  throw error;
+			}
+			// Handle other errors or re-throw if needed.
+			throw error;
 		}
 	}
 	  

@@ -87,9 +87,10 @@ function Profile() {
 				{
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
+					validateStatus: status => status >= 200 && status < 300,
 				}
 			);
-	
+			
 			if (response.status === 200) {
 				// Update the user's email in the user state
 				setUser((prevUser) => ({ ...prevUser, email: newEmail }));
@@ -124,13 +125,14 @@ function Profile() {
 	};
 
 	const handleSaveNick = async (newNickname: string) => {
+		console.log("handle nick");
 		try {
 		  // Call your backend API to update the nickname
 			const response = await axiosPrivate.post('/users/updateNick', JSON.stringify({ nickname: newNickname }), {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			});
-	  
+			console.log(`response.status = ${response.status}`);
 			if (response.status === 200) {
 				setUser((prevUser) => ({ ...prevUser, nickname: newNickname }));
 				console.log('Nickname update successful');

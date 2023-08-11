@@ -61,68 +61,70 @@ export class UserController {
 	async updateScore(
 		  @Body() body: { score: number },
 		  @GetUser() user
-	 	) {
-		  const { score } = body;
-		  console.log({score});
-		  console.log({user});
-		  await this.userService.updateScore(score, user.sub);
+		) {
+			const { score } = body;
+			console.log({score});
+			console.log({user});
+			await this.userService.updateScore(score, user.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('email')
 	async updateEmail(
-	  @Body() body: { email: string },
-	  @GetUser() user
-	) {
-	  const { email } = body;
-	  console.log(`new Email = ${email}`);
-	  await this.userService.updateEmail(email, user.sub);
+		@Body() body: { email: string },
+		@GetUser() user
+		) {
+			const { email } = body;
+			console.log(`new Email = ${email}`);
+			await this.userService.updateEmail(email, user.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('pwd')
 	async updatePwd(
-	  @Body() body: { pwd: string },
-	  @GetUser() user
-	) {
-	  const { pwd } = body;
-	  console.log(`new Pwd = ${pwd}`);
-	  await this.userService.updatePwd(pwd, user.sub);
+		@Body() body: { pwd: string },
+		@GetUser() user
+		) {
+			const { pwd } = body;
+			console.log(`new Pwd = ${pwd}`);
+			await this.userService.updatePwd(pwd, user.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('updateNick')
 	async updateNick(
-	  @Body() body: { nickname: string },
-	  @GetUser() user
-	) {
-	  const { nickname } = body;
-	  console.log(`new Nick = ${nickname}`);
-	  await this.userService.updateNick(nickname, user.sub);
+		@Body() body: { nickname: string },
+		@GetUser() user 
+		) {
+			const { nickname } = body;
+			console.log(`new Nick = ${nickname}`);
+			await this.userService.updateNick(nickname, user.sub);
 	}
 
+
+	//NOT USED 
 	@HttpCode(HttpStatus.OK)
 	@Post('updateUser')
 	async updateUser(
-	  @Body() updateData: { score?: number, email?: string },
-	  @GetUser() user
-	) {
-	  const { score, email } = updateData;
-  
-		try {
-			await this.userService.updateUser(user.sub, { score, email });
-	
-			if (score !== undefined) {
-				console.log(`Score updated successfully for user with ID: ${user.sub}`);
+		@Body() updateData: { score?: number, email?: string },
+		@GetUser() user
+		) {
+			const { score, email } = updateData;
+		
+			try {
+				await this.userService.updateUser(user.sub, { score, email });
+		
+				if (score !== undefined) {
+					console.log(`Score updated successfully for user with ID: ${user.sub}`);
+				}
+				if (email !== undefined) {
+					console.log(`Email updated successfully for user with ID: ${user.sub}`);
+				}
+				return { message: 'User updated successfully' };
+
+			} catch (error) {
+					console.error('Error updating user:', error);
+					return { message: 'Error updating user' };
 			}
-			if (email !== undefined) {
-				console.log(`Email updated successfully for user with ID: ${user.sub}`);
-			}
-	
-			return { message: 'User updated successfully' };
-		} catch (error) {
-				console.error('Error updating user:', error);
-				return { message: 'Error updating user' };
-		}
 	}
 }
