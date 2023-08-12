@@ -60,10 +60,8 @@ export class ChatService {
 			const findChat = await this.findChatByParticipants(participantIds);
 			if (!findChat) {
 				const newChat = await this.createChat(participantIds, creatorId);
-				console.log({newChat});
 				return newChat;
 			}
-			console.log({findChat});
 			return findChat;
 		} catch (error) {
             console.log(error);
@@ -84,7 +82,6 @@ export class ChatService {
 				messages : true // Include all messages in the returned object
 			},
 		})
-		console.log({myChats : myChats});
 		return myChats;
 	}
 }

@@ -62,18 +62,17 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     client: Socket,
   ) {
       console.log("handleConnection")
-      console.log({client_handshake : client.handshake});
+      // console.log({client_handshake : client.handshake});
   }
 
   //lifecycle method : automaticaly called on socket disconnection
   handleDisconnect(client: Socket) {
     console.log("disconnect")
-    console.log({client_handshake : client.handshake});
 
     //Remove socket connection from connectedClients list
     const userId = client.handshake.query.userId; // Assuming you pass userId as a query parameter while connecting
     this.connectedClients = this.connectedClients.filter((e:any) => e.userId != userId);
-    console.log(this.connectedClients);
+    console.log({remainingConnectedClients: this.connectedClients});
   }
 
   //The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate
@@ -88,7 +87,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
 
     //Add new socket connection to connectedClients list
     this.connectedClients.push({userId : data.userId, socketId : data.socketId});
-    console.log(this.connectedClients);
+    console.log({connectedClients: this.connectedClients});
 
     return data;
   }
@@ -98,25 +97,22 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
     @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ) {
-    console.log({clientId : client.id});
-    console.log('Received chat message:', data);
+    try {
+        //store message sent in DB
+        const createdMsg = await this.storeMessage(data);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 
-    //store message sent in DB
-    const createdMsg = await this.storeMessage(data);
-    console.log(createdMsg);
-
-    //retrieve recipients from DB with chatId
+    //TODO retrieve recipients from DB with chatId
 
     // ****** BLOC A MODIFIER : IL FAUT ENVOYER DANS UNE ROOM plutot que cibler un destinataire ******
     //search for the right recipient in connected clients
     const recipient = this.connectedClients.find((e) => e.userId === data.to)
-    console.log({recipient})
-
     if (recipient)
       this.sendMessageToClient('message', data.content, recipient.socketId, data.from);
     // ************
-
-    //return data;
   }
 
   async storeMessage(msg) {

@@ -29,7 +29,6 @@ export default function ChatChannels() {
                             headers: { 'Content-Type': 'application/json'},
                             withCredentials: true
                         })
-                    console.log(response.data);
                     setCurrentChat(response.data);
                     setChatFound(true);
                 }
@@ -48,7 +47,6 @@ export default function ChatChannels() {
                     withCredentials: true
                 })
                 setMyChats(response.data);
-                console.log({myChats : response.data});
 			} catch (error:any) {
 				console.log(error.response );
 			}
@@ -64,7 +62,6 @@ export default function ChatChannels() {
                     withCredentials: true
                 })
                 setCurrentUser(response.data);
-                console.log({currentUser : response.data});
 			} catch (error:any) {
 				console.log(error.response );
 			}
@@ -104,19 +101,3 @@ export default function ChatChannels() {
         </PageWrapper>
     )
 }
-
-
-// const [recipient, setRecipient] = useState<any>();
-// const [messages, setMessages] = useState<string[]>([]);
-
-    // const renderChatInfos = () => {
-    //     setMessages(chat?.messages);
-    //     setRecipient(chat?.participants.find((e:any) => e.id === recipientId));
-    // }
-
-    // useEffect(() => {// When chat state is updated, render chat infos
-    //     if (chat) {
-    //         renderChatInfos(); // Call the function when chat is updated
-    //         console.log({ chatInUseEffect: chat }); // Now the chat state will be updated
-    //     }
-    // }, [chat]);

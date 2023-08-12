@@ -18,9 +18,6 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
     const recipientId = parseInt(useParams().userId || '');
     const recipient = (chat?.participants.find((e:any) => e.id === recipientId));
-    console.log("chat recipientId : " + recipientId);
-    console.log({recipient});
-    console.log({chat});
 
     //Update des messages displayed quand le chat est modifié
     useEffect(() => {
@@ -57,8 +54,6 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 userId : currentUser.sub,
                 socketId : socket?.id
             }
-            console.log({userData})
-
             socket?.emit("userData", userData)
         }
         socket?.on('connect', onConnect);
@@ -73,14 +68,12 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             from: currentUser.sub,
             chatId: chat.id
         }
-        console.log({payload})
         setMessages([...messages, {content: value, senderId: currentUser.sub, chatId: chat.id}])
         socket?.emit("message", payload)
     }
 
     //Réception et stockage des messages par le client
     const messageListener = (message:Message) => {
-        console.log({message});
         setMessages([...messages, message])
     }
     useEffect(() => {
