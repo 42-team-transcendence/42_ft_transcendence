@@ -67,10 +67,10 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
 
   //lifecycle method : automaticaly called on socket disconnection
   handleDisconnect(client: Socket) {
-    console.log("disconnect")
+    const userId = client.handshake.query.userId; // Assuming you pass userId as a query parameter while connecting
+    console.log(`userId ${userId} socket disconnected`);
 
     //Remove socket connection from connectedClients list
-    const userId = client.handshake.query.userId; // Assuming you pass userId as a query parameter while connecting
     this.connectedClients = this.connectedClients.filter((e:any) => e.userId != userId);
     console.log({remainingConnectedClients: this.connectedClients});
   }
@@ -78,61 +78,76 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
   //The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate
   //that a particular method should be invoked when a specific WebSocket message is received.
   @SubscribeMessage('userData')
-  handleUserData(
+  async handleUserData(
     @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
-    @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
-  ): string {
+    @ConnectedSocket() client: Socket, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
+  ) {
     console.log('Received userData:', data);
-    console.log({client : client});
+
+    //Get all chats of user and add user to corresponding socket rooms
+    const userChats = await this.getUserChats(data.userId);
+    client.join(userChats.map(chat => "room_" + chat.id));
+    console.log({clientRooms:client.rooms});
 
     //Add new socket connection to connectedClients list
     this.connectedClients.push({userId : data.userId, socketId : data.socketId});
     console.log({connectedClients: this.connectedClients});
-
-    return data;
   }
+
+  async getUserChats(userId: number) {
+		try {
+      const userChats = await this.prisma.chat.findMany({
+        where: {
+          participants : {
+            some : {id : {in: [userId]}}
+          },
+        },
+      })
+      return userChats;
+		} catch (error) {
+        console.log(error);
+        throw error;
+		}
+  }
+
 
   @SubscribeMessage('message')
   async handleChatMessage(
     @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
-    @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
+    @ConnectedSocket() client: Socket, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ) {
     try {
-        //store message sent in DB
-        const createdMsg = await this.storeMessage(data);
+      //store message sent in DB
+      const createdMsg = await this.storeMessage(data);
+
+      //Envoyer le message à la room correspondante au chatId
+      this.sendMessageToRoom(data.content, "room_" + createdMsg.chatId, data.from);
     } catch (error) {
         console.log(error);
         throw error;
     }
-
-    //TODO retrieve recipients from DB with chatId
-
-    // ****** BLOC A MODIFIER : IL FAUT ENVOYER DANS UNE ROOM plutot que cibler un destinataire ******
-    //search for the right recipient in connected clients
-    const recipient = this.connectedClients.find((e) => e.userId === data.to)
-    if (recipient)
-      this.sendMessageToClient('message', data.content, recipient.socketId, data.from);
-    // ************
   }
 
   async storeMessage(msg) {
 		try {
-			//création du msg dans la DB : ajout dans la table et connexion avec le chat et le sender correspondant
+			//création du msg dans la DB
 			const createdMsg = await this.prisma.message.create({
 				data: {
 					message: msg.content,
 					chat: {connect: {id: msg.chatId}},
 					sender: {connect: {id: msg.from}},
-				},
-				// include: {
-				// 	chat: true, // Include chat infos
-				// },
-			})
+				}
+      })
       return createdMsg;
 		} catch (error) {
         console.log(error);
         throw error;
 		}
+  }
+
+  // Emit a message to a room
+  sendMessageToRoom(content:string, roomId:string, senderId:number): void {
+    this.server.to(roomId).emit('message', { content, senderId });
   }
 
   // Emit a message to specific socket client id

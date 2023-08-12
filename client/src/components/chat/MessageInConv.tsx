@@ -14,10 +14,10 @@ const MsgInConv = styled('div')(({ theme }) => ({
 
 export default function MessageInConv({content, sender, currentUser}: any) {
     return (
-        <Box sx={sender.id === currentUser.sub ? {ml:'150px', mt:'10px'}:{ mt:'10px'}}>
+        <Box sx={sender?.id === currentUser.sub ? {ml:'150px', mt:'10px'}:{ mt:'10px'}}>
             <Miniature 
                 nickname={sender?.nickname}
-                minAvatar={sender.id === currentUser.sub ? {url: alf, name:'Alf'}:{url: tchoupi, name:'Tchoupi'}}></Miniature>
+                minAvatar={sender?.id === currentUser.sub ? {url: alf, name:'Alf'}:{url: tchoupi, name:'Tchoupi'}}></Miniature>
             <MsgInConv>{content}</MsgInConv>
         </Box>
 

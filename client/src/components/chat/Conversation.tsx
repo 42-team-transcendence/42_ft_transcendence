@@ -68,8 +68,9 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             from: currentUser.sub,
             chatId: chat.id
         }
-        setMessages([...messages, {content: value, senderId: currentUser.sub, chatId: chat.id}])
         socket?.emit("message", payload)
+        //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
+        // setMessages([...messages, {content: value, senderId: currentUser.sub, chatId: chat.id}])
     }
 
     //Réception et stockage des messages par le client
