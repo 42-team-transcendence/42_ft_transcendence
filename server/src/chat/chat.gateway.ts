@@ -105,6 +105,8 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     const createdMsg = await this.storeMessage(data);
     console.log(createdMsg);
 
+    //retrieve recipients from DB with chatId
+
     // ****** BLOC A MODIFIER : IL FAUT ENVOYER DANS UNE ROOM plutot que cibler un destinataire ******
     //search for the right recipient in connected clients
     const recipient = this.connectedClients.find((e) => e.userId === data.to)
@@ -126,6 +128,9 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
 					chat: {connect: {id: msg.chatId}},
 					sender: {connect: {id: msg.from}},
 				},
+				// include: {
+				// 	chat: true, // Include chat infos
+				// },
 			})
       return createdMsg;
 		} catch (error) {

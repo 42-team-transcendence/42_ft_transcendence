@@ -11,21 +11,24 @@ import tchoupi from '../../assets/tchoupi50x50.jpg'
 import type {Message} from "../../utils/types"
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
-    const oldMessages: Message[] = chat.messages.map((msg:any) => {
-            return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId}})
-    console.log({oldMessages});
-
     const [socket, setSocket] = useState<Socket>();
     const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
-    const [messages, setMessages] = useState<Message[]>([...oldMessages]);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
     const recipientId = parseInt(useParams().userId || '');
-    const recipient = (chat?.participants.find((e:any) => e.id === recipientId))
+    const recipient = (chat?.participants.find((e:any) => e.id === recipientId));
     console.log("chat recipientId : " + recipientId);
     console.log({recipient});
     console.log({chat});
 
+    //Update des messages displayed quand le chat est modifié
+    useEffect(() => {
+        const oldMessages: Message[] = chat.messages.map((msg:any) => {
+            return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId
+        }});
+        setMessages([...oldMessages]);
+    }, [chat])
 
     //**************************************** SOCKETS *****************************************//
 
@@ -100,7 +103,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 alignItems: 'center'
             }}
         >
-            {recipient? (
+            {recipient && messages ? (
             <>
                 <Miniature nickname={recipient.nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
                 <Box sx={{ width:'100%'}}>
@@ -124,21 +127,3 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 }
 
 export default Conversation
-
-
-// useEffect(() => { //Fetch chat data
-//     const findOrCreateChat = async () => { //definition de la fonction
-//         try {
-//             const response = await axiosPrivate.post('/chats/findOrCreate',
-//                 JSON.stringify({'recipients': [recipientId]}),
-//                 {
-//                     headers: { 'Content-Type': 'application/json'},
-//                     withCredentials: true
-//                 })
-//             setChat(response.data);
-//         } catch (error:any) {
-//             console.log(error.response );
-//         }
-//     }
-//     findOrCreateChat(); //appel de la fonction
-// }, [recipientId])
