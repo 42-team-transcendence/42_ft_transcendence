@@ -10,6 +10,7 @@ import EmailModal from "./EmailModal";
 import PwdModal from "./PasswordModal";
 import AuthContext, { AuthProvider } from '../../context/AuthProvider';
 import NickModal from "./NicknameModal";
+import DoubleAuth from "../auth2fa/Doubleauth";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
@@ -233,11 +234,12 @@ function Profile() {
 					</div>
 
 					<div className="element-profile">
-						<div className="a-modifier">
-							<h2> Double factors </h2>
-							<Checkbox />
-						</div>
+					<div className="a-modifier">
+						<h2> Double factors </h2>
+						<Checkbox />
+						<DoubleAuth/>
 					</div>
+				</div>
 				</div>
 				<GameHistory/>
 			</div>
