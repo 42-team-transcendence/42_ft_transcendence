@@ -46,8 +46,10 @@ services:
         condition: service_healthy
     volumes:
       - ./server:/app
-      #- ./scripts/wait.sh:/wait.sh
-      #- /app/node_modules
+    command: ["npm", "run", "start:dev"]
+    # the command field is used to override the default command that is executed 
+    # when starting a container based on the specified Docker image. it sets a new command 
+    # and its arguments that will be executed within the container.
 
   client:
     container_name: client
@@ -58,13 +60,14 @@ services:
     env_file: .env
     networks:
       - transcendence-network
-    ports: # Exposes container ports : HOST_PORT:CONTAINER_PORT 
+    ports: 
       - ${FRONTEND_PORT}:${FRONTEND_PORT} 
     depends_on:
       - dev-db
       - server
     volumes:
       - ./client:/app
+    command: ["npm", "run", "start"]
 
 volumes:
   db-data:

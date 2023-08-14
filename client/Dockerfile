@@ -1,26 +1,15 @@
 # Base image
-FROM node:16-alpine
+FROM node:16-alpine as dev
 
 # Create app directory and go into it
-RUN mkdir -p /app
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+COPY ./bin/entrypoint.sh /usr/bin/entrypoint.sh
 
-# Install dependencies //l'install ne se fait pas automatiquement parce que MUI ne fonctionne pas encore avec React 18
-# RUN npm install --force @mui/material @emotion/react @emotion/styled @material-ui/core
-
-RUN npm install
-
-# Copy the rest of the files
-COPY . .
-
-# Set the backend URL
-# ENV BACKEND_URL http://server:3333
-
-# Expose the port on which the frontend will run - INUTILE car instructions dans le docker compose
-# EXPOSE 3000
+# RUN apk update
+# RUN apk add --no-cache \
+#     curl \
+#     vim
 
 # Start the frontend application
-CMD ["npm", "start"]
+ENTRYPOINT [ "/bin/sh", "/usr/bin/entrypoint.sh" ]
