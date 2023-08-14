@@ -33,6 +33,7 @@ import { PrismaService } from "src/prisma/prisma.service";
         sameSite: "lax"
       }
     },
+    namespace: "/ns-chat", //specific namespace for the chat
     path: "/chat", //replace http://localhost:3333/socket.io/ with http://localhost:3333/chat/
   },
 )

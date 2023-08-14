@@ -30,7 +30,12 @@ export default function ChatMiniature(
             }}
             mt={3} pt={1} pb={1}
         >
-            <Miniature nickname={nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
+            <Miniature miniatureUser={{
+                nickname: nickname,
+                id: userId,
+                minAvatar: {url: tchoupi, name:'Tchoupi'}
+            }}
+            ></Miniature>
             {/* margin left margin top */}
             <Box ml={0} mt={0}>
                 <div>{lastMessage}</div>

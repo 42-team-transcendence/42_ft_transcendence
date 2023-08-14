@@ -31,3 +31,9 @@ export type MiniAvatarPicture = {
     url: string,
     name: string
 }
+
+export type MiniatureUser = {
+    nickname: string,
+    id: number,
+    minAvatar: MiniAvatarPicture
+}

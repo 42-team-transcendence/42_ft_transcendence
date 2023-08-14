@@ -5,6 +5,8 @@ import axios, { CancelTokenSource } from 'axios';
 import Miniature from "../miniature/Miniature";
 
 import tchoupi from '../../assets/tchoupi50x50.jpg'
+import { Box } from "@mui/material";
+import { MiniatureUser } from "../../utils/types";
 
 interface User {
   nickname: string;
@@ -39,9 +41,7 @@ function Users() {
         navigate('/register', { state: { from: location }, replace: true });
       }
     };
-
     getUsers();
-
     return () => {
       isMounted = false;
       if (cancelTokenSource) {
@@ -50,21 +50,21 @@ function Users() {
     };
   }, [axiosPrivate, navigate, location]);
 
-	const goToUserProfile = (user:User) => {
-		navigate(`/profile/${user.id}`, {replace: false});
-	}
-
   return (
     <article style={{marginBottom:"90px"}}>
       <h2>Users List</h2>
       {users.length ? (
         <ul style={{display: "flex", flexDirection:'column'}}>
           {users.map((user, i) => {
+            const miniatureUser: MiniatureUser = {
+              nickname: user?.nickname,
+              id: user?.id,
+              minAvatar: {url: tchoupi, name:'Tchoupi'}
+            }
 						return (
-              <button key={i}
-                onClick={() => goToUserProfile(user)}
-              ><Miniature nickname={user?.nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
-              </button>
+              <Box key={i} sx={{backgroundColor:'gray'}}>
+                <Miniature miniatureUser={miniatureUser} ></Miniature>
+              </Box>
             )})}
         </ul>
       ) : (
