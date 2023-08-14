@@ -15,10 +15,17 @@ const MsgInConv = styled('div')(({ theme }) => ({
 export default function MessageInConv({content, sender, currentUser}: any) {
     return (
         <Box sx={sender?.id === currentUser.id ? {ml:'150px', mt:'10px'}:{ mt:'10px'}}>
-            <Miniature 
-                nickname={sender?.nickname}
-                minAvatar={sender?.id === currentUser.id ? {url: alf, name:'Alf'}:{url: tchoupi, name:'Tchoupi'}}></Miniature>
-            <MsgInConv>{content}</MsgInConv>
+            {sender ? (
+            <>
+                <Miniature miniatureUser={{
+                        nickname: sender.nickname,
+                        id: sender.id,
+                        minAvatar: sender.id === currentUser.id ? {url: alf, name:'Alf'}:{url: tchoupi, name:'Tchoupi'}
+                    }}
+                    ></Miniature>
+                <MsgInConv>{content}</MsgInConv>
+            </>
+            ) : <div>problem finding sender </div>}
         </Box>
 
     )

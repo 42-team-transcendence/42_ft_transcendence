@@ -100,7 +100,12 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         >
             {recipient && messages ? (
             <>
-                <Miniature nickname={recipient.nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
+                <Miniature miniatureUser={{
+                    nickname: recipient.nickname,
+                    id: recipient.id,
+                    minAvatar: {url: tchoupi, name:'Tchoupi'}
+                }}
+                ></Miniature>
                 <Box sx={{ width:'100%'}}>
                     {messages?.map((msg, index) => {
                         return (
