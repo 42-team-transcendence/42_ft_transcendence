@@ -3,23 +3,31 @@ import { useParams } from "react-router-dom";
 import io, {Socket} from "socket.io-client"
 import {Box} from "@mui/material";
 import MessageInput from "./MessageInput";
-import Messages from "./Messages";
+import MessageInConv from "./MessageInConv";
 import Miniature from "../miniature/Miniature";
 
-function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
-    console.log({Conversation : chat})
+import tchoupi from '../../assets/tchoupi50x50.jpg'
 
+import type {Message} from "../../utils/types"
+
+function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     const [socket, setSocket] = useState<Socket>();
     const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
-    const [messages, setMessages] = useState<string[]>([...chat.messages]);
-    
-
+    const [messages, setMessages] = useState<Message[]>([]);
 
     // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
     const recipientId = parseInt(useParams().userId || '');
-    const recipient = (chat?.participants.find((e:any) => e.id === recipientId))
-    console.log("chat recipientId : " + recipientId);
+    const recipient = (chat?.participants.find((e:any) => e.id === recipientId));
 
+    //Update des messages displayed quand le chat est modifié
+    useEffect(() => {
+        const oldMessages: Message[] = chat.messages.map((msg:any) => {
+            return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId
+        }});
+        setMessages([...oldMessages]);
+    }, [chat])
+
+    //**************************************** SOCKETS *****************************************//
 
     //Création de la socket client
     useEffect(() => {
@@ -29,8 +37,8 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 path: "/chat",
                 withCredentials: true,
                 autoConnect: true,
-                auth: {token: "TODO : gérer les tokens d'authentification ici"},
-                query: {"userId": currentUser.sub}
+                auth: {token: "//TODO : gérer les tokens d'authentification ici"},
+                query: {"userId": currentUser.id}
             });
         console.log({newSocket});
         setSocket(newSocket)
@@ -41,13 +49,11 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         function onConnect() {
             console.log("socket onConnect useEffect")
             setSocketIsConnected(true);
-            
+
             const userData = {
-                userId : currentUser.sub,
+                userId : currentUser.id,
                 socketId : socket?.id
             }
-            console.log({userData})
-
             socket?.emit("userData", userData)
         }
         socket?.on('connect', onConnect);
@@ -56,15 +62,19 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Emission d'un message via le bouton MessageInput
     const send = (value:string) => {
-        const payload = {
-            message: value,
-            to: recipientId,   
+        const payload : {content:string, to:number, from:number, chatId: number} = {
+            content: value,
+            to: recipientId,
+            from: currentUser.id,
+            chatId: chat.id
         }
         socket?.emit("message", payload)
+        //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
+        // setMessages([...messages, {content: value, senderId: currentUser.id, chatId: chat.id}])
     }
 
     //Réception et stockage des messages par le client
-    const messageListener = ({message}:{message : string}) => {
+    const messageListener = (message:Message) => {
         setMessages([...messages, message])
     }
     useEffect(() => {
@@ -87,10 +97,20 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 alignItems: 'center'
             }}
         >
-            {recipient? (
+            {recipient && messages ? (
             <>
-                <Miniature nickname={recipient.nickname}></Miniature>
-                <Messages messages={messages}></Messages>
+                <Miniature nickname={recipient.nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
+                <Box sx={{ width:'100%'}}>
+                    {messages?.map((msg, index) => {
+                        return (
+                            <MessageInConv
+                                key={index}
+                                content={msg.content}
+                                sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
+                                currentUser={currentUser}
+                            ></MessageInConv>
+                    )})}
+                </Box>
                 <Box>
                     <MessageInput send={send}></MessageInput>
                 </Box>
@@ -101,21 +121,3 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 }
 
 export default Conversation
-
-
-// useEffect(() => { //Fetch chat data
-//     const findOrCreateChat = async () => { //definition de la fonction
-//         try {
-//             const response = await axiosPrivate.post('/chats/findOrCreate',
-//                 JSON.stringify({'recipients': [recipientId]}),
-//                 {
-//                     headers: { 'Content-Type': 'application/json'},
-//                     withCredentials: true
-//                 })
-//             setChat(response.data);
-//         } catch (error:any) {
-//             console.log(error.response );
-//         }
-//     }
-//     findOrCreateChat(); //appel de la fonction
-// }, [recipientId])

@@ -16,20 +16,19 @@ export default function ChatChannels() {
     const [currentUser, setCurrentUser] = useState<any>();
 
     // Cas Chat en 1v1 : il faut checker le paramètre de l'URL
-    //pour avoir l'id du user avec qui on veut chater 
+    //pour avoir l'id du user avec qui on veut chater
     let recipientId = parseInt(useParams().userId || ''); //vérifie si on a un userId dans l'URL
     console.log({recipientId});
 
     useEffect(() => { //If chat with recipientId does not exist, creates it
         const findOrCreateChat = async () => { //definition de la fonction
             try {
-                if (recipientId && currentUser && recipientId != currentUser.sub) { //ne s'actionne que si on a recipientId (que si un userId est dans l'URL)
+                if (recipientId && currentUser && recipientId != currentUser.id) { //ne s'actionne que si on a recipientId (que si un userId est dans l'URL)
                     const response = await axiosPrivate.post('/chats/findOrCreate',
                         JSON.stringify({'recipients': [recipientId]}), {
                             headers: { 'Content-Type': 'application/json'},
                             withCredentials: true
                         })
-                    console.log(response.data);
                     setCurrentChat(response.data);
                     setChatFound(true);
                 }
@@ -48,7 +47,6 @@ export default function ChatChannels() {
                     withCredentials: true
                 })
                 setMyChats(response.data);
-                console.log({myChats : response.data});
 			} catch (error:any) {
 				console.log(error.response );
 			}
@@ -64,14 +62,12 @@ export default function ChatChannels() {
                     withCredentials: true
                 })
                 setCurrentUser(response.data);
-                console.log({currentUser : response.data});
 			} catch (error:any) {
 				console.log(error.response );
 			}
 		}
 		getCurrentUser(); //appel de la fonction
     }, [])
-
 
     return (
         <PageWrapper>
@@ -84,7 +80,7 @@ export default function ChatChannels() {
             >
                 { myChats && currentUser ? ( // Conditionally render the components only when recipient is available
                 <>
-                    <ChatSidebar 
+                    <ChatSidebar
                         myChats={myChats}
                         currentUser={currentUser}
                     ></ChatSidebar>
@@ -105,19 +101,3 @@ export default function ChatChannels() {
         </PageWrapper>
     )
 }
-
-
-// const [recipient, setRecipient] = useState<any>();
-// const [messages, setMessages] = useState<string[]>([]);
-
-    // const renderChatInfos = () => {
-    //     setMessages(chat?.messages);
-    //     setRecipient(chat?.participants.find((e:any) => e.id === recipientId));
-    // }
-
-    // useEffect(() => {// When chat state is updated, render chat infos
-    //     if (chat) {
-    //         renderChatInfos(); // Call the function when chat is updated
-    //         console.log({ chatInUseEffect: chat }); // Now the chat state will be updated
-    //     }
-    // }, [chat]);

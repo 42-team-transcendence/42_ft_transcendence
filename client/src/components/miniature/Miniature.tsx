@@ -1,7 +1,10 @@
 import { Container, Box } from "@mui/material";
 import BadgeAvatar from "./BadgeAvatar";
 
-export default function Miniature({nickname}:{nickname:any}) {
+import type {MiniAvatarPicture} from '../../utils/types'
+
+
+export default function Miniature({nickname, minAvatar}:{nickname:string, minAvatar:MiniAvatarPicture}) {
 
     return (
         // sx = "style system." shorthand prop provided by MUI to apply custom styles to components using an inline object syntax.
@@ -11,7 +14,7 @@ export default function Miniature({nickname}:{nickname:any}) {
         <Container sx={
                 { display: 'flex' }
             }> 
-            <BadgeAvatar></BadgeAvatar>
+            <BadgeAvatar minAvatar={minAvatar}></BadgeAvatar>
             <Box 
                 ml={0} mb={0} p={1}
                 sx={{ fontWeight: 'bold' }}

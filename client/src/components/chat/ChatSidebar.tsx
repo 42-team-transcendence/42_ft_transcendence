@@ -10,14 +10,14 @@ export default function ChatSidebar(
         <Box p={10} sx={{backgroundColor : '#FF79AF', width:'58%', height:'100%'}}>
             {myChats.map((chat:any, i:number) => {
                 //Find first user id which is not mine
-                const recipient = chat?.participants.find((e:any) => e.id != currentUser.sub)
+                const recipient = chat?.participants.find((e:any) => e.id != currentUser.id)
                 return (
-                    <ChatMiniature 
+                    <ChatMiniature
                         key={i}
                         notif={true}
                         userId={recipient?.id}
                         nickname={recipient?.nickname}
-                        lastMessage={chat?.messages[chat?.messages.length - 1]}
+                        lastMessage={chat?.messages.length > 0 ? chat?.messages[chat?.messages.length - 1].message : ""}
                     ></ChatMiniature>
                 )
             })}
