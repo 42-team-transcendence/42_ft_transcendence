@@ -11,8 +11,8 @@ import tchoupi from '../../assets/tchoupi50x50.jpg'
 import type {Message} from "../../utils/types"
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
-    const [socket, setSocket] = useState<Socket>();
-    const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
+    const [chatSocket, setChatSocket] = useState<Socket>();
+    // const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
     const [messages, setMessages] = useState<Message[]>([]);
 
     // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
@@ -31,8 +31,9 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Création de la socket client
     useEffect(() => {
-        const newSocket = io(
-            "http://localhost:3333", //dès que j'essaie de changer le port j'ai une erreur
+        const newChatSocket = io(
+            //URL:port/namespace
+            "http://localhost:3333/ns-chat", //dès que j'essaie de changer le port j'ai une erreur
             {
                 path: "/chat",
                 withCredentials: true,
@@ -40,25 +41,25 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 auth: {token: "//TODO : gérer les tokens d'authentification ici"},
                 query: {"userId": currentUser.id}
             });
-        console.log({newSocket});
-        setSocket(newSocket)
-    }, [setSocket])
+        console.log({newChatSocket});
+        setChatSocket(newChatSocket)
+    }, [setChatSocket])
 
     //On Connect : actions supplémentaires possibles à la connexion de la socket client
     useEffect(() => {
         function onConnect() {
             console.log("socket onConnect useEffect")
-            setSocketIsConnected(true);
+            // setSocketIsConnected(true);
 
             const userData = {
                 userId : currentUser.id,
-                socketId : socket?.id
+                socketId : chatSocket?.id
             }
-            socket?.emit("userData", userData)
+            chatSocket?.emit("userData", userData)
         }
-        socket?.on('connect', onConnect);
+        chatSocket?.on('connect', onConnect);
 
-      }, [socket]);
+      }, [chatSocket]);
 
     //Emission d'un message via le bouton MessageInput
     const send = (value:string) => {
@@ -68,7 +69,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             from: currentUser.id,
             chatId: chat.id
         }
-        socket?.emit("message", payload)
+        chatSocket?.emit("message", payload)
         //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
         // setMessages([...messages, {content: value, senderId: currentUser.id, chatId: chat.id}])
     }
@@ -78,9 +79,9 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         setMessages([...messages, message])
     }
     useEffect(() => {
-        socket?.on("message", messageListener); //if we have a socket, when we receive a message, adds function messageListener as listener
+        chatSocket?.on("message", messageListener); //if we have a socket, when we receive a message, adds function messageListener as listener
         return (() => { //cleanup function
-            socket?.off("message", messageListener);
+            chatSocket?.off("message", messageListener);
         })
     }, [messageListener]);
 
@@ -99,7 +100,12 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         >
             {recipient && messages ? (
             <>
-                <Miniature nickname={recipient.nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
+                <Miniature miniatureUser={{
+                    nickname: recipient.nickname,
+                    id: recipient.id,
+                    minAvatar: {url: tchoupi, name:'Tchoupi'}
+                }}
+                ></Miniature>
                 <Box sx={{ width:'100%'}}>
                     {messages?.map((msg, index) => {
                         return (
