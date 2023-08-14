@@ -3,7 +3,10 @@ import { Container, Box } from "@mui/material";
 import Miniature from "../miniature/Miniature";
 
 import tchoupi from '../../assets/tchoupi50x50.jpg'
+import { CenterFocusStrong } from "@mui/icons-material";
 
+
+import  "../../styles/ChatMiniature.css";
 
 
 export default function ChatMiniature(
@@ -17,24 +20,28 @@ export default function ChatMiniature(
         const location = useLocation();
 
     return (
-        <Box 
-            onClick={() => navigate(`/chat/${userId}`, {replace: false})}
-            sx={{
-                backgroundColor: notif ? 'white' : '#00000021',
-                border: notif ? '2px solid black' : 'none',
-                borderRadius: '10px',
-                "&:hover": {
-                    border: "1px solid #FF8100",
-                    color: '#FF8100',
-                },
-            }}
-            mt={3} pt={1} pb={1}
-        >
-            <Miniature nickname={nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
-            {/* margin left margin top */}
-            <Box ml={0} mt={0}>
-                <div>{lastMessage}</div>
-            </Box>
-        </Box>
+        // <Box 
+        //     onClick={() => navigate(`/chat/${userId}`, {replace: false})}
+        //     sx={{
+        //         backgroundColor: notif ? 'white' : '#00000021',
+        //         border: notif ? '2px solid black' : 'none',
+        //         borderRadius: '10px',
+        //         "&:hover": {
+        //             border: "1px solid #FF8100",
+        //             color: '#FF8100',
+        //         },
+        //     }}
+        //     mt={3} pt={1} pb={1}
+        // >
+			<div className="chat-miniature">
+
+	
+				<Miniature nickname={nickname} minAvatar={{url: tchoupi, name:'Tchoupi'}}></Miniature>
+				{/* margin left margin top */}
+				<Box ml={0} mt={0}>
+					<div>{lastMessage}</div>
+				</Box>
+			</div>
+        // </Box>
     )
 }
