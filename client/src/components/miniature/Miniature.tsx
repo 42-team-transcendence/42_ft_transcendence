@@ -11,7 +11,9 @@ export default function Miniature({miniatureUser}: {miniatureUser: MiniatureUser
     const location = useLocation();
     const axiosPrivate = useAxiosPrivate();
 
+
     const [currentUser, setCurrentUser] = useState<any>();
+
 
     useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => {
@@ -36,6 +38,7 @@ export default function Miniature({miniatureUser}: {miniatureUser: MiniatureUser
     }
 
     return (
+
         // sx = "style system." shorthand prop provided by MUI to apply custom styles to components using an inline object syntax.
         // mt={2} sets a top margin of 2 units.
         // mb={4} sets a bottom margin of 4 units.

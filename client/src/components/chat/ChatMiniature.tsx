@@ -3,7 +3,10 @@ import { Container, Box } from "@mui/material";
 import Miniature from "../miniature/Miniature";
 
 import tchoupi from '../../assets/tchoupi50x50.jpg'
+import { CenterFocusStrong } from "@mui/icons-material";
 
+
+import  "../../styles/ChatMiniature.css";
 
 
 export default function ChatMiniature(
@@ -17,6 +20,7 @@ export default function ChatMiniature(
         const location = useLocation();
 
     return (
+
         <Box 
             onClick={() => navigate(`/chat/${userId}`, {replace: false})}
             sx={{
