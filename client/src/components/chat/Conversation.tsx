@@ -38,7 +38,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 withCredentials: true,
                 autoConnect: true,
                 auth: {token: "//TODO : gérer les tokens d'authentification ici"},
-                query: {"userId": currentUser.sub}
+                query: {"userId": currentUser.id}
             });
         console.log({newSocket});
         setSocket(newSocket)
@@ -51,7 +51,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             setSocketIsConnected(true);
 
             const userData = {
-                userId : currentUser.sub,
+                userId : currentUser.id,
                 socketId : socket?.id
             }
             socket?.emit("userData", userData)
@@ -65,12 +65,12 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         const payload : {content:string, to:number, from:number, chatId: number} = {
             content: value,
             to: recipientId,
-            from: currentUser.sub,
+            from: currentUser.id,
             chatId: chat.id
         }
         socket?.emit("message", payload)
         //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
-        // setMessages([...messages, {content: value, senderId: currentUser.sub, chatId: chat.id}])
+        // setMessages([...messages, {content: value, senderId: currentUser.id, chatId: chat.id}])
     }
 
     //Réception et stockage des messages par le client

@@ -23,7 +23,7 @@ export default function ChatChannels() {
     useEffect(() => { //If chat with recipientId does not exist, creates it
         const findOrCreateChat = async () => { //definition de la fonction
             try {
-                if (recipientId && currentUser && recipientId != currentUser.sub) { //ne s'actionne que si on a recipientId (que si un userId est dans l'URL)
+                if (recipientId && currentUser && recipientId != currentUser.id) { //ne s'actionne que si on a recipientId (que si un userId est dans l'URL)
                     const response = await axiosPrivate.post('/chats/findOrCreate',
                         JSON.stringify({'recipients': [recipientId]}), {
                             headers: { 'Content-Type': 'application/json'},
