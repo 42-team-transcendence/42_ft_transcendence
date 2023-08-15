@@ -1,7 +1,17 @@
 import { useState, useEffect } from "react";
-import {Box} from '@mui/material';
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import ChatMiniature from "./ChatMiniature";
 
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import {Box} from '@mui/material';
+
+
+
+// =============================================================================
+// FUNCTION ====================================================================
 
 export default function ChatSidebar(
     {myChats, currentUser}:{myChats:any,currentUser:any}

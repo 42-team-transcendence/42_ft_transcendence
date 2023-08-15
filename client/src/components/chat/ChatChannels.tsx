@@ -1,19 +1,29 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import Conversation from "./Conversation";
-import {Stack, Box, Container, Divider} from '@mui/material';
 import ChatSidebar from "./ChatSidebar";
 import PageWrapper from "../navbar/pageWrapper";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { useParams } from "react-router-dom";
 
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import {Stack, Box, Container, Divider} from '@mui/material';
+import '../../styles/ChatChannel.css';
+
+
+// =============================================================================
+// FUNCTION ====================================================================
 
 export default function ChatChannels() {
-    const axiosPrivate = useAxiosPrivate();
+	const axiosPrivate = useAxiosPrivate();
 
-    const [myChats, setMyChats] = useState<any>();
-    const [chatFound, setChatFound] = useState<boolean>(false)
-    const [currentChat, setCurrentChat] = useState<any>();
-    const [currentUser, setCurrentUser] = useState<any>();
+	const [myChats, setMyChats] = useState<any>();
+	const [chatFound, setChatFound] = useState<boolean>(false)
+	const [currentChat, setCurrentChat] = useState<any>();
+	const [currentUser, setCurrentUser] = useState<any>();
 
     // Cas Chat en 1v1 : il faut checker le paramètre de l'URL
     //pour avoir l'id du user avec qui on veut chater
@@ -71,25 +81,27 @@ export default function ChatChannels() {
 
     return (
         <PageWrapper>
-            <Stack
+            {/* <Stack
                 sx={{width:'100vw', height:'100vh'}}
                 spacing={0}
                 direction="row"
-                justifyContent='center'
-                alignItems='center'
-            >
+                // justifyContent='center'
+                // alignItems='flex-start'
+            > */}
+				<div className="chat-channel-container">
+				
                 { myChats && currentUser ? ( // Conditionally render the components only when recipient is available
                 <>
                     <ChatSidebar
                         myChats={myChats}
                         currentUser={currentUser}
                     ></ChatSidebar>
-                    <Box sx={{backgroundColor : 'white', width:'2%', height:'100%'}}></Box>
+                    <Box sx={{backgroundColor : 'white', width:'1.5%', height:'100%'}}></Box>
                     <Box p={5} sx={{
-                        backgroundColor : '#FF8100', width:'40%', height:'100%',
+                        backgroundColor : '#FF8100', width:'65%', height:'100%',
                         justifyContent : currentChat? 'space-between': 'center',
                         alignItems : currentChat? 'space-between': 'center',
-                        display : 'flex'
+                        // display : 'flex'
                     }}>
                         { currentChat ? (
                             <Conversation chat={currentChat} currentUser={currentUser}></Conversation>
@@ -97,7 +109,8 @@ export default function ChatChannels() {
                     </Box>
                 </>
                 ): <p> Loading Chats</p>}
-            </Stack>
+				</div>
+            {/* </Stack> */}
         </PageWrapper>
     )
 }
