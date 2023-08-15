@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import Navbar from '../navbar/Navbar';
 
+
 interface PageWrapperProps {
   children: ReactNode;
 }

@@ -1,14 +1,28 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import io, {Socket} from "socket.io-client"
-import {Box} from "@mui/material";
+
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import MessageInput from "./MessageInput";
 import MessageInConv from "./MessageInConv";
 import Miniature from "../miniature/Miniature";
-
 import tchoupi from '../../assets/tchoupi50x50.jpg'
 
+// =============================================================================
+// IMPORT TYPES ===============================================================
 import type {Message} from "../../utils/types"
+
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import {Box} from "@mui/material";
+import '../../styles/Conversation.css'
+
+
+
+// =============================================================================
+// FUNCTION ====================================================================
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     const [chatSocket, setChatSocket] = useState<Socket>();
@@ -86,18 +100,19 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     }, [messageListener]);
 
     return (
-        <Box p={3}
-            sx={{
-                backgroundColor:'white',
-                height:'100%',
-                border: '2px solid black',
-                borderRadius:'10px',
-                display:'flex',
-                flexDirection: 'column',
-                justifyContent: recipient? 'space-between': 'center',
-                alignItems: 'center'
-            }}
-        >
+        // <Box p={3}
+        //     sx={{
+        //         backgroundColor:'white',
+        //         // height:'100%',
+        //         border: '2px solid black',
+        //         borderRadius:'10px',
+        //         display:'flex',
+        //         flexDirection: 'column',
+        //         justifyContent: recipient? 'space-between': 'center',
+        //         alignItems: 'center'
+        //     }}
+        // >
+			<div className="conversation-container">
             {recipient && messages ? (
             <>
                 <Miniature miniatureUser={{
@@ -122,7 +137,8 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 </Box>
             </>
             ) : <div>Select conversation</div>}
-        </Box>
+			</div>
+   
     )
 }
 

@@ -1,0 +1,12 @@
+.conversation-container {
+	display: flex;
+	border:2px solid yellow;
+	display: flex;
+	justify-content: center;
+	background-color: white;
+	border: 2px solid black;
+	border-radius: 10px;
+	flex-direction: column;
+
+}
+
