@@ -2,14 +2,25 @@ import React from "react";
 import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 
+import {Box} from "@mui/material";
+
 import Miniature from "../miniature/Miniature";
+import BadgeAvatar from "../miniature/BadgeAvatar";
 
 type MessageProps = {
   message: string;
   timestamp: string; // Adjust the type as needed
   photoURL?: string;
   displayName?: string;
+  sender?: string;
+//   id?: string;
 };
+
+type SenderType = {
+	id: number;
+	nickname: string;
+	url: string;
+  };
 
 const useStyles: any = {
   messageRow: {
@@ -67,25 +78,32 @@ const useStyles: any = {
 };
 
 // Avatar is on the left
-export const MessageLeft: React.FC<MessageProps> = (props) => {
-  const { message, timestamp, photoURL, displayName, } = props;
+export const MessageLeft: React.FC<MessageProps & { recipients?: any; tchoupi?: string; sender?: SenderType }> = (
+	props
+  ) => {
+	const { message, timestamp, displayName, recipients = [], tchoupi = "", sender } = props;
+  
+	return (
+		<div style={useStyles.messageRow}>
+		
+			<Box>
+				{sender ? (
+					<>
+						<BadgeAvatar minAvatar={{ url: sender.id.toString(), name: "Tchoupi" }} />
+					</>
+				) : (
+					<div>problem finding sender</div>
+			)}
+			</Box>
 
-  return (
-    <div style={useStyles.messageRow}>
-      <Avatar
-        alt={displayName}
-        sx={useStyles.orangeAvatar}
-        src={photoURL}
-      ></Avatar>
-      <div style={useStyles.displayName}>{displayName}</div>
-      <div style={useStyles.messageBlue}>
-        <div>
-          <p style={useStyles.messageContent}>{message}</p>
-        </div>
-        <div style={useStyles.messageTimeStampRight}>{timestamp}</div>
-      </div>
-    </div>
-  );
+			<div style={useStyles.messageBlue}>
+				<div>
+					<p style={useStyles.messageContent}>{message}</p>
+				</div>
+				<div style={useStyles.messageTimeStampRight}>{timestamp}</div>
+			</div>
+    	</div>
+  	);
 };
 
 // Avatar is on the right

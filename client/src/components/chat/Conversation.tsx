@@ -122,7 +122,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 					  <MessageRight
 						key={index}
 						message={msg.content}
-						timestamp={'0'}
+						timestamp={'MM-DD 00H00'}
 					  />
 					);
 				  } else {
@@ -130,15 +130,16 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 					const sender = chat?.participants.find(
 					  (e: any) => e.id === msg.senderId
 					);
+			
 					return (
-					  <MessageLeft
-						key={index}
-						message={msg.content}
-						timestamp={'0'}
-						displayName={sender.nickname}
-						
-						// photoURL={/* Add the sender's photo URL here */}
-					  />
+						<MessageLeft
+							key={index}
+							message={msg.content}
+							timestamp={'MM-DD 00H00'}
+							displayName={sender.nickname}
+							sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
+							// photoURL={/* Add the sender's photo URL here */}
+						/>
 					);
 				  }
 				})}
