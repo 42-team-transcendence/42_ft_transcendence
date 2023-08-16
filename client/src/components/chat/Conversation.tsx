@@ -17,6 +17,7 @@ import type {Message} from "../../utils/types"
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box} from "@mui/material";
+import { MessageLeft, MessageRight } from "./MessageStyle";
 import '../../styles/Conversation.css'
 
 
@@ -102,47 +103,55 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         })
     }, [messageListener]);
 
-    return (
-        // <Box p={3}
-        //     sx={{
-        //         backgroundColor:'white',
-        //         // height:'100%',
-        //         border: '2px solid black',
-        //         borderRadius:'10px',
-        //         display:'flex',
-        //         flexDirection: 'column',
-        //         justifyContent: recipient? 'space-between': 'center',
-        //         alignItems: 'center'
-        //     }}
-        // >
-			<div className="conversation-container">
-            {isChat && recipients && messages ? (
-            <>
-                <Miniature miniatureUser={{
-                    nickname: recipients[0].nickname,
-                    id: recipients[0].id,
-                    minAvatar: {url: tchoupi, name:'Tchoupi'}
-                }}
-                ></Miniature>
-                <Box sx={{ width:'100%'}}>
-                    {messages?.map((msg, index) => {
-                        return (
-                            <MessageInConv
-                                key={index}
-                                content={msg.content}
-                                sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
-                                currentUser={currentUser}
-                            ></MessageInConv>
-                    )})}
-                </Box>
-                <Box>
-                    <MessageInput send={send}></MessageInput>
-                </Box>
-            </>
-            ) : <div>Select conversation</div>}
-			</div>
-   
-    )
+	return (
+		<div className="conversation-container">
+		  {isChat && recipients && messages ? (
+			<>
+			  <Miniature
+				miniatureUser={{
+				  nickname: recipients[0].nickname,
+				  id: recipients[0].id,
+				  minAvatar: { url: tchoupi, name: "Tchoupi" },
+				}}
+			  ></Miniature>
+			  <Box sx={{ width: "100%" }}>
+				{messages?.map((msg, index) => {
+				  if (msg.senderId === currentUser.id) {
+					// Display messages sent by the current user on the right
+					return (
+					  <MessageRight
+						key={index}
+						message={msg.content}
+						timestamp={'0'}
+					  />
+					);
+				  } else {
+					// Display messages sent by others on the left
+					const sender = chat?.participants.find(
+					  (e: any) => e.id === msg.senderId
+					);
+					return (
+					  <MessageLeft
+						key={index}
+						message={msg.content}
+						timestamp={'0'}
+						displayName={sender.nickname}
+						
+						// photoURL={/* Add the sender's photo URL here */}
+					  />
+					);
+				  }
+				})}
+			  </Box>
+			  <Box>
+				<MessageInput send={send}></MessageInput>
+			  </Box>
+			</>
+		  ) : (
+			<div>Select conversation</div>
+		  )}
+		</div>
+	  );
 }
 
 export default Conversation
