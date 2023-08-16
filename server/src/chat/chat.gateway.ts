@@ -122,7 +122,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
       const createdMsg = await this.storeMessage(data);
 
       //Envoyer le message à la room correspondante au chatId
-      this.sendMessageToRoom(data.content, "room_" + createdMsg.chatId, data.from);
+      this.sendMessageToRoom(data.content, "room_" + createdMsg.chatId, data.senderId);
     } catch (error) {
         console.log(error);
         throw error;
@@ -136,7 +136,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
 				data: {
 					message: msg.content,
 					chat: {connect: {id: msg.chatId}},
-					sender: {connect: {id: msg.from}},
+					sender: {connect: {id: msg.senderId}},
 				}
       })
       return createdMsg;
