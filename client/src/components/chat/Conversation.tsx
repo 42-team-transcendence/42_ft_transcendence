@@ -29,9 +29,13 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     // const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
     const [messages, setMessages] = useState<Message[]>([]);
 
-    // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
-    const recipientId = parseInt(useParams().userId || '');
-    const recipient = (chat?.participants.find((e:any) => e.id === recipientId));
+    // ******** TO DO: A modifier quand on introduira les channels pour distinguer si la conv actuelle est un chat ou un channel
+    let isChat;
+    let recipients;
+    if (1) {
+        isChat = true;
+        recipients = (chat?.participants.filter((e:any) => e.id != currentUser.id));
+    }
 
     //Update des messages displayed quand le chat est modifié
     useEffect(() => {
@@ -76,11 +80,10 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
       }, [chatSocket]);
 
     //Emission d'un message via le bouton MessageInput
-    const send = (value:string) => {
-        const payload : {content:string, to:number, from:number, chatId: number} = {
-            content: value,
-            to: recipientId,
-            from: currentUser.id,
+    const send = (content:string) => {
+        const payload : {content:string, senderId:number, chatId: number} = {
+            content: content,
+            senderId: currentUser.id,
             chatId: chat.id
         }
         chatSocket?.emit("message", payload)
@@ -113,11 +116,11 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         //     }}
         // >
 			<div className="conversation-container">
-            {recipient && messages ? (
+            {isChat && recipients && messages ? (
             <>
                 <Miniature miniatureUser={{
-                    nickname: recipient.nickname,
-                    id: recipient.id,
+                    nickname: recipients[0].nickname,
+                    id: recipients[0].id,
                     minAvatar: {url: tchoupi, name:'Tchoupi'}
                 }}
                 ></Miniature>

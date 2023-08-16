@@ -13,6 +13,7 @@ import {Box} from '@mui/material';
 // =============================================================================
 // FUNCTION ====================================================================
 
+//faire une version alternative de chat miniature pour les channels
 export default function ChatSidebar(
     {myChats, currentUser}:{myChats:any,currentUser:any}
     ) {
