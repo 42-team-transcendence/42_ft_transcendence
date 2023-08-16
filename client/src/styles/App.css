@@ -1,12 +1,11 @@
- .App {
+.App {
   text-align: center;
   display: flex;
-  padding-top: 56px;
-  
   justify-content: center;
   align-items: center;
   min-height: 100vh; 
   background: linear-gradient(to bottom, #FF79AF 0%,#FF79AF 52%, white 52%, white 54%, #FF8100 54%, #FF8100 100%);
+  padding-top: 40px;
 } 
 
 .column {

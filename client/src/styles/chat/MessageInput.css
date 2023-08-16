@@ -1,0 +1,13 @@
+.message-input {
+	margin-top: 50px;
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	gap: 20px;
+	/* border: 2px solid green; */
+}
+
+
+.text-field {
+	width: 100%;
+}
