@@ -1,6 +1,15 @@
+import { useState } from "react";
+
+// =============================================================================
+// IMPORT STYLES ===============================================================
 import { TextField, Box, Fab } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
-import { useState } from "react";
+import '../../styles/chat/MessageInput.css'
+
+
+
+// =============================================================================
+// FUNCTION ====================================================================
 
 export default function MessageInput({send} : {send: (val:string) => void}) {
     const [value, setValue] = useState("");
@@ -11,8 +20,11 @@ export default function MessageInput({send} : {send: (val:string) => void}) {
     }
 
     return (
-        <Box sx={{display:'flex', alignItems:'center', justifyContent: 'space-around'}}>
+        
+
+		<div className="message-input">
             <TextField 
+				className="text-field"
                 id="outlined-basic-email" label="Type your message"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
@@ -22,6 +34,7 @@ export default function MessageInput({send} : {send: (val:string) => void}) {
                 size="small" color="primary" aria-label="add"
                 onClick={() => sendClearInput()}
             ><SendIcon /></Fab>
-        </Box>
+		</div>
+
     )
 }

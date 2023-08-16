@@ -105,52 +105,52 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
 	return (
 		<div className="conversation-container">
-		  {isChat && recipients && messages ? (
+		  	{isChat && recipients && messages ? (
 			<>
-			  <Miniature
-				miniatureUser={{
-				  nickname: recipients[0].nickname,
-				  id: recipients[0].id,
-				  minAvatar: { url: tchoupi, name: "Tchoupi" },
-				}}
-			  ></Miniature>
-			  <Box sx={{ width: "100%" }}>
-				{messages?.map((msg, index) => {
-				  if (msg.senderId === currentUser.id) {
-					// Display messages sent by the current user on the right
-					return (
-					  <MessageRight
-						key={index}
-						message={msg.content}
-						timestamp={'MM-DD 00H00'}
-					  />
-					);
-				  } else {
-					// Display messages sent by others on the left
-					const sender = chat?.participants.find(
-					  (e: any) => e.id === msg.senderId
-					);
-			
-					return (
-						<MessageLeft
+				<Miniature
+					miniatureUser={{
+						nickname: recipients[0].nickname,
+						id: recipients[0].id,
+						minAvatar: { url: tchoupi, name: "Tchoupi" },
+					}}
+			 	></Miniature>
+				<Box sx={{ width: "100%",  marginTop:"30px"}}>
+					{messages?.map((msg, index) => {
+					if (msg.senderId === currentUser.id) {
+						// Display messages sent by the current user on the right
+						return (
+						<MessageRight
 							key={index}
 							message={msg.content}
 							timestamp={'MM-DD 00H00'}
-							displayName={sender.nickname}
-							sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
-							// photoURL={/* Add the sender's photo URL here */}
 						/>
-					);
-				  }
-				})}
-			  </Box>
-			  <Box>
-				<MessageInput send={send}></MessageInput>
-			  </Box>
+						);
+					} else {
+						// Display messages sent by others on the left
+						const sender = chat?.participants.find(
+						(e: any) => e.id === msg.senderId
+						);
+				
+						return (
+							<MessageLeft
+								key={index}
+								message={msg.content}
+								timestamp={'MM-DD 00H00'}
+								displayName={sender.nickname}
+								sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
+								// photoURL={/* Add the sender's photo URL here */}
+							/>
+						);
+					}
+					})}
+				</Box>
+				<Box>
+					<MessageInput send={send}></MessageInput>
+				</Box>
 			</>
-		  ) : (
-			<div>Select conversation</div>
-		  )}
+			) : (
+				<div>Select conversation</div>
+			)}
 		</div>
 	  );
 }

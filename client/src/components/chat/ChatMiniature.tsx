@@ -9,7 +9,7 @@ import tchoupi from '../../assets/tchoupi50x50.jpg'
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { CenterFocusStrong } from "@mui/icons-material";
-import  "../../styles/ChatMiniature.css";
+import  "../../styles/chat/ChatMiniature.css";
 
 
 

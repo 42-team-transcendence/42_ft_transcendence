@@ -11,7 +11,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Stack, Box, Container, Divider} from '@mui/material';
-import '../../styles/ChatChannel.css';
+import '../../styles/chat/ChatChannel.css';
 
 
 // =============================================================================
@@ -81,36 +81,27 @@ export default function ChatChannels() {
 
     return (
         <PageWrapper>
-            {/* <Stack
-                sx={{width:'100vw', height:'100vh'}}
-                spacing={0}
-                direction="row"
-                // justifyContent='center'
-                // alignItems='flex-start'
-            > */}
-				<div className="chat-channel-container">
-				
-                { myChats && currentUser ? ( // Conditionally render the components only when recipient is available
-                <>
-                    <ChatSidebar
-                        myChats={myChats}
-                        currentUser={currentUser}
-                    ></ChatSidebar>
-                    <Box sx={{backgroundColor : 'white', width:'1.5%', height:'100%'}}></Box>
-                    <Box p={5} sx={{
-                        backgroundColor : '#FF8100', width:'65%', height:'100%',
-                        justifyContent : currentChat? 'space-between': 'center',
-                        alignItems : currentChat? 'space-between': 'center',
-                        // display : 'flex'
-                    }}>
-                        { currentChat ? (
-                            <Conversation chat={currentChat} currentUser={currentUser}></Conversation>
-                        ) : <p> Select Chat</p>}
-                    </Box>
-                </>
-                ): <p> Loading Chats</p>}
-				</div>
-            {/* </Stack> */}
+			<div className="chat-channel-container">
+				{ myChats && currentUser ? ( // Conditionally render the components only when recipient is available
+				<>
+					<ChatSidebar
+						myChats={myChats}
+						currentUser={currentUser}
+					></ChatSidebar>
+					<Box sx={{backgroundColor : 'white', width:'1.5%', height:'100%'}}></Box>
+					<Box p={5} sx={{
+						backgroundColor : '#FF8100', width:'65%', height:'100%',
+						justifyContent : currentChat? 'space-between': 'center',
+						alignItems : currentChat? 'space-between': 'center',
+						// display : 'flex'
+					}}>
+						{ currentChat ? (
+							<Conversation chat={currentChat} currentUser={currentUser}></Conversation>
+						) : <p> Select Chat</p>}
+					</Box>
+				</>
+				): <p> Loading Chats</p>}
+			</div>
         </PageWrapper>
     )
 }
