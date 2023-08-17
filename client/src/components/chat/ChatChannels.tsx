@@ -10,7 +10,8 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {Stack, Box, Container, Divider} from '@mui/material';
+import { Box, IconButton } from "@mui/material";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import '../../styles/chat/ChatChannel.css';
 
 
@@ -79,29 +80,59 @@ export default function ChatChannels() {
 		getCurrentUser(); //appel de la fonction
     }, [])
 
-    return (
-        <PageWrapper>
-			<div className="chat-channel-container">
-				{ myChats && currentUser ? ( // Conditionally render the components only when recipient is available
-				<>
-					<ChatSidebar
-						myChats={myChats}
-						currentUser={currentUser}
-					></ChatSidebar>
-					<Box sx={{backgroundColor : 'white', width:'1.5%', height:'100%'}}></Box>
-					<Box p={5} sx={{
-						backgroundColor : '#FF8100', width:'65%', height:'100%',
-						justifyContent : currentChat? 'space-between': 'center',
-						alignItems : currentChat? 'space-between': 'center',
-						// display : 'flex'
-					}}>
-						{ currentChat ? (
-							<Conversation chat={currentChat} currentUser={currentUser}></Conversation>
-						) : <p> Select Chat</p>}
-					</Box>
-				</>
-				): <p> Loading Chats</p>}
-			</div>
-        </PageWrapper>
-    )
+	const [showChatSidebar, setShowChatSidebar] = useState(true);
+
+	useEffect(() => {
+	  const handleResize = () => {
+		setShowChatSidebar(window.innerWidth > 768);
+	  };
+  
+	  window.addEventListener("resize", handleResize);
+  
+	  // Call handleResize immediately to set initial state
+	  handleResize();
+  
+	  return () => {
+		window.removeEventListener("resize", handleResize);
+	  };
+	}, []);
+  
+	return (
+	  <PageWrapper>
+		<div className="chat-channel-container">
+		  {showChatSidebar && (
+			<ChatSidebar
+			  myChats={myChats}
+			  currentUser={currentUser}
+			></ChatSidebar>
+		  )}
+		  <Box sx={{backgroundColor : 'white', width:'1.5%', height:'100%'}}></Box>
+		  <Box
+			className="chat-content"
+			sx={{
+				margin: "20px",
+			}}
+		  >
+			{currentChat && !showChatSidebar && (
+			  <IconButton
+				className="back-button"
+				onClick={() => {
+				  setShowChatSidebar(true);
+				}}
+			  >
+				<ArrowBackIcon />
+			  </IconButton>
+			)}
+			{currentChat ? (
+			  <Conversation
+				chat={currentChat}
+				currentUser={currentUser}
+			  ></Conversation>
+			) : (
+			  <p> Select Chat</p>
+			)}
+		  </Box>
+		</div>
+	  </PageWrapper>
+	);
 }
