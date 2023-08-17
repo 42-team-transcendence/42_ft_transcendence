@@ -18,7 +18,7 @@ import type {Message} from "../../utils/types"
 // IMPORT STYLES ===============================================================
 import {Box} from "@mui/material";
 import { MessageLeft, MessageRight } from "./MessageStyle";
-import '../../styles/Conversation.css'
+import '../../styles/chat/Conversation.css'
 
 
 
