@@ -30,7 +30,7 @@ export default function ChatSidebar({
               (e: any) => e && e.id !== currentUser.id
             );
 
-            if (recipient) {
+            if (recipient && recipient.id) {
               return (
                 <ChatMiniature
                   key={i}
@@ -52,4 +52,3 @@ export default function ChatSidebar({
     </Box>
   );
 }
-

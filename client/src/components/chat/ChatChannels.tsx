@@ -106,12 +106,11 @@ export default function ChatChannels() {
 			  currentUser={currentUser}
 			></ChatSidebar>
 		  )}
+		  <Box sx={{backgroundColor : 'white', width:'1.5%', height:'100%'}}></Box>
 		  <Box
 			className="chat-content"
 			sx={{
-			  backgroundColor: "white",
-			  width: "100%",
-			  height: "100%",
+				margin: "20px",
 			}}
 		  >
 			{currentChat && !showChatSidebar && (
