@@ -98,41 +98,45 @@ export default function ChatChannels() {
 	}, []);
   
 	return (
-	  <PageWrapper>
-		<div className="chat-channel-container">
-		  {showChatSidebar && (
-			<ChatSidebar
-			  myChats={myChats}
-			  currentUser={currentUser}
-			></ChatSidebar>
-		  )}
-		  <Box sx={{backgroundColor : 'white', width:'1.5%', height:'100%'}}></Box>
-		  <Box
-			className="chat-content"
-			sx={{
-				margin: "20px",
-			}}
-		  >
-			{currentChat && !showChatSidebar && (
-			  <IconButton
-				className="back-button"
-				onClick={() => {
-				  setShowChatSidebar(true);
-				}}
-			  >
-				<ArrowBackIcon />
-			  </IconButton>
-			)}
-			{currentChat ? (
-			  <Conversation
-				chat={currentChat}
-				currentUser={currentUser}
-			  ></Conversation>
-			) : (
-			  <p> Select Chat</p>
-			)}
-		  </Box>
-		</div>
-	  </PageWrapper>
-	);
+		<PageWrapper>
+		  	<div className="chat-channel-container">
+				{showChatSidebar && (
+				<ChatSidebar
+					myChats={myChats}
+					currentUser={currentUser}
+				></ChatSidebar>
+				)}
+				<Box sx={{ backgroundColor: 'white', width: '1.5%', height: '100%' }}></Box>
+				<Box
+					className={`chat-content ${showChatSidebar ? 'hidden' : ''}`}
+					sx={{
+						
+						width:"100%",	
+						height: "100%",
+						// justifyContent : currentChat? 'space-between': 'center',
+			
+					}}
+				>
+				{currentChat && !showChatSidebar && (
+					<IconButton
+					className="back-button"
+					onClick={() => {
+						setShowChatSidebar(true);
+					}}
+					>
+					<ArrowBackIcon />
+					</IconButton>
+				)}
+				{currentChat ? (
+					<Conversation
+					chat={currentChat}
+					currentUser={currentUser}
+					></Conversation>
+				) : (
+					<p> Select Chat</p>
+				)}
+				</Box>
+		 	</div>
+		</PageWrapper>
+	  );
 }

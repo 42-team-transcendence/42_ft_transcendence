@@ -1,3 +1,7 @@
+.conversation {
+	background-color: blue;
+}
+
 .conversation-container {
 	display: flex;
 	border:2px solid rgb(255, 0, 128);
@@ -8,6 +12,7 @@
 	border-radius: 10px;
 	flex-direction: column;
 	padding: 20px;
+	
 
 }
 
