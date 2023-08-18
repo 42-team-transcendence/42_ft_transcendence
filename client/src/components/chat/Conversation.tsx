@@ -104,6 +104,9 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     }, [messageListener]);
 
 	return (
+		<Box 
+		className="conversation"
+		p={5} sx={{ backgroundColor : '#FF8100', width:'100%', height:'100%'}}>
 		<div className="conversation-container">
 		  	{isChat && recipients && messages ? (
 			<>
@@ -152,7 +155,9 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 				<div>Select conversation</div>
 			)}
 		</div>
+		</Box>
 	  );
+	
 }
 
 export default Conversation

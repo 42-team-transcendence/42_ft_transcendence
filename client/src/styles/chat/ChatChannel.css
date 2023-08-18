@@ -3,13 +3,10 @@
 	height: 100vh;
 	display: flex;
 	align-items: flex-start;
+
+	/* justify-content: space-between; */
 	border:2px solid blue;
 }
-
-/* .chat-content {
-	margin-left: 20px;
-} */
-
 
 @media (max-width: 768px) {
 	.chat-sidebar.hidden {

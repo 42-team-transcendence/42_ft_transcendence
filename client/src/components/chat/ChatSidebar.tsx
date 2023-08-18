@@ -7,6 +7,7 @@ import ChatMiniature from "./ChatMiniature";
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { Box } from "@mui/material";
+import "../../styles/chat/ChatSidebar.css"
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -20,7 +21,10 @@ export default function ChatSidebar({
   currentUser: any;
 }) {
   return (
-    <Box p={10} sx={{ backgroundColor: "#FF79AF", width: "58%", height: "100%" }}>
+	<Box
+		p={10}
+		className="responsive-chat-sidebar" // Add a class to the Box element
+  	>
       {myChats &&
         myChats.map((chat: any, i: number) => {
           // Ensure chat and participants are defined before accessing properties
