@@ -30,11 +30,14 @@ export default function ChatSidebar({
 				// Ensure chat and participants are defined before accessing properties
 				if (chat && chat.participants && chat.participants.length > 0) {
 					// Find first user id which is not mine
-					const recipient = chat.participants.find(
-					(e: any) => e && e.id !== currentUser.id
-			);
+					const recipient = chat?.participants?.find(
+						(e: any) => {
+						console.log(`ID PB ${e.id} or  CURRENT USER ID ${currentUser.id}`);
+						return e && e.id !== currentUser.id
+					}
+						);
 
-			if (recipient && recipient.id) {
+			if (recipient?.id) {
 				return (
 					<ChatMiniature
 						key={i}

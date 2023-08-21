@@ -125,7 +125,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 						<MessageRight
 							key={index}
 							message={msg.content}
-							timestamp={'MM-DD 00H00'}
+							timestamp={msg.createdAt ? msg.createdAt.toString() : ''}
 						/>
 						);
 					} else {
@@ -138,7 +138,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 							<MessageLeft
 								key={index}
 								message={msg.content}
-								timestamp={'MM-DD 00H00'}
+								timestamp={msg.createdAt ? msg.createdAt.toString() : ''}
 								displayName={sender.nickname}
 								sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
 								// photoURL={/* Add the sender's photo URL here */}
