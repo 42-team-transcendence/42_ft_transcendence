@@ -4,6 +4,8 @@ import { deepOrange } from "@mui/material/colors";
 
 import {Box} from "@mui/material";
 
+import tchoupi from '../../assets/tchoupi50x50.jpg'
+
 import Miniature from "../miniature/Miniature";
 import BadgeAvatar from "../miniature/BadgeAvatar";
 
@@ -89,7 +91,8 @@ export const MessageLeft: React.FC<MessageProps & { recipients?: any; tchoupi?: 
 			<Box>
 				{sender ? (
 					<>
-						<BadgeAvatar minAvatar={{ url: sender.id.toString(), name: "Tchoupi" }} />
+					
+						<BadgeAvatar minAvatar={{ url: tchoupi, name: "Tchoupi" }} />
 					</>
 				) : (
 					<div>problem finding sender</div>
@@ -119,3 +122,7 @@ export const MessageRight: React.FC<MessageProps> = (props) => {
     </div>
   );
 };
+
+
+
+//sender.id.toString()
