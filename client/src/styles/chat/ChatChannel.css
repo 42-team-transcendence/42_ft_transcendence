@@ -8,6 +8,14 @@
 	border:2px solid blue;
 }
 
+/* Default styling for the box */
+.chat-box {
+	background-color: white;
+	width: 1.5%;
+	height: 100%;
+}
+
+
 @media (max-width: 768px) {
 	.chat-sidebar.hidden {
 	  display: none;
@@ -17,7 +25,16 @@
 	  display: none;
 	}
 
-	.chat-content {
-		width: 100%;
+	.chat-box {
+		display: none;
 	}
+
+	.chat-content {
+		/* width: 100%; */
+		/* background-color: white; */
+	}
+
+	/* .back-button {
+		background-color: white;
+	} */
   }
