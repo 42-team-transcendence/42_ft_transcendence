@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
-import Conversation from "./Conversation";
-import ChatSidebar from "./ChatSidebar";
-import PageWrapper from "../navbar/pageWrapper";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+
+import { statuses, Status } from "./types";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
@@ -24,15 +23,24 @@ export default function ChannelCreation() {
 	const navigate = useNavigate();
 
     const [errMsg, setErrMsg] = useState<string>('');
+
     const [name, setName] = useState<string>('');
     const [nameErrorText, setNameErrorText] = useState<string>('');
-    
 
-    const statuses = ["public", "private", "protected"];
+    const [status, setStatus] = useState<Status>('public');
+
+    const [pwd, setPwd] = useState<string>('');
+    const [matchPwd, setMatchPwd] = useState<string>('');
+    const [validMatch, setValidMatch] = useState<boolean>(false);
+
 
     useEffect(() => {
         setErrMsg('');
     }, [])
+
+    useEffect(() => {
+        setValidMatch(pwd === matchPwd);
+    }, [pwd, matchPwd])
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		console.log("channel creation form submitted")
@@ -82,6 +90,7 @@ export default function ChannelCreation() {
 					id="name"
 					label="Name"
                     name="name"
+                    variant="standard"
                     autoFocus
                     fullWidth
                     margin="normal"
@@ -99,20 +108,54 @@ export default function ChannelCreation() {
                     name="status"
                     defaultValue="public"
                     helperText="Please select the status of your channel"
-                    >
-                    {statuses.map((option:string, index) => (
-                        <MenuItem key={index} value={option}>
-                        {option}
-                        </MenuItem>
+                >
+                    {statuses.map((st:Status, index) => (
+                        <MenuItem key={index} value={st} onClick={e => setStatus(st)}>{st}</MenuItem>
                     ))}
                 </TextField>
+
+                {status === 'protected' ? (
+                <>
+                    <TextField
+                        required
+                        id="pwd"
+                        variant="standard"
+                        label="Password"
+                        name="pwd"
+                        autoFocus
+                        fullWidth
+                        margin="normal"
+                        error={!pwd}
+                        value={pwd}
+                        onChange={e => setPwd(e.target.value)}
+                    />
+
+                    <TextField
+                        required
+                        id="matchPwd"
+                        variant="standard"
+                        label="Valid password"
+                        autoComplete="off"
+                        onChange={(e) => setMatchPwd(e.target.value)}
+                        value={matchPwd}
+                        error={!validMatch}
+                        // helperText={
+                        //     !validPwd && pwd.length > 0 &&  (
+                        //         <>	error </>
+                        //     )
+                        // }
+                    />
+                </>
+                ) : <p> status not protected </p>}
 
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     color="primary"
-                >Create channel</Button>
+                    disabled={!name || (status === "protected" && (!pwd || !matchPwd || !validMatch)) ? true : false }
+                >Create channel
+                </Button>
 
 				</Box>
         </section>
