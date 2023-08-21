@@ -1,4 +1,5 @@
 .navbar {
+	z-index: 100; /* Make sure the navbar is above other content */
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
