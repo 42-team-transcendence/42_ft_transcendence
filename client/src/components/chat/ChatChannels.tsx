@@ -106,7 +106,9 @@ export default function ChatChannels() {
 					currentUser={currentUser}
 				></ChatSidebar>
 				)}
-				<Box sx={{ backgroundColor: 'white', width: '1.5%', height: '100%' }}></Box>
+				{/* <Box sx={{ backgroundColor: 'white', width: '1.5%', height: '100%' }}></Box> */}
+				<Box className="chat-box"></Box>
+
 				<Box
 					className={`chat-content ${showChatSidebar ? 'hidden' : ''}`}
 					sx={{

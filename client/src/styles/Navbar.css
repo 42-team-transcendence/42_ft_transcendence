@@ -119,6 +119,7 @@
 	/************************************/
 	/************** BURGER **************/
 	.navbar_burger {
+		/* min-height: 75px; */
 		display: block;
 		position: fixed;
 		top: 1rem;
