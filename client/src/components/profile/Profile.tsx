@@ -184,6 +184,38 @@ function Profile() {
 		handleClosePwdModal();
 	};
 
+	// =============================================================================
+	// 2FA MODAL ===================================================================
+	const [is2fa, set2fa] = useState(false);
+
+	const handle2fa = () => {
+		const new2faState = !is2fa; // Toggle the state
+		set2fa(new2faState);
+	  
+		// Save the new 2FA state to your backend
+		save2faState(new2faState); // Call a function to save the state
+	};
+
+	const save2faState = async (new2faState: boolean) => {
+		try {
+			const response = await axiosPrivate.post(
+				'/users/update2fa',
+				JSON.stringify({ auth2fa: new2faState }),
+				{
+				headers: { "Content-Type": "application/json" },
+				withCredentials: true,
+				}
+			);
+		
+			if (response.status === 200) {
+				console.log('2FA state update successful');
+			} else {
+				console.error('2FA state update failed');
+			}
+		} catch (error) {
+		  	console.error('Error updating 2FA state:', error);
+		}
+	};
 	
 	// =============================================================================
 	// RETURN ======================================================================
@@ -236,8 +268,8 @@ function Profile() {
 					<div className="element-profile">
 					<div className="a-modifier">
 						<h2> Double factors </h2>
-						<Checkbox />
-						<DoubleAuth/>
+						<Checkbox checked={is2fa} onChange={handle2fa}/>
+						{/* <DoubleAuth/> */}
 					</div>
 				</div>
 				</div>
