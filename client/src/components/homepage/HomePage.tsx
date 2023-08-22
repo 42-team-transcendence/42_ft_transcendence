@@ -1,17 +1,27 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import Navbar from "../navbar/Navbar";
 import CustomButton from "../../styles/buttons/CustomButton";
-import  "../../styles/HomepageStyle.css";
 import ScoreButton from '../scorebutton/Score';
 import GameButton from '../gamebutton/Game';
 
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import  "../../styles/HomepageStyle.css";
+
+
+
+// =============================================================================
+// FUNCTION ====================================================================
 
 const Homepage: React.FC = () => {
-    const navigate = useNavigate();
-    const from_leaderboard = "/leaderboard"; 
-    const from_how_to_play = "/rules";
-    const from_play = "/play";
+	const navigate = useNavigate();
+	const from_leaderboard = "/leaderboard"; 
+	const from_how_to_play = "/rules";
+	const from_play = "/play";
 
     const handlePlay = () => {
         navigate(from_play, { replace: false });
@@ -31,7 +41,7 @@ const Homepage: React.FC = () => {
     }
 
     return (
-        <div className="column">
+        <div className="homepage-column">
             <Navbar showLinks={showLinks} handleShowLinks={handleShowLinks} />
             <div className="backgroundTop">
                 <div className="welcomeHome">
@@ -43,8 +53,8 @@ const Homepage: React.FC = () => {
 
             {!showLinks && (
                 <div className="show_button">
-					<ScoreButton/>
-					<GameButton/>
+					{/* <ScoreButton/> */}
+					{/* <GameButton/> */}
                     <CustomButton onClick={handlePlay}> PLAY </CustomButton>
                     <CustomButton onClick={handleRules}> How to Play </CustomButton>
                     <CustomButton onClick={handleLeaderboard}> Leaderboard </CustomButton>

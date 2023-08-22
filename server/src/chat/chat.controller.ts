@@ -17,8 +17,6 @@ export class ChatController {
 		@GetUser() creator,
         @Body() payload,
     ) {
-		console.log({payload});
-		console.log({creator});
 		const participants = [...payload.recipients, creator.sub];
 		return (this.chatService.createChat(participants, creator.sub));
 	}
@@ -28,8 +26,6 @@ export class ChatController {
 		@GetUser() creator,
         @Body() payload,
     ) {
-		console.log({payload});
-		console.log({creator});
 		const participantIds = [...payload.recipients, creator.sub];
 		return (this.chatService.findChatByParticipants(participantIds));
 	}
@@ -40,9 +36,6 @@ export class ChatController {
         @Body() payload,
     ) {
 		try {
-
-			console.log({payload});
-			console.log({creator});
 			const participantIds = [...payload.recipients, creator.sub];
 			const participantIdsNoDuplicates = [...new Set(participantIds)]
 			if (participantIdsNoDuplicates.length < 2)
@@ -54,11 +47,7 @@ export class ChatController {
 	}
 
 	@Get('findAllMyChats')
-	findAllMyChats(
-		@GetUser() me,
-    ) {
-		console.log("enter controller chat/findAllMyChats");
-		console.log({me});
+	findAllMyChats(@GetUser() me) {
 		return (this.chatService.findAllMyChats(me));
 	}
 

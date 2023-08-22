@@ -14,7 +14,7 @@ import DoubleAuth from "../auth2fa/Doubleauth";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import '../../styles/Profile.css';
+import '../../styles/profile/Profile.css';
 import Checkbox from '@mui/material/Checkbox';
 
 

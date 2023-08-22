@@ -1,0 +1,12 @@
+.responsive-chat-sidebar {
+	background-color: #FF79AF;
+	width: 58%;
+	height: 100%;
+  }
+  
+  /* Apply responsive styles at screen width 768px and below */
+  @media (max-width: 768px) {
+	.responsive-chat-sidebar {
+	  width: 100%;
+	}
+  }
