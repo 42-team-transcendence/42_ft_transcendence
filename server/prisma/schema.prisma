@@ -81,7 +81,8 @@ model ChannelInfo {
 	chat	   		Chat 		@relation(fields: [chatId], references: [id])
 	chatId		    Int			@unique
 
-	status			ChannelStatus	@default(PUBLIC)	
+	name			String		@default("")
+	status			ChannelStatus	@default(PUBLIC)
 	password		String		@default("")
 
 	owner			User 		@relation("channelOwner", fields: [ownerId], references: [id])

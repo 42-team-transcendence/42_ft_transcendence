@@ -15,7 +15,7 @@ import "../../styles/chat/ChannelCreation.css"
 // =============================================================================
 // FUNCTION ====================================================================
 
-const CHANNEL_CREATION_ROUTE = '/channel/create';
+const CHANNEL_CREATION_ROUTE = '/channels/create';
 
 export default function ChannelCreation() {
 	const axiosPrivate = useAxiosPrivate();
@@ -26,7 +26,7 @@ export default function ChannelCreation() {
     const [name, setName] = useState<string>('');
     const [nameErrorText, setNameErrorText] = useState<string>('');
 
-    const [status, setStatus] = useState<Status>('public');
+    const [status, setStatus] = useState<Status>('PUBLIC');
 
     const [pwd, setPwd] = useState<string>('');
     const [matchPwd, setMatchPwd] = useState<string>('');
@@ -42,32 +42,31 @@ export default function ChannelCreation() {
     }, [pwd, matchPwd])
 
 	const handleSubmit = async (e: React.FormEvent) => {
-		console.log("channel creation form submitted")
 		e.preventDefault();
         if (!name) {
             setNameErrorText("Please enter name");
         } else {
             setNameErrorText("");
         }
-        // try {
-        //     const response = await axiosPrivate.post(
-        //         CHANNEL_CREATION_ROUTE,
-        //         JSON.stringify({ name:"test", status: "public", password: ""}),
-        //         {
-        //             headers: {'Content-Type': 'application/json'},
-        //             withCredentials: true
-        //         }
-		// 	);
-		// 	console.log(response.data);
-        //     navigate('/chat', { replace: false});
-        // } catch (err: any) {
-        //     if (!err?.response) {
-        //         setErrMsg('No Server Response');
-        //     } else if (err.response) {
-        //         setErrMsg('Channel creation failed');
-        //         console.log(err);
-        //     }
-        // }
+        try {
+            const response = await axiosPrivate.post(
+                CHANNEL_CREATION_ROUTE,
+                JSON.stringify({ name, status, password: pwd}),
+                {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: true
+                }
+			);
+			console.log(response.data);
+            navigate('/chat', { replace: false});
+        } catch (err: any) {
+            if (!err?.response) {
+                setErrMsg('No Server Response');
+            } else if (err.response) {
+                setErrMsg('Channel creation failed');
+                console.log(err);
+            }
+        }
 	}
 
     return (
@@ -105,7 +104,7 @@ export default function ChannelCreation() {
                     select
                     label="Status"
                     name="status"
-                    defaultValue="public"
+                    defaultValue="PUBLIC"
                     helperText="Please select the status of your channel"
                 >
                     {statuses.map((st:Status, index) => (
@@ -113,7 +112,7 @@ export default function ChannelCreation() {
                     ))}
                 </TextField>
 
-                {status === 'protected' && (
+                {status === 'PROTECTED' && (
                     <>
                         <TextField
                             required
@@ -151,7 +150,7 @@ export default function ChannelCreation() {
                     fullWidth
                     variant="contained"
                     color="primary"
-                    disabled={!name || (status === "protected" && (!pwd || !matchPwd || !validMatch)) ? true : false }
+                    disabled={!name || (status === "PROTECTED" && (!pwd || !matchPwd || !validMatch)) ? true : false }
                 >Create channel
                 </Button>
 
