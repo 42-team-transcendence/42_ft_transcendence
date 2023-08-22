@@ -105,7 +105,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     }, [messageListener]);
 
 	return (
-		<Box 
+		<Box
 		  className="conversation"
 		  p={5} sx={{ backgroundColor: '#FF8100', width: '100%', height: '100%' }}
 		>
@@ -130,32 +130,24 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 						  minute: "2-digit",
 						}).format(new Date(msg.createdAt))
 					  : "";
-	  
-					if (msg.senderId === currentUser.id) {
-					  // Display messages sent by the current user on the right
+
+					if (msg.senderId === currentUser.id) {// Display messages sent by the current user on the right
 					  return (
-						<MessageRight
-						  key={index}
-						  message={msg.content}
-						  timestamp={formattedTimestamp}
-						/>
+              <MessageRight
+                key={index}
+                message={msg.content}
+                timestamp={formattedTimestamp}/>
 					  );
-					} else {
-					  // Display messages sent by others on the left
-					  const sender = chat?.participants.find(
-						(e: any) => e.id === msg.senderId
-					  );
-	  
-					  return (
-						<MessageLeft
-						  key={index}
-						  message={msg.content}
-						  timestamp={formattedTimestamp}
-						  displayName={sender.nickname}
-						  sender={chat?.participants.find((e: any) => e.id === msg.senderId)}
-						/>
-					  );
-					}
+					} else {// Display messages sent by others on the left
+					    const sender = chat?.participants.find((e: any) => e.id === msg.senderId);
+              return (
+                <MessageLeft
+                  key={index}
+                  message={msg.content}
+                  timestamp={formattedTimestamp}
+                  displayName={sender.nickname}
+                  sender={chat?.participants.find((e: any) => e.id === msg.senderId)}/>
+          );}
 				  })}
 				</Box>
 				<Box>
@@ -168,8 +160,8 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 		  </div>
 		</Box>
 	  );
-	  
-	
+
+
 }
 
 export default Conversation

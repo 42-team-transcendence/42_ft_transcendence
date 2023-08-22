@@ -28,9 +28,9 @@ export default function ChatMiniature(
 
     return (
 
-        <Box 
+        <Box
             onClick={() => {
-				//change hidden
+				//TODO : change/toggle hidden class here to make conversation appear
 				navigate(`/chat/${userId}`, {replace: false})
 			}}
             sx={{
@@ -44,9 +44,8 @@ export default function ChatMiniature(
             }}
             mt={3} pt={0} pb={0}
         >
-			<div className="chat-miniature"> 
+			<div className="chat-miniature">
 				<Miniature miniatureUser={{
-					
 					nickname: nickname,
 					id: userId,
 					minAvatar: {url: tchoupi, name:'Tchoupi'}
