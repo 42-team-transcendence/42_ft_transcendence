@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -7,7 +7,9 @@ import ChatMiniature from "./ChatMiniature";
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { Box } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import "../../styles/chat/ChatSidebar.css"
+import CustomButton from "../../styles/buttons/CustomButton";
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -20,13 +22,19 @@ export default function ChatSidebar({
   myChats: any;
   currentUser: any;
 }) {
+	const navigate = useNavigate();
+
   return (
 	<Box
 		p={10}
 		className="responsive-chat-sidebar" // Add a class to the Box element
   	>
-		{myChats &&
-			myChats.map((chat: any, i: number) => {
+		<CustomButton onClick={()=>navigate('/createChannel', { replace: false})}>
+			<AddIcon />
+			CREATE CHAN
+		</CustomButton>
+
+		{myChats && myChats.map((chat: any, i: number) => {
 				// Ensure chat and participants are defined before accessing properties
 				if (chat && chat.participants && chat.participants.length > 0) {
 					// Find first user id which is not mine

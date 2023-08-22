@@ -10,8 +10,7 @@ import { statuses, Status } from "./types";
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box, Button, FormHelperText, MenuItem, TextField} from '@mui/material';
-import '../../styles/ChatChannel.css';
-
+import "../../styles/chat/ChannelCreation.css"
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -72,7 +71,7 @@ export default function ChannelCreation() {
 	}
 
     return (
-        <section className="channel-params-form">
+        <section className="channel-creation-form">
             <p className={errMsg? "errmsg" : "offscreen"}>
                 {errMsg}
             </p>
@@ -114,40 +113,39 @@ export default function ChannelCreation() {
                     ))}
                 </TextField>
 
-                {status === 'protected' ? (
-                <>
-                    <TextField
-                        required
-                        id="pwd"
-                        variant="standard"
-                        label="Password"
-                        name="pwd"
-                        autoFocus
-                        fullWidth
-                        margin="normal"
-                        error={!pwd}
-                        value={pwd}
-                        onChange={e => setPwd(e.target.value)}
-                    />
+                {status === 'protected' && (
+                    <>
+                        <TextField
+                            required
+                            id="pwd"
+                            variant="standard"
+                            label="Password"
+                            name="pwd"
+                            autoFocus
+                            fullWidth
+                            margin="normal"
+                            error={!pwd}
+                            value={pwd}
+                            onChange={e => setPwd(e.target.value)}
+                        />
 
-                    <TextField
-                        required
-                        id="matchPwd"
-                        variant="standard"
-                        label="Valid password"
-                        autoComplete="off"
-                        onChange={(e) => setMatchPwd(e.target.value)}
-                        value={matchPwd}
-                        error={!validMatch}
-                        // helperText={
-                        //     !validPwd && pwd.length > 0 &&  (
-                        //         <>	error </>
-                        //     )
-                        // }
-                    />
-                </>
-                ) : <p> status not protected </p>}
-
+                        <TextField
+                            required
+                            id="matchPwd"
+                            variant="standard"
+                            label="Validate password"
+                            autoComplete="off"
+                            onChange={(e) => setMatchPwd(e.target.value)}
+                            value={matchPwd}
+                            error={!validMatch}
+                            // helperText={
+                            //     !validPwd && pwd.length > 0 &&  (
+                            //         <>	error </>
+                            //     )
+                            // }
+                        />
+                    </>
+                )}
                 <Button
                     type="submit"
                     fullWidth
