@@ -16,7 +16,7 @@ import  "../../styles/chat/ChatMiniature.css";
 // =============================================================================
 // FUNCTION ====================================================================
 
-export default function ChatMiniature(
+export default function ChannelMiniature(
     {notif, nickname, lastMessage, userId}:{
         notif:boolean,
         nickname:string,
