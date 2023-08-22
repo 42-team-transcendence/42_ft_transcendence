@@ -35,27 +35,43 @@ export default function ChatSidebar({
 		</CustomButton>
 
 		{myChats && myChats.map((chat: any, i: number) => {
-				// Ensure chat and participants are defined before accessing properties
-				if (chat && chat.participants && chat.participants.length > 0) {
+			// Ensure chat and participants are defined before accessing properties
+			if (chat && chat.participants && chat.participants.length > 0) {
+				if (!chat.channelInfo) {
 					// Find first user id which is not mine
 					const recipient = chat?.participants?.find((e: any) => e.id !== currentUser.id);
-			if (recipient?.id) {
-				return (
-					<ChatMiniature
-						key={i}
-						notif={true}
-						userId={recipient.id}
-						nickname={recipient.nickname}
-						lastMessage={
-							chat.messages.length > 0
-							? chat.messages[chat.messages.length - 1].message
-							: ""
-						}
-					></ChatMiniature>
-				);
+					if (recipient?.id) {
+						return (
+							<ChatMiniature
+								key={i}
+								notif={true}
+								userId={recipient.id}
+								nickname={recipient.nickname}
+								lastMessage={
+									chat.messages.length > 0
+									? chat.messages[chat.messages.length - 1].message
+									: ""
+								}
+							></ChatMiniature>
+					);}
+				} else {
+					//show all participants to channel
+					return (
+						<ChatMiniature
+							key={i}
+							notif={true}
+							userId={currentUser.id}
+							nickname={chat.channelInfo.name}
+							lastMessage={
+								chat.messages.length > 0
+								? chat.messages[chat.messages.length - 1].message
+								: ""
+							}
+						></ChatMiniature>
+					)
+				}
 			}
-		}
-          return null; // Return null if recipient or other necessary data is undefined
+        	return null; // Return null if recipient or other necessary data is undefined
         })}
     </Box>
   );
