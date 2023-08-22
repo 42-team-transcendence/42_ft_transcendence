@@ -62,7 +62,7 @@ const axiosPrivate = useAxiosPrivate();
 
 	    //Création de la socket client
 	useEffect(() => {
-		if (currentUser && currentUser.sub){
+		if (currentUser && currentUser.id){
 		const newSocket = io(
 			"http://localhost:3333", //dès que j'essaie de changer le port j'ai une erreur
 			{
@@ -70,25 +70,26 @@ const axiosPrivate = useAxiosPrivate();
 				withCredentials: true,
 				autoConnect: true,
 				auth: {token: "TODO : gérer les tokens d'authentification ici"},
-				query: {"Id": currentUser.sub}
+				query: {"Id": currentUser.id}
 			});
 		setSocket(newSocket)
-		console.log("!! SUB !! == " + currentUser.sub);
+		console.log("!! SUB !! == " + currentUser.id);
 		}
 	}, [currentUser])
 
 	useEffect(() => {
+		
 		function onConnect() {
-			// console.log("socket onConnect useEffect")
-				
+			
 				const data = {
-					currentUser: currentUser.sub,
+					currentUser: currentUser.id,
 					socketId: socket?.id,
 				}
 				socket?.emit("playerData", data);
 		}
 			socket?.on('connect', onConnect);
 
+			console.log("start == " + start);
 			socket?.on('game',  (data: { ball: Ball, players: Paddle[] }) => {
 				const receivedBall = data.ball;
 				const receivedPlayers = data.players;
@@ -101,7 +102,7 @@ const axiosPrivate = useAxiosPrivate();
 			window.addEventListener("keydown", changeDirection);
 
 			return () => {
-				socket?.off('connect'); // Assurez-vous de retirer l'écoute lors du démontage du composant
+				socket?.disconnect(); // Assurez-vous de retirer l'écoute lors du démontage du composant
 				window.removeEventListener("keydown", changeDirection);
 			};
 
@@ -118,6 +119,7 @@ const axiosPrivate = useAxiosPrivate();
 
 	const game = (ball: Ball, players: Paddle[]) => {
 
+		// console.log("start == " + start);
 		const gameBoard = gameBoardRef.current;
 		const ctx = gameBoard?.getContext('2d');
 		const scoreText = scoreTextRef.current;
@@ -154,11 +156,11 @@ const axiosPrivate = useAxiosPrivate();
 			if (scoreText) {
 			scoreText.textContent = `${players[0].score} : ${players[1].score}`;
 			}
-			if (players[0].score >= 7) {
+			if (players[0].score >= 3) {
 				setOver(true);
 				setWinner(players[0].Id);
 			}
-			if (players[1].score >= 7) {
+			if (players[1].score >= 3) {
 				setOver(true);
 				setWinner(players[1].Id);
 			}
@@ -181,17 +183,34 @@ return (
                     <button ref={resetBtnRef} id="resetBtn">Reset</button>
                 </>
             )}
-            {over && winner === currentUser.sub && <div id="winnerMessage">You win!</div>}
-            {over && winner !== currentUser.sub && <div id="looserMessage">You loose...</div>}
+            {over && winner === currentUser.id && <div id="winnerMessage">You win!</div>}
+            {over && winner !== currentUser.id && <div id="looserMessage">You loose...</div>}
 
         </div>
     </PageWrapper>
 );
 
-
 };
 
 export default Play;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // {over && <div id="gameOverMessage">Game Over!</div>}
 

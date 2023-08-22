@@ -66,7 +66,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
 	private gameHeight = 400;
 	private ballRadius = 12.5;
 	private paddleSpeed = 50;
-	private ballSpeed = 3;
+	private ballSpeed = 1;
     private ball: Ball = {
         X: this.gameWidth / 2,
         Y: this.gameHeight / 2,
@@ -74,7 +74,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
     };
 	private ballXDirection = Math.random() < 0.5 ? -1 : 1;
 	private ballYDirection = Math.random() < 0.5 ? -1 : 1;
-
+	private intervalID = undefined;
   /*-------------------------------------------------------------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -83,7 +83,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
   //setup or initialization tasks before the WebSocket server starts accepting connections.
   afterInit(server: Server) {
       // Perform initialization tasks here
-      console.log('Game WebSocket gateway initialized');
+      console.log(' !!!!!!!!! Game WebSocket gateway initialized !!!!!!!!');
     }
 
   //lifecycle method : automatically called by NestJS when a new client establishes a WebSocket connection with the server, due to OnGatewayConnection Interface
@@ -91,15 +91,20 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
     client: Socket,
   ) {
       console.log("handleConnection")
+	  this.ball.X = this.gameWidth / 2;
+	  this.ball.Y = this.gameHeight / 2;
+	  this.ball.color = "orange";
+	  this.ballSpeed = 1;
+	  this.interval();
   }
 
   //lifecycle method : automaticaly called on socket disconnection
   handleDisconnect(client: Socket) {
     console.log("disconnect")
-    
     //Remove socket connection from players list
     const Id = client.handshake.query.Id; // Assuming you pass Id as a query parameter while connecting
     this.players = this.players.filter((e:any) => e.Id != Id);
+    console.log('taille tableau' + this.players.length);
   }
 
   /*-------------------------------------------------------------------------------------------------------------------------------*/
@@ -114,16 +119,19 @@ heartBeat() {
         this.server.emit('game', gameData);
         this.moveBall();
         this.checkCollision();
-        if (this.players[0].score >= 7 || this.players[1].score >= 7) {
+        if (this.players[0].score >= 3 || this.players[1].score >= 3) {
             this.server.emit('game', gameData);
             clearInterval(this.intervalID); // Arrêtez l'intervalle
         }
     }
 }
 
-intervalID = setInterval(() => {
-        this.heartBeat();
-}, 33);
+interval() {
+
+	 this.intervalID = setInterval(() => {
+		this.heartBeat();
+	}, 33);
+}
   
 //   The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate 
 //   that a particular method should be invoked when a specific WebSocket message is received.
@@ -159,6 +167,7 @@ intervalID = setInterval(() => {
         };
     }
     this.players.push(paddleInstance);
+    console.log('taille tableau 2 = ' + this.players.length);
 
     return data;
   }
@@ -213,7 +222,6 @@ intervalID = setInterval(() => {
         this.ball.Y = this.gameHeight / 2;
         this.ballXDirection = Math.random() < 0.5 ? -1 : 1;
         this.ballYDirection = Math.random() < 0.5 ? -1 : 1;
-        this.ballSpeed += 0.5;
         return;
     }
 
@@ -223,7 +231,6 @@ intervalID = setInterval(() => {
         this.ball.Y = this.gameHeight / 2;
         this.ballXDirection = Math.random() < 0.5 ? -1 : 1;
         this.ballYDirection = Math.random() < 0.5 ? -1 : 1;
-        this.ballSpeed += 0.5;
         return;
     }
 
