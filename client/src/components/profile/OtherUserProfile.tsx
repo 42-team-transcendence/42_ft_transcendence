@@ -11,7 +11,8 @@ import PageWrapper from "../navbar/pageWrapper";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import '../../styles/OtherUserProfile.css';
+import '../../styles/profile/OtherUserProfile.css';
+import '../../styles/profile/Profile.css';
 import CustomButtonSecond from "../../styles/buttons/CustomButtonSecond";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import PublicIcon from '@mui/icons-material/Public';
@@ -69,7 +70,7 @@ function OtherUserProfile() {
 	<PageWrapper>
 		<div className="container-wrap-other">
 			<div className="container-1">
-				<div className="profile-container">
+				<div className="avatar">
 					<div className="profile-picture-container">
 						<img
 						src={user?.picture}
@@ -79,8 +80,7 @@ function OtherUserProfile() {
 					</div>
 
 					<div className="profile-info">
-						<h2>Profile</h2>
-						<h3>{user?.nickname}</h3>
+						<h1 className="name">{user?.nickname}</h1>
 						<p>Rank 2 | Lvl {user?.level}</p>
 					</div>
 				</div>

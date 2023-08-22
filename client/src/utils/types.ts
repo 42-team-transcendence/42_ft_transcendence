@@ -17,7 +17,8 @@ export type User = {
 export type Message = {
     content: string,
     senderId: number,
-    chatId: number
+    chatId: number,
+	createdAt: Date
 }
 
 export type Conversation = {

@@ -1,7 +1,8 @@
 .chat-miniature {
 	display: flex;
 	align-items: center;
+	width: 25vw;
 	gap: 50px;
-	background-color: white;
+	/* background-color: white; */
 	padding: 10px;
 }

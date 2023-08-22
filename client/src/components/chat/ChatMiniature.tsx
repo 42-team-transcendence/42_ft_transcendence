@@ -9,7 +9,7 @@ import tchoupi from '../../assets/tchoupi50x50.jpg'
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { CenterFocusStrong } from "@mui/icons-material";
-import  "../../styles/ChatMiniature.css";
+import  "../../styles/chat/ChatMiniature.css";
 
 
 
@@ -29,7 +29,10 @@ export default function ChatMiniature(
     return (
 
         <Box 
-            onClick={() => navigate(`/chat/${userId}`, {replace: false})}
+            onClick={() => {
+				//change hidden
+				navigate(`/chat/${userId}`, {replace: false})
+			}}
             sx={{
                 backgroundColor: notif ? 'white' : '#00000021',
                 border: notif ? '2px solid black' : 'none',

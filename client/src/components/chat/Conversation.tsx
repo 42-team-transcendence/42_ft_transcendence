@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import io, {Socket} from "socket.io-client"
 
 
+
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import MessageInput from "./MessageInput";
@@ -17,7 +18,8 @@ import type {Message} from "../../utils/types"
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box} from "@mui/material";
-import '../../styles/Conversation.css'
+import { MessageLeft, MessageRight } from "./MessageStyle";
+import '../../styles/chat/Conversation.css'
 
 
 
@@ -40,7 +42,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     //Update des messages displayed quand le chat est modifié
     useEffect(() => {
         const oldMessages: Message[] = chat.messages.map((msg:any) => {
-            return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId
+            return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId, createdAt: msg.createdAt
         }});
         setMessages([...oldMessages]);
     }, [chat])
@@ -102,47 +104,72 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         })
     }, [messageListener]);
 
-    return (
-        // <Box p={3}
-        //     sx={{
-        //         backgroundColor:'white',
-        //         // height:'100%',
-        //         border: '2px solid black',
-        //         borderRadius:'10px',
-        //         display:'flex',
-        //         flexDirection: 'column',
-        //         justifyContent: recipient? 'space-between': 'center',
-        //         alignItems: 'center'
-        //     }}
-        // >
-			<div className="conversation-container">
-            {isChat && recipients && messages ? (
-            <>
-                <Miniature miniatureUser={{
-                    nickname: recipients[0].nickname,
-                    id: recipients[0].id,
-                    minAvatar: {url: tchoupi, name:'Tchoupi'}
-                }}
-                ></Miniature>
-                <Box sx={{ width:'100%'}}>
-                    {messages?.map((msg, index) => {
-                        return (
-                            <MessageInConv
-                                key={index}
-                                content={msg.content}
-                                sender={(chat?.participants.find((e:any) => e.id === msg.senderId))}
-                                currentUser={currentUser}
-                            ></MessageInConv>
-                    )})}
-                </Box>
-                <Box>
-                    <MessageInput send={send}></MessageInput>
-                </Box>
-            </>
-            ) : <div>Select conversation</div>}
-			</div>
-   
-    )
+	return (
+		<Box 
+		  className="conversation"
+		  p={5} sx={{ backgroundColor: '#FF8100', width: '100%', height: '100%' }}
+		>
+		  <div className="conversation-container">
+			{isChat && recipients && messages ? (
+			  <>
+				<Miniature
+				  miniatureUser={{
+					nickname: recipients[0].nickname,
+					id: recipients[0].id,
+					minAvatar: { url: tchoupi, name: "Tchoupi" },
+				  }}
+				></Miniature>
+				<Box sx={{ width: "100%", marginTop: "30px" }}>
+				  {messages?.map((msg, index) => {
+					const formattedTimestamp = msg.createdAt
+					  ? new Intl.DateTimeFormat("en-GB", {
+						  day: "2-digit",
+						  month: "2-digit",
+						  year: "numeric",
+						  hour: "2-digit",
+						  minute: "2-digit",
+						}).format(new Date(msg.createdAt))
+					  : "";
+	  
+					if (msg.senderId === currentUser.id) {
+					  // Display messages sent by the current user on the right
+					  return (
+						<MessageRight
+						  key={index}
+						  message={msg.content}
+						  timestamp={formattedTimestamp}
+						/>
+					  );
+					} else {
+					  // Display messages sent by others on the left
+					  const sender = chat?.participants.find(
+						(e: any) => e.id === msg.senderId
+					  );
+	  
+					  return (
+						<MessageLeft
+						  key={index}
+						  message={msg.content}
+						  timestamp={formattedTimestamp}
+						  displayName={sender.nickname}
+						  sender={chat?.participants.find((e: any) => e.id === msg.senderId)}
+						/>
+					  );
+					}
+				  })}
+				</Box>
+				<Box>
+				  <MessageInput send={send}></MessageInput>
+				</Box>
+			  </>
+			) : (
+			  <div>Select conversation</div>
+			)}
+		  </div>
+		</Box>
+	  );
+	  
+	
 }
 
 export default Conversation

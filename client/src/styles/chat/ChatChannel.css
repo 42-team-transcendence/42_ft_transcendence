@@ -1,0 +1,40 @@
+.chat-channel-container{
+	width:100vw;
+	height: 100vh;
+	display: flex;
+	align-items: flex-start;
+
+	/* justify-content: space-between; */
+	border:2px solid blue;
+}
+
+/* Default styling for the box */
+.chat-box {
+	background-color: white;
+	width: 1.5%;
+	height: 100%;
+}
+
+
+@media (max-width: 768px) {
+	.chat-sidebar.hidden {
+	  display: none;
+	}
+  
+	.chat-content.hidden {
+	  display: none;
+	}
+
+	.chat-box {
+		display: none;
+	}
+
+	.chat-content {
+		/* width: 100%; */
+		/* background-color: white; */
+	}
+
+	/* .back-button {
+		background-color: white;
+	} */
+  }

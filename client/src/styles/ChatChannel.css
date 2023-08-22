@@ -1,7 +1,0 @@
-.chat-channel-container{
-	width:100vh;
-	height: 100vh;
-	display: flex;
-	/* align-items: flex-start; */
-	border:2px solid blue;
-}
