@@ -16,9 +16,12 @@ const DoubleAuth = () => {
 
 	const enable2FA = async (userEmail: string) => {
 		try {
-			const response = await axiosPrivate.post('/auth/enable-2fa', { email: auth.email });
-
-			if (response.status === 200) {
+			const response = await axiosPrivate.post('/auth/enable-2fa', { email: userEmail }, {
+				headers: { 'Content-Type': 'application/json'},
+				withCredentials: true
+			})
+			console.log(response)
+			if (response.status === 201) {
 				setQrCodeData(response.data.qrCodeData);
 			} else {
 				console.error('Error enabling 2FA:', response);
@@ -32,7 +35,7 @@ const DoubleAuth = () => {
 		if (auth.email) {
 			enable2FA(auth.email);
 		}
-	}, [auth.email, enable2FA]);
+	}, [auth.email]);
 
 	console.log(`Auth email = ${auth.email}`)
 

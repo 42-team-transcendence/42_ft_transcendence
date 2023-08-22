@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import speakeasy from 'speakeasy';
-import qrcode from 'qrcode';
+// import qrcode from 'qrcode';
+import * as qrcode from 'qrcode'
 
 
 @Injectable()
@@ -37,14 +38,15 @@ export class DoubleAuthService {
   }
 
   async saveUserSecret(userEmail: string, secret: string): Promise<void> {
-	console.log('UserId:', userEmail);
+	console.log('userEmail:', userEmail);
 	try {
-	  await this.prisma.user.update({
-		where: { email: userEmail }, // Make sure to use the userId parameter to identify the user
-		data: {
-		  secret: secret,
-		},
+	  const updatedUser = await this.prisma.user.update({
+      where: { email: userEmail }, // Make sure to use the userId parameter to identify the user
+      data: {
+        secret: secret,
+      },
 	  });
+    console.log(updatedUser);
 	} catch (error) {
 	  // Handle any potential errors that may occur during the update process
 	  console.error('Error updating user secret:', error);

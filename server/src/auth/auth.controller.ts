@@ -22,7 +22,7 @@ export class AuthController {
 				private  readonly doubleAuthService: DoubleAuthService,) {}
 
 /*********************************************************************************************************/
-    
+
     @Post('signup')
     @HttpCode(HttpStatus.CREATED)
     signup(
@@ -38,21 +38,22 @@ export class AuthController {
 	@Post('enable-2fa')
 	@HttpCode(HttpStatus.CREATED)
 	async enable2FA(
-		@Body() dto: AuthDto, 
-		@Res() res: Response
+		@Body() dto: any,
 	) {
 	  try {
 		// Check if the user has already set up 2FA before allowing the setup process again (Optional)
 		// You can add an additional check here to prevent users from setting up 2FA multiple times.
-	
+
 		// Generate the 2FA secret and store it in the database
 		const secret = speakeasy.generateSecret();
-		console.log(`USER Nickname = ${dto.email}`);
+		console.log(`USER email = ${dto.email}`);
 		await this.doubleAuthService.saveUserSecret(dto.email, secret.base32);
-	
+
+        console.log({secret});
 		// Generate the QR code and return the representation of the QR code in the response
 		const qrCodeData = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
-		return { qrCodeData };
+		console.log({qrCodeData});
+        return ({ qrCodeData });
 	  } catch (error) {
 		console.error('Error enabling 2FA:', error);
 		throw new Error('Failed to enable 2FA.');
@@ -65,7 +66,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     signin(
         @Body() dto: SignInAuthDto,
-        @Res() res: Response 
+        @Res() res: Response
     ) {
         return (this.authService.signin(dto, res));
 
@@ -90,7 +91,7 @@ export class AuthController {
     @Post('logout')
     @HttpCode(HttpStatus.OK)
     logout(@GetUser() user,
-            @Res(/*({ passthrough: true })*/) res: Response   
+            @Res(/*({ passthrough: true })*/) res: Response
     ) {
         console.log({"controller": user});
         return (this.authService.logout(user.sub, res));
@@ -98,12 +99,12 @@ export class AuthController {
 
 /*********************************************************************************************************/
 
-    @UseGuards(RtGuard) //link this guard (check for refresh token) to our refresh token strategy 
+    @UseGuards(RtGuard) //link this guard (check for refresh token) to our refresh token strategy
     @Post('refresh')
     @HttpCode(HttpStatus.OK)
     refresh(
         @GetUser() user,
-        @Res(/*({ passthrough: true })*/) res: Response   
+        @Res(/*({ passthrough: true })*/) res: Response
     ) {
         console.log({"controller_user" : user});
         return (this.authService.refresh(user.sub, user.refreshToken, res));
