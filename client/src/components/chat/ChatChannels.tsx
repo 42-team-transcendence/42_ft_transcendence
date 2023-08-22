@@ -86,21 +86,21 @@ export default function ChatChannels() {
 	  const handleResize = () => {
 		setShowChatSidebar(window.innerWidth > 768);
 	  };
-  
+
 	  window.addEventListener("resize", handleResize);
-  
+
 	  // Call handleResize immediately to set initial state
 	  handleResize();
-  
+
 	  return () => {
 		window.removeEventListener("resize", handleResize);
 	  };
 	}, []);
-  
+
 	return (
 		<PageWrapper>
 		  	<div className="chat-channel-container">
-				{showChatSidebar && (
+				{showChatSidebar && currentUser && myChats && (
 				<ChatSidebar
 					myChats={myChats}
 					currentUser={currentUser}
@@ -110,11 +110,11 @@ export default function ChatChannels() {
 				<Box
 					className={`chat-content ${showChatSidebar ? 'hidden' : ''}`}
 					sx={{
-						
-						width:"100%",	
+
+						width:"100%",
 						height: "100%",
 						// justifyContent : currentChat? 'space-between': 'center',
-			
+
 					}}
 				>
 				{currentChat && !showChatSidebar && (
