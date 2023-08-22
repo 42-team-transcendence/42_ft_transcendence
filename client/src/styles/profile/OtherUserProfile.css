@@ -1,0 +1,33 @@
+.container-wrap-other {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 70px
+}
+
+.profile-container {
+	display: flex;
+	margin-bottom: 70px;
+	gap: 70px;
+	
+}
+
+.container-1 {
+	display: flex;
+	flex-direction: column;
+	border: 2px solid black;
+	border-radius: 20px;
+	background-color: white;
+	padding: 10vh;
+}
+
+.row-other-user{
+	display: flex;
+	margin-top: 30px;
+	gap: 30px;
+}
+
+.column-other-user {
+	display: flex;
+	flex-direction: column;
+	margin-top: 40px;
+}

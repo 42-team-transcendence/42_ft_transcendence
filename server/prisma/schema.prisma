@@ -2,57 +2,79 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  	provider = "prisma-client-js"
+	binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+	id        		Int       @id @default(autoincrement())
+	createdAt 		DateTime  @default(now())
+	updatedAt 		DateTime  @updatedAt
 
-  nickname	String    @unique
-  email	   	String    @unique
-  hash	  	String
-  hashedRt  String?
+	nickname		String    @unique
+	email	   		String    @unique
+	hash	  		String
+	hashedRt  		String?
 
-  chats     Chat[]    @relation("chatParticipants")
-  messages  Message[]
+	chats     		Chat[]    @relation("chatParticipants")
+	messages  		Message[]
 
-  chatsCreated  Chat[]
+	chatsCreated  	Chat[]
+
+	rank			Int @default(0)
+	score			Int @default(0)
+
+	games_player_1 Game[] @relation(name: "GamePlayer1")
+  	games_player_2 Game[] @relation(name: "GamePlayer2")
 
   @@map("users")
 }
 
 model Chat {
-  id                Int       @id @default(autoincrement())
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+	id                Int       @id @default(autoincrement())
+	createdAt         DateTime  @default(now())
+	updatedAt         DateTime  @updatedAt
 
-  creator           User      @relation(fields: [creatorId], references: [id])
-  creatorId         Int
+	creator           User      @relation(fields: [creatorId], references: [id])
+	creatorId         Int
 
-  participants      User[]    @relation("chatParticipants")
-  participantsCount Int       @default(2)
+	participants      User[]    @relation("chatParticipants")
+	participantsCount Int       @default(2)
 
-  messages          Message[]
+	messages          Message[]
 
-  @@map("chats")
+	@@map("chats")
 }
 
 model Message {
-  id            Int @id @default(autoincrement())
-  createdAt     DateTime  @default(now())
+	id            Int @id @default(autoincrement())
+	createdAt     DateTime  @default(now())
 
-  message       String
+	message       String
 
-  chat          Chat @relation(fields: [chatId], references: [id])
-  chatId        Int
+	chat          Chat @relation(fields: [chatId], references: [id])
+	chatId        Int
 
-  sender        User @relation(fields: [senderId], references: [id])
-  senderId      Int 
+	sender        User @relation(fields: [senderId], references: [id])
+	senderId      Int
+}
+
+model Game {
+	id			    Int @id @default(autoincrement())
+	player_1_id     Int
+	player_2_id     Int
+	player_1_score  Int @default(0)
+	player_2_score  Int @default(0)
+	winnerId        Int?
+	createdAt DateTime @default(now())
+
+  	player_1    User @relation(name: "GamePlayer1", fields: [player_1_id], references: [id])
+ 	player_2    User @relation(name: "GamePlayer2", fields: [player_2_id], references: [id])
+
+	@@map ("games")
 }

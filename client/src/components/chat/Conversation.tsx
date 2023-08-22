@@ -1,121 +1,175 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import io, {Socket} from "socket.io-client"
-import {Box} from "@mui/material";
+
+
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import MessageInput from "./MessageInput";
-import Messages from "./Messages";
+import MessageInConv from "./MessageInConv";
 import Miniature from "../miniature/Miniature";
+import tchoupi from '../../assets/tchoupi50x50.jpg'
+
+// =============================================================================
+// IMPORT TYPES ===============================================================
+import type {Message} from "../../utils/types"
+
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import {Box} from "@mui/material";
+import { MessageLeft, MessageRight } from "./MessageStyle";
+import '../../styles/chat/Conversation.css'
+
+
+
+// =============================================================================
+// FUNCTION ====================================================================
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
-    console.log({Conversation : chat})
+    const [chatSocket, setChatSocket] = useState<Socket>();
+    // const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
+    const [messages, setMessages] = useState<Message[]>([]);
 
-    const [socket, setSocket] = useState<Socket>();
-    const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
-    const [messages, setMessages] = useState<string[]>([...chat.messages]);
-    
+    // ******** TO DO: A modifier quand on introduira les channels pour distinguer si la conv actuelle est un chat ou un channel
+    let isChat;
+    let recipients;
+    if (1) {
+        isChat = true;
+        recipients = (chat?.participants.filter((e:any) => e.id != currentUser.id));
+    }
 
+    //Update des messages displayed quand le chat est modifié
+    useEffect(() => {
+        const oldMessages: Message[] = chat.messages.map((msg:any) => {
+            return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId, createdAt: msg.createdAt
+        }});
+        setMessages([...oldMessages]);
+    }, [chat])
 
-    // ******** TO DO: voir comment améliorer la fiabilité de ce bloc
-    const recipientId = parseInt(useParams().userId || '');
-    const recipient = (chat?.participants.find((e:any) => e.id === recipientId))
-    console.log("chat recipientId : " + recipientId);
-
+    //**************************************** SOCKETS *****************************************//
 
     //Création de la socket client
     useEffect(() => {
-        const newSocket = io(
-            "http://localhost:3333", //dès que j'essaie de changer le port j'ai une erreur
+        const newChatSocket = io(
+            //URL:port/namespace
+            "http://localhost:3333/ns-chat", //dès que j'essaie de changer le port j'ai une erreur
             {
                 path: "/chat",
                 withCredentials: true,
                 autoConnect: true,
-                auth: {token: "TODO : gérer les tokens d'authentification ici"},
-                query: {"userId": currentUser.sub}
+                auth: {token: "//TODO : gérer les tokens d'authentification ici"},
+                query: {"userId": currentUser.id}
             });
-        console.log({newSocket});
-        setSocket(newSocket)
-    }, [])
+        console.log({newChatSocket});
+        setChatSocket(newChatSocket)
+    }, [setChatSocket])
 
     //On Connect : actions supplémentaires possibles à la connexion de la socket client
     useEffect(() => {
         function onConnect() {
             console.log("socket onConnect useEffect")
-            setSocketIsConnected(true);
-            
+            // setSocketIsConnected(true);
+
             const userData = {
-                userId : currentUser.sub,
-                socketId : socket?.id
+                userId : currentUser.id,
+                socketId : chatSocket?.id
             }
-            console.log({userData})
-
-            socket?.emit("userData", userData)
+            chatSocket?.emit("userData", userData)
         }
-        socket?.on('connect', onConnect);
+        chatSocket?.on('connect', onConnect);
 
-      }, [socket]);
+      }, [chatSocket]);
 
     //Emission d'un message via le bouton MessageInput
-    const send = (value:string) => {
-        const payload = {
-            message: value,
-            to: recipientId,   
+    const send = (content:string) => {
+        const payload : {content:string, senderId:number, chatId: number} = {
+            content: content,
+            senderId: currentUser.id,
+            chatId: chat.id
         }
-        socket?.emit("message", payload)
+        chatSocket?.emit("message", payload)
+        //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
+        // setMessages([...messages, {content: value, senderId: currentUser.id, chatId: chat.id}])
     }
 
     //Réception et stockage des messages par le client
-    const messageListener = ({message}:{message : string}) => {
+    const messageListener = (message:Message) => {
         setMessages([...messages, message])
     }
     useEffect(() => {
-        socket?.on("message", messageListener); //if we have a socket, when we receive a message, adds function messageListener as listener
+        chatSocket?.on("message", messageListener); //if we have a socket, when we receive a message, adds function messageListener as listener
         return (() => { //cleanup function
-            socket?.off("message", messageListener);
+            chatSocket?.off("message", messageListener);
         })
     }, [messageListener]);
 
-    return (
-        <Box p={3}
-            sx={{
-                backgroundColor:'white',
-                height:'100%',
-                border: '2px solid black',
-                borderRadius:'10px',
-                display:'flex',
-                flexDirection: 'column',
-                justifyContent: recipient? 'space-between': 'center',
-                alignItems: 'center'
-            }}
-        >
-            {recipient? (
-            <>
-                <Miniature nickname={recipient.nickname}></Miniature>
-                <Messages messages={messages}></Messages>
-                <Box>
-                    <MessageInput send={send}></MessageInput>
-                </Box>
-            </>
-            ) : <div>Select conversation</div>}
-        </Box>
-    )
+	return (
+		<Box 
+		  className="conversation"
+		  p={5} sx={{ backgroundColor: '#FF8100', width: '100%', height: '100%' }}
+		>
+		  <div className="conversation-container">
+			{isChat && recipients && messages ? (
+			  <>
+				<Miniature
+				  miniatureUser={{
+					nickname: recipients[0].nickname,
+					id: recipients[0].id,
+					minAvatar: { url: tchoupi, name: "Tchoupi" },
+				  }}
+				></Miniature>
+				<Box sx={{ width: "100%", marginTop: "30px" }}>
+				  {messages?.map((msg, index) => {
+					const formattedTimestamp = msg.createdAt
+					  ? new Intl.DateTimeFormat("en-GB", {
+						  day: "2-digit",
+						  month: "2-digit",
+						  year: "numeric",
+						  hour: "2-digit",
+						  minute: "2-digit",
+						}).format(new Date(msg.createdAt))
+					  : "";
+	  
+					if (msg.senderId === currentUser.id) {
+					  // Display messages sent by the current user on the right
+					  return (
+						<MessageRight
+						  key={index}
+						  message={msg.content}
+						  timestamp={formattedTimestamp}
+						/>
+					  );
+					} else {
+					  // Display messages sent by others on the left
+					  const sender = chat?.participants.find(
+						(e: any) => e.id === msg.senderId
+					  );
+	  
+					  return (
+						<MessageLeft
+						  key={index}
+						  message={msg.content}
+						  timestamp={formattedTimestamp}
+						  displayName={sender.nickname}
+						  sender={chat?.participants.find((e: any) => e.id === msg.senderId)}
+						/>
+					  );
+					}
+				  })}
+				</Box>
+				<Box>
+				  <MessageInput send={send}></MessageInput>
+				</Box>
+			  </>
+			) : (
+			  <div>Select conversation</div>
+			)}
+		  </div>
+		</Box>
+	  );
+	  
+	
 }
 
 export default Conversation
-
-
-// useEffect(() => { //Fetch chat data
-//     const findOrCreateChat = async () => { //definition de la fonction
-//         try {
-//             const response = await axiosPrivate.post('/chats/findOrCreate',
-//                 JSON.stringify({'recipients': [recipientId]}),
-//                 {
-//                     headers: { 'Content-Type': 'application/json'},
-//                     withCredentials: true
-//                 })
-//             setChat(response.data);
-//         } catch (error:any) {
-//             console.log(error.response );
-//         }
-//     }
-//     findOrCreateChat(); //appel de la fonction
-// }, [recipientId])

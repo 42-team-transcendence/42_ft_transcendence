@@ -15,8 +15,10 @@ export type User = {
 // }
 
 export type Message = {
-    message: string,
-
+    content: string,
+    senderId: number,
+    chatId: number,
+	createdAt: Date
 }
 
 export type Conversation = {
@@ -24,4 +26,15 @@ export type Conversation = {
     creator: User,
     recipient: User,
     messages: Message[]
+}
+
+export type MiniAvatarPicture = {
+    url: string,
+    name: string
+}
+
+export type MiniatureUser = {
+    nickname: string,
+    id: number,
+    minAvatar: MiniAvatarPicture
 }

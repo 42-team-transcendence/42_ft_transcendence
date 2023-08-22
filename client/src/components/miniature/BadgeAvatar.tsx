@@ -1,10 +1,12 @@
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
-import tchoupi from '../../assets/tchoupi50x50.jpg'
+
 import { useState } from 'react';
 
-export default function BadgeAvatar() {
+import type {MiniAvatarPicture} from '../../utils/types'
+
+export default function BadgeAvatar({minAvatar} :{minAvatar: MiniAvatarPicture}) {
   const [isConnected, updateIsConnected] = useState<boolean>(true)
   const [invisible, setInvisible] = useState(false); //faire disparaître le rond de connexion
 
@@ -28,7 +30,7 @@ export default function BadgeAvatar() {
         variant="dot"
         invisible={invisible}
       >
-        <Avatar alt="Tchoupi" src={tchoupi} />
+        <Avatar alt={minAvatar.name} src={minAvatar.url} />
       </StyledBadge>
   );
 }
