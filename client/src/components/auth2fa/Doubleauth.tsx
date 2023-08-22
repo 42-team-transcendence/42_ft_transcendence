@@ -52,39 +52,3 @@ const DoubleAuth = () => {
 };
 
 export default DoubleAuth;
-
-
-// import React, { useEffect, useState } from 'react';
-// import * as speakeasy from 'speakeasy';
-// import * as qrcode from 'qrcode';
-
-// function DoubleAuth(): JSX.Element {
-//   const [qrCodeData, setQrCodeData] = useState<string>(''); // Assurez-vous que qrCodeData est de type 'string'
-
-//   useEffect(() => {
-//     // Générer le secret et le code OTP
-//     var secret = speakeasy.generateSecret({
-//       name: 'WeAreDevs',
-//     });
-
-//     // Générer le QR code
-//     qrcode.toDataURL(secret.otpauth_url, function (err: Error | null, data: string | undefined) {
-//       if (err) {
-//         console.error('Erreur lors de la génération du QR code:', err);
-//       } else if (data) { // Assurez-vous que data est défini avant de le définir dans le state
-//         setQrCodeData(data);
-//       }
-//     });
-//   }, []);
-
-//   return (
-//     <div>
-//       <h1>Authentification à double facteur</h1>
-//       <p>Scannez ce QR code avec une application d'authentification :</p>
-//       {qrCodeData && <img src={qrCodeData} alt="QR Code" />}
-//       {/* Vous pouvez également afficher ici le secret pour l'enregistrer manuellement */}
-//     </div>
-//   );
-// }
-
-// export default DoubleAuth;

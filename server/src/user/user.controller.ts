@@ -127,4 +127,15 @@ export class UserController {
 					return { message: 'Error updating user' };
 			}
 	}
+
+	@HttpCode(HttpStatus.OK)
+	@Post('update2fa')
+	async update2fa(
+		@Body() body: {auth2fa: boolean},
+		@GetUser() user
+	) {
+		const { auth2fa } = body;
+		console.log(`Auth2fa = ${auth2fa}`);
+		await this.userService.update2fa(auth2fa, user.sub);
+	}
 }

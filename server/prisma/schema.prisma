@@ -22,6 +22,7 @@ model User {
 	hashedRt  		String?
 
 	secret        	String?
+	auth2fa			Boolean @default(false)
 
 	chats     		Chat[]    @relation("chatParticipants")
 	messages  		Message[]
