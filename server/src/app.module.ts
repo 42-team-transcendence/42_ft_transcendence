@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { ChatModule } from './chat/chat.module';
 import { GameModule } from './game/game.module';
+import { DoubleAuthModule } from './auth/doubleauth.module';
 
 @Module({
   imports: [
@@ -13,11 +14,12 @@ import { GameModule } from './game/game.module';
       isGlobal: true //permet d'utiliser ce module dans tous nos autres modules
     }),
     AuthModule,
+    DoubleAuthModule,
     UserModule,
     PrismaModule,
     HttpModule,
     ChatModule,
-	GameModule
+	  GameModule
   ],
 })
 export class AppModule {}

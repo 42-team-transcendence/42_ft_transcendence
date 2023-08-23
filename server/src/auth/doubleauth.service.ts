@@ -21,20 +21,30 @@ export class DoubleAuthService {
     });
   }
 
-  async verify2FA(user: any, code: string): Promise<boolean> {
-    const secret = user.secret;
-    if (!secret) {
-      return false;
+  async verify2FA(userEmail: string, code: string): Promise<boolean> {
+    console.log("verify 2fa function user.scret")
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { email: userEmail},
+      })
+      console.log("user", {user});
+      const secret = user.secret
+
+      if (!secret) {
+        return false;
+      }
+  
+      const verified = speakeasy.totp.verify({
+        secret: secret,
+        encoding: 'base32',
+        token: code,
+        window: 1,
+      });
+      console.log("verified")
+      return verified;
+    } catch (error) {
+      console.error("error secret")
     }
-
-    const verified = speakeasy.totp.verify({
-      secret: secret,
-      encoding: 'base32',
-      token: code,
-      window: 1,
-    });
-
-    return verified;
   }
 
   async saveUserSecret(userEmail: string, secret: string): Promise<void> {

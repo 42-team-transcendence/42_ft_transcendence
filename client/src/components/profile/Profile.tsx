@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import speakeasy from 'speakeasy';
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -269,7 +270,7 @@ function Profile() {
 					<div className="a-modifier">
 						<h2> Double factors </h2>
 						<Checkbox checked={is2fa} onChange={handle2fa}/>
-						{/* <DoubleAuth/> */}
+						<DoubleAuth/>
 					</div>
 				</div>
 				</div>

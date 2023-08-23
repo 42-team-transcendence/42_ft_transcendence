@@ -8,7 +8,7 @@ import { GetUser } from "../auth/decorator"
 
 @Controller('2fa')
 export class DoubleAuthController {
-  constructor(private readonly doubleAuthService: DoubleAuthService) {}
+    constructor(private readonly doubleAuthService: DoubleAuthService) {}
 
   @Get('generate')
   async generate2FA(@Res() res: Response) {
@@ -20,30 +20,15 @@ export class DoubleAuthController {
     return res.json({ secret: secret.base32, qrcode });
   }
 
-  @Post('verify')
+  @Post('verify2fa')
   async verify2FA(
-		@Body('code') code: string, 
-		@GetUser() user,
-		@Req() req, 
-		@Res() res) {
-    // Get the user from the request (assuming it is set by the authentication middleware)
-    // const { user } = req;
-
+    @Body() dto: any,
+    @Res() res) {
+    console.log(`CODE = ${dto.otp} USER =`, {dto});
     // Verify the 2FA code using the DoubleAuthService
-    const isVerified = await this.doubleAuthService.verify2FA(user.sub, code);
+    const isVerified = await this.doubleAuthService.verify2FA(dto.email, dto.opt);
 
     // Return the verification result in the response
     return res.json({ isVerified });
   }
 }
-// @HttpCode(HttpStatus.OK)
-// @Post('score')
-// async updateScore(
-// 	  @Body() body: { score: number },
-// 	  @GetUser() user
-// 	 ) {
-// 	  const { score } = body;
-// 	  console.log({score});
-// 	  console.log({user});
-// 	  await this.userService.updateScore(score, user.sub);
-// }
