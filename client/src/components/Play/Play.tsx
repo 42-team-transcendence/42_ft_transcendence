@@ -43,6 +43,9 @@ const axiosPrivate = useAxiosPrivate();
 	const [winner, setWinner] = useState<any>();
 	const [start, setStart] = useState<boolean>(false);
 	const [over, setOver] = useState<boolean>(false);
+	const [disconnect, setDisconnect] = useState<boolean>(false);
+	const [roomName, setRoomName] = useState<string>();
+	const roomNameRef = useRef<string | undefined>(roomName);
 
 	useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => { //definition de la fonction
@@ -81,40 +84,62 @@ const axiosPrivate = useAxiosPrivate();
 		
 		function onConnect() {
 			
+			socket?.on('roomAssigned', (room) => {
+				console.log("ROOMNAME == " + room);
+				setRoomName(room);
 				const data = {
 					currentUser: currentUser.id,
 					socketId: socket?.id,
+					roomName: room,
 				}
 				socket?.emit("playerData", data);
-		}
-			socket?.on('connect', onConnect);
-
-			console.log("start == " + start);
-			socket?.on('game',  (data: { ball: Ball, players: Paddle[] }) => {
-				const receivedBall = data.ball;
-				const receivedPlayers = data.players;
-			
-				// Appelle la fonction game en passant receivedBall et receivedPlayers comme arguments
-				setStart(true);
-				game(receivedBall, receivedPlayers);
 			});
+		}
 
-			window.addEventListener("keydown", changeDirection);
+		socket?.on('connect', onConnect);
+		socket?.on('playerDisconnected', () => {
+			setDisconnect(true);
+			setStart(false);
+		});
 
-			return () => {
-				socket?.disconnect(); // Assurez-vous de retirer l'écoute lors du démontage du composant
-				window.removeEventListener("keydown", changeDirection);
-			};
+		socket?.on('game',  (data: { ball: Ball, players: Paddle[] }) => {
+			const receivedBall = data.ball;
+			const receivedPlayers = data.players;
+		
+			// Appelle la fonction game en passant receivedBall et receivedPlayers comme arguments
+			setStart(true);
+			game(receivedBall, receivedPlayers);
+		});
+
+		window.addEventListener("keydown", changeDirection);
+
+		return () => {
+			socket?.disconnect(); // Assurez-vous de retirer l'écoute lors du démontage du composant
+			window.removeEventListener("keydown", changeDirection);
+		};
 
 	}, [socket]);
 
 /*-------------------------------------------------------------------------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------------------------------*/
 
+
+// Mise à jour de la référence en utilisant l'effet
+useEffect(() => {
+  roomNameRef.current = roomName;
+}, [roomName]);
+
 	const changeDirection = (event: KeyboardEvent) => {
-		const keyPressed = event.key;
+
+		const currentRoomName = roomNameRef.current;
+		event.preventDefault();
+
+		const data = {
+			keyPressed: event.key,
+			roomName: currentRoomName,
+		}
 		
-		socket?.emit("changeDirection", keyPressed);
+		socket?.emit("changeDirection", data);
 	};
 
 	const game = (ball: Ball, players: Paddle[]) => {
@@ -175,7 +200,7 @@ const axiosPrivate = useAxiosPrivate();
 return (
     <PageWrapper>
         <div id="gameContainer">
-            {!start && <div id="waitingMessage">Waiting for an opponent !</div>}
+            {!start && !disconnect && <div id="waitingMessage">Waiting for an opponent !</div>}
             {start && !over && (
                 <>
                     <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
@@ -185,6 +210,7 @@ return (
             )}
             {over && winner === currentUser.id && <div id="winnerMessage">You win!</div>}
             {over && winner !== currentUser.id && <div id="looserMessage">You loose...</div>}
+            {disconnect && !start && <div id="disconnect">The other player has disconnected !</div>}
 
         </div>
     </PageWrapper>
