@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+// =============================================================================
+// IMPORT STYLES ===============================================================
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,6 +11,10 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
 
@@ -63,6 +69,7 @@ export default function SearchAppBar() {
 	const navigate = useNavigate();
 
   const [searchInput, setSearchInput] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
 
   const handleChange = (event:any) => {
     setSearchInput(event.target.value);
@@ -78,6 +85,7 @@ export default function SearchAppBar() {
             }
         );
         console.log(response.data);
+        setSearchResults(response.data);
         } catch (err: any) {
             console.log(err);
         }
@@ -85,6 +93,8 @@ export default function SearchAppBar() {
     if (searchInput) {
       console.log("search database for", searchInput);
       searchResults();
+    } else {
+      setSearchResults([])
     }
   }, [searchInput])
 
@@ -102,6 +112,18 @@ export default function SearchAppBar() {
               onChange={handleChange}
             />
         </Search>
+        {searchResults.length > 0 &&
+        <List subheader="Channels">
+          {searchResults.map((item, idx) => {
+            return (
+                <ListItem disablePadding key={idx}>
+                  <ListItemButton>
+                    <ListItemText primary={item.channelInfo.name} />
+                  </ListItemButton>
+                </ListItem>
+            )})}
+        </List>
+        }
     </Box>
   );
 }

@@ -23,7 +23,6 @@ export class ChannelController {
 	@Get('getByName/:input') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
 	getChannelsByName(@Param('input') input: string) {
 		console.log({input});
-		return ("coucou");
-
+		return (this.channelService.getChannelsByName(input));
 	}
 }

@@ -33,13 +33,32 @@ export class ChannelService {
 						}
 					}
 				},
+			})
+			console.log({channel});
+			return channel;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+	}
+
+	async getChannelsByName(input:string) {
+		try {
+			const channels = await this.prisma.chat.findMany({
+				where: {
+					channelInfo: {
+						name: {
+							contains: input,
+						}
+					}
+				},
 				include: {
 					participants: true, // Include all participants in the returned object
 					channelInfo : true
 				},
 			})
-			console.log({channel});
-			return channel;
+			console.log({channels});
+			return channels;
 		} catch (error) {
             console.log(error);
             throw error;
