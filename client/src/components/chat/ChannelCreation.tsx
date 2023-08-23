@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import PageWrapper from "../navbar/pageWrapper";
 
 import { statuses, Status } from "./types";
 
@@ -70,6 +71,7 @@ export default function ChannelCreation() {
 	}
 
     return (
+        <PageWrapper>
         <section className="channel-creation-form">
             <p className={errMsg? "errmsg" : "offscreen"}>
                 {errMsg}
@@ -156,6 +158,7 @@ export default function ChannelCreation() {
 
 				</Box>
         </section>
+        </PageWrapper>
     )
 
 
