@@ -1,4 +1,4 @@
-import { Controller, ForbiddenException, Get, Post, UseGuards, Body, } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, UseGuards, Body, Param, } from "@nestjs/common";
 import { JwtGuard } from "../auth/guard";
 import { GetUser } from "../auth/decorator"
 import { ChannelService } from "./channel.service";
@@ -18,5 +18,12 @@ export class ChannelController {
     ) {
 		console.log("create channel controller")
 		return (this.channelService.createChannel(payload, creator.sub));
+	}
+
+	@Get('getByName/:input') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
+	getChannelsByName(@Param('input') input: string) {
+		console.log({input});
+		return ("coucou");
+
 	}
 }

@@ -1,4 +1,5 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
+
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { useNavigate } from 'react-router-dom';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -55,6 +59,35 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+  const axiosPrivate = useAxiosPrivate();
+	const navigate = useNavigate();
+
+  const [searchInput, setSearchInput] = useState<string>('');
+
+  const handleChange = (event:any) => {
+    setSearchInput(event.target.value);
+  };
+
+  useEffect(() => { //search for channels
+    const searchResults = async () => {
+      try {
+        const response = await axiosPrivate.get(
+            `/channels/getByName/${searchInput}`, {
+                headers: {'Content-Type': 'application/json'},
+                withCredentials: true
+            }
+        );
+        console.log(response.data);
+        } catch (err: any) {
+            console.log(err);
+        }
+    }
+    if (searchInput) {
+      console.log("search database for", searchInput);
+      searchResults();
+    }
+  }, [searchInput])
+
   return (
     <Box className='search_bar' sx={{ flexGrow: 1 }}>
         <Search>
@@ -62,8 +95,11 @@ export default function SearchAppBar() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search for friends/chans"
+              placeholder="Search for friends/channels"
               inputProps={{ 'aria-label': 'search' }}
+
+              value={searchInput}
+              onChange={handleChange}
             />
         </Search>
     </Box>
