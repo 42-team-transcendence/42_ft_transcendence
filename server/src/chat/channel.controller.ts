@@ -25,4 +25,17 @@ export class ChannelController {
 		console.log({input});
 		return (this.channelService.getChannelsByName(input));
 	}
+
+	@Post('join/:id')
+	joinChannel(
+		@GetUser() user,
+		@Param('id') id: string
+    ) {
+		console.log("join channel controller")
+		const channelId = parseInt(id);
+		if ((isNaN(channelId)))
+			throw new ForbiddenException("incorrect id sent : not a number");
+		console.log(user, channelId);
+		return (this.channelService.joinChannel(channelId, user.sub));
+	}
 }

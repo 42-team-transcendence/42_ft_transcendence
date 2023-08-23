@@ -71,10 +71,6 @@ export default function SearchAppBar() {
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
 
-  const handleChange = (event:any) => {
-    setSearchInput(event.target.value);
-  };
-
   useEffect(() => { //search for channels
     const searchResults = async () => {
       try {
@@ -98,6 +94,25 @@ export default function SearchAppBar() {
     }
   }, [searchInput])
 
+  const handleSearchChange = (event:any) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleResultClick = async (channelId:number) => {
+    try {
+			const response = await axiosPrivate.post(
+				`/channels/join/${channelId}`,
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			);
+      console.log(response.data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
   return (
     <Box className='search_bar' sx={{ flexGrow: 1 }}>
         <Search>
@@ -109,7 +124,7 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
 
               value={searchInput}
-              onChange={handleChange}
+              onChange={handleSearchChange}
             />
         </Search>
         {searchResults.length > 0 &&
@@ -117,7 +132,7 @@ export default function SearchAppBar() {
           {searchResults.map((item, idx) => {
             return (
                 <ListItem disablePadding key={idx}>
-                  <ListItemButton>
+                  <ListItemButton onClick={() => handleResultClick(item.id)}>
                     <ListItemText primary={item.channelInfo.name} />
                   </ListItemButton>
                 </ListItem>
