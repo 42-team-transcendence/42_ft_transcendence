@@ -10,6 +10,7 @@ import { Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import "../../styles/chat/ChatSidebar.css"
 import CustomButton from "../../styles/buttons/CustomButton";
+import ChannelMiniature from "./ChannelMiniature";
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -37,7 +38,7 @@ export default function ChatSidebar({
 		{myChats && myChats.map((chat: any, i: number) => {
 			// Ensure chat and participants are defined before accessing properties
 			if (chat && chat.participants && chat.participants.length > 0) {
-				if (!chat.channelInfo) {
+				if (!chat.channelInfo) { //CHAT
 					// Find first user id which is not mine
 					const recipient = chat?.participants?.find((e: any) => e.id !== currentUser.id);
 					if (recipient?.id) {
@@ -54,20 +55,20 @@ export default function ChatSidebar({
 								}
 							></ChatMiniature>
 					);}
-				} else {
-					//show all participants to channel
+				} else { //CHANNEL
 					return (
-						<ChatMiniature
+						<ChannelMiniature
 							key={i}
 							notif={true}
 							userId={currentUser.id}
-							nickname={chat.channelInfo.name}
+							participants={chat.participants}
+							channelName={chat.channelInfo.name}
 							lastMessage={
 								chat.messages.length > 0
 								? chat.messages[chat.messages.length - 1].message
 								: ""
 							}
-						></ChatMiniature>
+						></ChannelMiniature>
 					)
 				}
 			}
