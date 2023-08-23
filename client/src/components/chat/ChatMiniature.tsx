@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Container, Box } from "@mui/material";
 
 // =============================================================================
@@ -16,23 +16,22 @@ import  "../../styles/chat/ChatMiniature.css";
 // =============================================================================
 // FUNCTION ====================================================================
 
-export default function ChatMiniature(
-    {notif, nickname, lastMessage, userId}:{
-        notif:boolean,
-        nickname:string,
-        lastMessage:string,
-        userId:number
-    }) {
-        const navigate = useNavigate();
-        const location = useLocation();
+export default function ChatMiniature({notif, nickname, lastMessage, userId}: {
+    notif:boolean,
+    nickname:string,
+    lastMessage:string,
+    userId:number
+}) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        //TODO : change/toggle hidden class here to make conversation appear
+		navigate('/chat', {state: {recipientId: userId}});
+    }
 
     return (
-
         <Box
-            onClick={() => {
-				//TODO : change/toggle hidden class here to make conversation appear
-				navigate(`/chat/${userId}`, {replace: false})
-			}}
+            onClick={handleClick}
             sx={{
                 backgroundColor: notif ? 'white' : '#00000021',
                 border: notif ? '2px solid black' : 'none',

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -25,10 +25,15 @@ export default function ChatChannels() {
 	const [chatFound, setChatFound] = useState<boolean>(false)
 	const [currentChat, setCurrentChat] = useState<any>();
 	const [currentUser, setCurrentUser] = useState<any>();
+	const [showChatSidebar, setShowChatSidebar] = useState(true);
 
-    // Cas Chat en 1v1 : il faut checker le paramètre de l'URL
-    //pour avoir l'id du user avec qui on veut chater
-    let recipientId = parseInt(useParams().userId || ''); //vérifie si on a un userId dans l'URL
+	// Cas Chat en 1v1 : on utilise recipientId pour afficher le chat correspondant. il est passe par location
+	const location = useLocation();
+	console.log({location});
+    let recipientId:number | null = null;
+	if (location.state && location.state.recipientId) {
+		recipientId = location.state.recipientId;
+	}
     console.log({recipientId});
 
     useEffect(() => { //If chat with recipientId does not exist, creates it
@@ -50,7 +55,7 @@ export default function ChatChannels() {
         findOrCreateChat(); //appel de la fonction
     }, [recipientId, currentUser])
 
-    useEffect(() => { //Fetch chat data
+    useEffect(() => { //Fetch chats data
 		const findAllMyChats = async () => { //definition de la fonction
 			try {
                 const response = await axiosPrivate.get('/chats/findAllMyChats', {
@@ -81,18 +86,13 @@ export default function ChatChannels() {
 		getCurrentUser(); //appel de la fonction
     }, [])
 
-	const [showChatSidebar, setShowChatSidebar] = useState(true);
-
-	useEffect(() => {
+	useEffect(() => { //Style : resize window
 	  const handleResize = () => {
 		setShowChatSidebar(window.innerWidth > 768);
 	  };
 
 	  window.addEventListener("resize", handleResize);
-
-	  // Call handleResize immediately to set initial state
-	  handleResize();
-
+	  handleResize(); // Call handleResize immediately to set initial state
 	  return () => {
 		window.removeEventListener("resize", handleResize);
 	  };
@@ -120,18 +120,18 @@ export default function ChatChannels() {
 				>
 				{currentChat && !showChatSidebar && (
 					<IconButton
-					className="back-button"
-					onClick={() => {
-						setShowChatSidebar(true);
-					}}
+						className="back-button"
+						onClick={() => {
+							setShowChatSidebar(true);
+						}}
 					>
 					<ArrowBackIcon />
 					</IconButton>
 				)}
 				{currentChat ? (
 					<Conversation
-					chat={currentChat}
-					currentUser={currentUser}
+						chat={currentChat}
+						currentUser={currentUser}
 					></Conversation>
 				) : (
 					<p> Select Chat</p>

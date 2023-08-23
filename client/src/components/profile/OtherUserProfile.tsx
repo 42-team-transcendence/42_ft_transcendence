@@ -53,7 +53,7 @@ function OtherUserProfile() {
 					...response.data,
 					picture:"https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg",
 					level : "200"
-					
+
 				});
 			} catch (error:any) {
 				console.log(error.response );
@@ -63,7 +63,7 @@ function OtherUserProfile() {
 	}, [])
 
 	const startPrivateMessage = () => {
-		navigate(`/chat/${user?.id}`, {replace: false});
+		navigate('/chat', {state:{recipientId:user?.id}});
 	}
 
   return (
@@ -84,7 +84,7 @@ function OtherUserProfile() {
 						<p>Rank 2 | Lvl {user?.level}</p>
 					</div>
 				</div>
-			
+
 				<div className="column-other-user">
 					<div className="row-other-user">
 						<CustomButtonSecond
@@ -103,7 +103,7 @@ function OtherUserProfile() {
 					<div className="row-other-user">
 						<CustomButtonSecond
 							icon={<PersonRemoveIcon />}
-							text="Unfriend" 
+							text="Unfriend"
 							onClick={startPrivateMessage}/>
 
 						<CustomButtonSecond

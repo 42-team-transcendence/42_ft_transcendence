@@ -44,7 +44,7 @@ export default function ChatSidebar({
 					if (recipient?.id) {
 						return (
 							<ChatMiniature
-								key={i}
+								key={"chat"+i}
 								notif={true}
 								userId={recipient.id}
 								nickname={recipient.nickname}
@@ -58,7 +58,7 @@ export default function ChatSidebar({
 				} else { //CHANNEL
 					return (
 						<ChannelMiniature
-							key={i}
+							key={"channel"+i}
 							notif={true}
 							userId={currentUser.id}
 							participants={chat.participants}
