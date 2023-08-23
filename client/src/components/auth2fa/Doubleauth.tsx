@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useContext, ChangeEvent } from 'react';
 import QRCode from 'qrcode.react';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";

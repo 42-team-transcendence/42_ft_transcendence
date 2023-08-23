@@ -26,7 +26,7 @@ export class DoubleAuthController {
     @Res() res) {
     console.log(`CODE = ${dto.otp} USER =`, {dto});
     // Verify the 2FA code using the DoubleAuthService
-    const isVerified = await this.doubleAuthService.verify2FA(dto.email, dto.opt);
+    const isVerified = await this.doubleAuthService.verify2FA(dto.email, dto.otp);
 
     // Return the verification result in the response
     return res.json({ isVerified });

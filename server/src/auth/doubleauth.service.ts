@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import speakeasy from 'speakeasy';
-// import qrcode from 'qrcode';
 import * as qrcode from 'qrcode'
 
 
@@ -40,7 +39,7 @@ export class DoubleAuthService {
         token: code,
         window: 1,
       });
-      console.log("verified")
+      console.log("verified", {verified});
       return verified;
     } catch (error) {
       console.error("error secret")

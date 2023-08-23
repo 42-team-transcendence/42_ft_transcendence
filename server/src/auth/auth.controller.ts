@@ -40,24 +40,23 @@ export class AuthController {
 	async enable2FA(
 		@Body() dto: any,
 	) {
-	  try {
-		// Check if the user has already set up 2FA before allowing the setup process again (Optional)
-		// You can add an additional check here to prevent users from setting up 2FA multiple times.
+        try {
+            // Check if the user has already set up 2FA before allowing the setup process again (Optional)
+            // You can add an additional check here to prevent users from setting up 2FA multiple times.
 
-		// Generate the 2FA secret and store it in the database
-		const secret = speakeasy.generateSecret();
-		console.log(`USER email = ${dto.email}`);
-		await this.doubleAuthService.saveUserSecret(dto.email, secret.base32);
-
-        console.log({secret});
-		// Generate the QR code and return the representation of the QR code in the response
-		const qrCodeData = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
-		console.log({qrCodeData});
-        return ({ qrCodeData });
-	  } catch (error) {
-		console.error('Error enabling 2FA:', error);
-		throw new Error('Failed to enable 2FA.');
-	  }
+            // Generate the 2FA secret and store it in the database
+            const secret = speakeasy.generateSecret();
+            await this.doubleAuthService.saveUserSecret(dto.email, secret.base32);
+            console.log({secret});
+            
+            // Generate the QR code and return the representation of the QR code in the response
+            const qrCodeData = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
+            console.log({qrCodeData});
+            return ({ qrCodeData });
+        } catch (error) {
+            console.error('Error enabling 2FA:', error);
+            throw new Error('Failed to enable 2FA.');
+        }
 	}
 
 /*********************************************************************************************************/
