@@ -2,12 +2,12 @@ import PageWrapper from "../navbar/pageWrapper";
 import React, { useState, useEffect, useRef } from 'react';
 import io, {Socket} from "socket.io-client"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import '../../styles/Play.css'
 
 const Play: React.FC = () => {
 
 	const gameBoardRef = useRef<HTMLCanvasElement>(null);
   	const scoreTextRef = useRef<HTMLDivElement>(null);
-  	const resetBtnRef = useRef<HTMLButtonElement>(null);
 
 	const gameWidth = 800; 
 	const gameHeight = 400;
@@ -148,9 +148,8 @@ useEffect(() => {
 		const gameBoard = gameBoardRef.current;
 		const ctx = gameBoard?.getContext('2d');
 		const scoreText = scoreTextRef.current;
-		const resetBtn = resetBtnRef.current;
 	
-		if (!gameBoard || !ctx || !scoreText || !resetBtn) return;
+		if (!gameBoard || !ctx || !scoreText ) return;
 
 		  const drawBall = () => {
 			  ctx.fillStyle = ball.color;
@@ -200,12 +199,11 @@ useEffect(() => {
 return (
     <PageWrapper>
         <div id="gameContainer">
-            {!start && !disconnect && <div id="waitingMessage">Waiting for an opponent !</div>}
+            {!start && !disconnect && <div className="waitingMessage">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
             {start && !over && (
                 <>
                     <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
                     <div ref={scoreTextRef} id="scoreText">0 : 0</div>
-                    <button ref={resetBtnRef} id="resetBtn">Reset</button>
                 </>
             )}
             {over && winner === currentUser.id && <div id="winnerMessage">You win!</div>}
