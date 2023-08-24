@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import io, {Socket} from "socket.io-client"
-
+import { useNavigate } from "react-router-dom";
 
 
 // =============================================================================
@@ -9,6 +9,7 @@ import MessageInput from "./MessageInput";
 import MessageInConv from "./MessageInConv";
 import Miniature from "../miniature/Miniature";
 import tchoupi from '../../assets/tchoupi50x50.jpg'
+import GroupMiniature from "../miniature/GroupMiniature";
 
 // =============================================================================
 // IMPORT TYPES ===============================================================
@@ -16,11 +17,9 @@ import type {Message} from "../../utils/types"
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {AvatarGroup, Box} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import { MessageLeft, MessageRight } from "./MessageStyle";
 import '../../styles/chat/Conversation.css'
-import BadgeAvatar from "../miniature/BadgeAvatar";
-
 
 
 // =============================================================================
@@ -29,6 +28,8 @@ import BadgeAvatar from "../miniature/BadgeAvatar";
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     const [chatSocket, setChatSocket] = useState<Socket>();
     const [messages, setMessages] = useState<Message[]>([]);
+
+    const navigate = useNavigate();
 
     let isChat = true;
     if (chat.channelInfo) //Check si c'est un chat ou un channel
@@ -101,6 +102,11 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         })
     }, [messageListener]);
 
+    //**************************************** AUTRES *****************************************//
+    const handleChannelTitleClick = () => {
+      navigate('/channelParams', {state: {chat}});
+    }
+
     //Format Timestamp from msg stored in DB
     const formattedTimestamp = (date:Date) => {
       if (date)
@@ -121,7 +127,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 		  <div className="conversation-container">
         {recipients && messages ? (
           <>
-            {
+            { //CONVERSATION HEADER
               isChat ? ( //Si la conversation est un chat
                 recipients.length > 0 &&
                 <Miniature
@@ -132,16 +138,14 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                   }}
                 ></Miniature>
               ) : (  //Si la conversation est un channel
-                <> { chat.participants.length > 0 &&
-                  <AvatarGroup max={4}> {
-                    chat.participants.map((e:any, idx:number)=><BadgeAvatar key={idx} minAvatar={{url: tchoupi, name:'Tchoupi'}}></BadgeAvatar>)
-                  }
-                  </AvatarGroup>}
-                  { chat.channelInfo && <span>{chat.channelInfo.name}</span>}
+                <>
+                  {chat.participants.length > 0 && <GroupMiniature participants={chat.participants}></GroupMiniature>}
+                  {chat.channelInfo &&
+                    <Button onClick={handleChannelTitleClick}>{chat.channelInfo.name}</Button>}
                 </>
               )
             }
-            <Box sx={{ width: "100%", marginTop: "30px" }}> {
+            <Box sx={{ width: "100%", marginTop: "30px" }}> { //CONVERSATION BODY
               messages?.map((msg, index) => {
                 if (msg.senderId === currentUser.id) {// Display messages sent by the current user on the right
                   return (

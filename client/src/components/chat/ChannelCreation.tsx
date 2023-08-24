@@ -11,7 +11,7 @@ import { statuses, Status } from "./types";
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box, Button, FormHelperText, MenuItem, TextField} from '@mui/material';
-import "../../styles/chat/ChannelCreation.css"
+import "../../styles/chat/ChanCreationParam.css"
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -72,7 +72,7 @@ export default function ChannelCreation() {
 
     return (
         <PageWrapper>
-        <section className="channel-creation-form">
+        <section className="chan-creation-param-container">
             <p className={errMsg? "errmsg" : "offscreen"}>
                 {errMsg}
             </p>

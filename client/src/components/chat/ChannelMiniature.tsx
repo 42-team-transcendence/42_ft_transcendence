@@ -3,7 +3,6 @@ import { Container, Box, AvatarGroup, Avatar } from "@mui/material";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
-import Miniature from "../miniature/Miniature";
 import tchoupi from '../../assets/tchoupi50x50.jpg'
 
 // =============================================================================
@@ -11,6 +10,7 @@ import tchoupi from '../../assets/tchoupi50x50.jpg'
 import { CenterFocusStrong } from "@mui/icons-material";
 import  "../../styles/chat/ChatMiniature.css";
 import BadgeAvatar from "../miniature/BadgeAvatar";
+import GroupMiniature from "../miniature/GroupMiniature";
 
 
 
@@ -46,10 +46,7 @@ export default function ChannelMiniature({notif, channelName, lastMessage, chann
         >
             {participants &&
                 <div className="chat-miniature">
-                    <AvatarGroup max={4}> {
-                        participants.map((e:any, idx:number)=><BadgeAvatar key={idx} minAvatar={{url: tchoupi, name:'Tchoupi'}}></BadgeAvatar>)
-                    }
-                    </AvatarGroup>
+                    <GroupMiniature participants={participants}></GroupMiniature>
                     <span>{"CHANNEL " + channelName}</span>
                     <Box ml={0} mt={0}><div>{lastMessage}</div></Box>
                 </div>
