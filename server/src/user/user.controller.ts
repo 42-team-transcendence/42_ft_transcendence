@@ -138,4 +138,15 @@ export class UserController {
 		console.log(`Auth2fa = ${auth2fa}`);
 		await this.userService.update2fa(auth2fa, user.sub);
 	}
+
+	@HttpCode(HttpStatus.OK)
+	@Post('uploadAvatar')
+	async uploadAvatar(
+		@Body() body: {avatar: string},
+		@GetUser() user
+	) {
+		const { avatar } = body;
+		console.log(`Avatar = ${avatar}`);
+		await this.userService.uploadAvatar(avatar, user.sub);
+	}
 }
