@@ -119,16 +119,10 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
   handleDisconnect(client: Socket) {
 
     // Find the room that the client was in
-    let index = 0;
+    let index = -1;
+
       for (const [roomName, gameInfo] of this.rooms) {
-        // const index = gameInfo.players.findIndex(player => player.socketId.id === client.id);
-        if (gameInfo.players[0].socketId === client.id) {
-          index = 0;
-        } else if (gameInfo.players[1].socketId === client.id) {
-          index = 1;
-        }else {
-          index = -1;
-        }
+        const index = gameInfo.players.findIndex(player => player.socketId === client.id);
 		if(gameInfo.players.length === 2 ){
 			player1Id = gameInfo.players[0].Id;
 			player2Id = gameInfo.players[1].Id;
@@ -138,7 +132,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
 			winnerId = player1Id;
 			else if(player1Score < player2Score)
 				winnerId = player2Id;
-			else if(player1Score = player2Score)
+			else if(player1Score == player2Score || (player1Score == 0 && player2Score == 0))
 				winnerId = 0;
 			saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
 		}
@@ -149,7 +143,8 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
       // Emit a 'playerDisconnected' event to the remaining client in the room
           if (gameInfo.players.length === 1) {
             this.server.to(roomName).emit('playerDisconnected', 'The other player has disconnected');
-            // this.server.to(roomName).emit('gameOver');
+            this.rooms.delete(roomName);
+			// this.server.to(roomName).emit('gameOver');
           }else if(gameInfo.players.length === 0) {
             this.rooms.delete(roomName);
         }
@@ -160,7 +155,6 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
 
   /*-------------------------------------------------------------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------------------------------------------------------------*/
-
 
 assignPlayerToRoom(client: Socket, gameInfo: GameInfo): string {
     for (const [roomName, objet] of this.rooms) {
@@ -178,10 +172,11 @@ assignPlayerToRoom(client: Socket, gameInfo: GameInfo): string {
   return newRoomName;
 }
 
-heartBeat(roomName: string, gameInfo: GameInfo) {
+heartBeat(roomName: string, gameInfo: GameInfo, client: Socket) {
 
     let info = this.rooms.get(roomName);
 
+	if (info) {
     if(info.players.length > 1) {
       const gameData = {
           ball: gameInfo.ball,
@@ -201,22 +196,27 @@ heartBeat(roomName: string, gameInfo: GameInfo) {
 			winnerId = player1Id;
 		else if(player1Score < player2Score)
 			winnerId = player2Id;
-		else if(player1Score = player2Score)
+		else if(player1Score == player2Score )
 			winnerId = 0;
 		saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
         this.server.to(roomName).emit('game', gameData);
         clearInterval(gameInfo.intervalID); // Arrêtez l'intervalle
+		// this.disconnect(client);
       }
     }
     else {
       clearInterval(gameInfo.intervalID); // Arrêtez l'intervalle
+	//   gameInfo.players.length = 0;
+	//   this.rooms.delete(roomName);
+	  this.server.to(roomName).emit('gameOver');
     }
 }
+}
 
-interval(roomName: string, gameInfo: GameInfo) {
+interval(roomName: string, gameInfo: GameInfo, client: Socket) {
 
   gameInfo.intervalID = setInterval(() => {
-		this.heartBeat(roomName, gameInfo);
+		this.heartBeat(roomName, gameInfo, client);
 	}, 33);
 }
   
@@ -262,7 +262,7 @@ interval(roomName: string, gameInfo: GameInfo) {
     // Check and start the game if there are 2 players in the room
     if (roomClients && roomClients.length === 1) {
     } else if (roomClients && roomClients.length === 2) {
-        this.interval(data.roomName, info);
+        this.interval(data.roomName, info, client);
     }
 
     return data;

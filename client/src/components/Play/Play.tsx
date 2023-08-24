@@ -61,7 +61,7 @@ const axiosPrivate = useAxiosPrivate();
 			}
 		}
 		getCurrentUser(); //appel de la fonction
-    }, [])
+    }, [axiosPrivate])
 
 	    //Création de la socket client
 	useEffect(() => {
@@ -189,11 +189,9 @@ useEffect(() => {
 				setWinner(players[1].Id);
 			}
 		}
-
 		drawPaddles();
 		drawBall();
 		updateScore();
-
 }
 
 return (
