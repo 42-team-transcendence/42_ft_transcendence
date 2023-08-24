@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
+import speakeasy from 'speakeasy';
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -10,6 +11,7 @@ import EmailModal from "./EmailModal";
 import PwdModal from "./PasswordModal";
 import AuthContext, { AuthProvider } from '../../context/AuthProvider';
 import NickModal from "./NicknameModal";
+import DoubleAuth from "../auth2fa/Doubleauth";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
@@ -27,6 +29,7 @@ interface User {
 	email: string;
 	hash:string;
 	nickname: string;
+	auth2fa: boolean
 }
 
 
@@ -45,12 +48,11 @@ function Profile() {
 	const { auth, setAuth } = useContext(AuthContext);
 
 
-
 	// =============================================================================
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
-	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '' });
+	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false });
     useEffect(() => {
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
@@ -183,6 +185,40 @@ function Profile() {
 		handleClosePwdModal();
 	};
 
+	// =============================================================================
+	// 2FA MODAL ===================================================================
+	const [is2fa, setIs2fa] = useState(user?.auth2fa || false);
+
+
+	const handle2fa = () => {
+		const new2faState = !is2fa; // Toggle the state
+		setIs2fa(new2faState);
+	  
+		// Save the new 2FA state to your backend
+		save2faState(new2faState); // Call a function to save the state
+	};
+
+	const save2faState = async (new2faState: boolean) => {
+		try {
+			const response = await axiosPrivate.post(
+				'/users/update2fa',
+				JSON.stringify({ auth2fa: new2faState }),
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			);
+		
+			if (response.status === 200) {
+				console.log('2FA state update successful');
+				setUser((prevUser) => ({...prevUser, auth2fa: new2faState}))
+			} else {
+				console.error('2FA state update failed');
+			}
+		} catch (error) {
+		  	console.error('Error updating 2FA state:', error);
+		}
+	};
 	
 	// =============================================================================
 	// RETURN ======================================================================
@@ -233,11 +269,12 @@ function Profile() {
 					</div>
 
 					<div className="element-profile">
-						<div className="a-modifier">
-							<h2> Double factors </h2>
-							<Checkbox />
-						</div>
+					<div className="a-modifier">
+						<h2> Double factors </h2>
+						<Checkbox checked={user.auth2fa} onChange={handle2fa}/>
+						<DoubleAuth/>
 					</div>
+				</div>
 				</div>
 				<GameHistory/>
 			</div>

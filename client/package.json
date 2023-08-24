@@ -11,6 +11,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.6",
+    "@otplib/preset-browser": "^12.0.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -18,14 +19,26 @@
     "@types/node": "^16.18.36",
     "@types/react": "^18.2.12",
     "@types/react-dom": "^18.2.5",
+    "@types/speakeasy": "^2.0.7",
+    "authenticator": "^1.1.5",
     "axios": "^1.4.0",
+    "crypto-browserify": "^3.12.0",
+    "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.7.1",
+    "speakeasy": "^2.0.0",
+    "stream": "^0.0.2",
     "typescript": "^4.9.5",
+    "url": "^0.11.1",
+    "util": "^0.12.5",
     "web-vitals": "^2.1.4"
+  },
+  "browser": {
+    "crypto": false,
+    "stream": false
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,6 +65,8 @@
     ]
   },
   "devDependencies": {
-    "@types/cors": "^2.8.13"
+    "@types/authenticator": "^1.1.1",
+    "@types/cors": "^2.8.13",
+    "@types/notp": "^2.0.2"
   }
 }

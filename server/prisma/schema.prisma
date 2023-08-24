@@ -21,8 +21,13 @@ model User {
 	hash	  		String
 	hashedRt  		String?
 
+
+	secret        	String?
+	auth2fa			Boolean @default(false)
+
 	chatsCreated  	Chat[]			@relation("chatCreator")
 	chats     		Chat[]    		@relation("chatParticipants")
+
 	messages  		Message[]
 
 	channelsOwned 			ChannelInfo[]		@relation("channelOwner")
