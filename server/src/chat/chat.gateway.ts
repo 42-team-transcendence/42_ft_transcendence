@@ -55,7 +55,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
   //setup or initialization tasks before the WebSocket server starts accepting connections.
   afterInit(server: Server) {
       // Perform initialization tasks here
-      console.log('WebSocket gateway initialized!');
+      console.log('!!!!!!!!!!!!!!!!!!!!!!!WebSocket gateway initialized!!!!!!!!!!!');
     }
 
   //lifecycle method : automatically called by NestJS when a new client establishes a WebSocket connection with the server, due to OnGatewayConnection Interface

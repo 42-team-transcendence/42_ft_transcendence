@@ -12,22 +12,31 @@ datasource db {
 }
 
 model User {
-	id        		Int       @id @default(autoincrement())
-	createdAt 		DateTime  @default(now())
-	updatedAt 		DateTime  @updatedAt
+	id        		Int       		@id @default(autoincrement())
+	createdAt 		DateTime  		@default(now())
+	updatedAt 		DateTime  		@updatedAt
 
-	nickname		String    @unique
-	email	   		String    @unique
+	nickname		String    		@unique
+	email	   		String    		@unique
 	hash	  		String
 	hashedRt  		String?
+
 
 	secret        	String?
 	auth2fa			Boolean @default(false)
 
-	chats     		Chat[]    @relation("chatParticipants")
+	chatsCreated  	Chat[]			@relation("chatCreator")
+	chats     		Chat[]    		@relation("chatParticipants")
+
 	messages  		Message[]
 
-	chatsCreated  	Chat[]
+	channelsOwned 			ChannelInfo[]		@relation("channelOwner")
+	channelsAdministrated	ChannelInfo[] 		@relation("channelAdministrator")
+	channelsKickedOf		ChannelInfo[]		@relation("channelKicked")
+	channelsBannedOf		ChannelInfo[]		@relation("channelBanned")
+	channelsMutedOf			ChannelInfo[]		@relation("channelMuted")
+
+
 
 	rank			Int @default(0)
 	score			Int @default(0)
@@ -39,32 +48,63 @@ model User {
 }
 
 model Chat {
-	id                Int       @id @default(autoincrement())
-	createdAt         DateTime  @default(now())
-	updatedAt         DateTime  @updatedAt
+	id                Int       	@id @default(autoincrement())
+	createdAt         DateTime  	@default(now())
+	updatedAt         DateTime  	@updatedAt
 
-	creator           User      @relation(fields: [creatorId], references: [id])
+	creator           User      	@relation("chatCreator", fields: [creatorId], references: [id])
 	creatorId         Int
 
-	participants      User[]    @relation("chatParticipants")
-	participantsCount Int       @default(2)
+	participants      User[]    	@relation("chatParticipants")
+	participantsCount Int       	@default(2)
 
 	messages          Message[]
+
+	channelInfo		  ChannelInfo? //par défaut un chat n'a pas de channel infos (ce n'est pas un channel)
 
 	@@map("chats")
 }
 
 model Message {
-	id            Int @id @default(autoincrement())
+	id            Int @id 	@default(autoincrement())
 	createdAt     DateTime  @default(now())
 
 	message       String
 
-	chat          Chat @relation(fields: [chatId], references: [id])
+	chat          Chat 		@relation(fields: [chatId], references: [id])
 	chatId        Int
 
-	sender        User @relation(fields: [senderId], references: [id])
+	sender        User 		@relation(fields: [senderId], references: [id])
 	senderId      Int
+}
+
+model ChannelInfo {
+	id        		Int       	@id @default(autoincrement())
+	createdAt       DateTime  	@default(now())
+	updatedAt       DateTime  	@updatedAt
+
+	chat	   		Chat 		@relation(fields: [chatId], references: [id])
+	chatId		    Int			@unique
+
+	name			String		@default("")
+	status			ChannelStatus	@default(PUBLIC)
+	password		String		@default("")
+
+	owner			User 		@relation("channelOwner", fields: [ownerId], references: [id])
+	ownerId			Int
+
+	administrators	User[]		@relation("channelAdministrator")
+	kickedUsers		User[]		@relation("channelKicked")
+	bannedUsers		User[]		@relation("channelBanned")
+	mutedUsers		User[]		@relation("channelMuted")
+
+	@@map("channelInfos")
+}
+
+enum ChannelStatus {
+  PUBLIC
+  PRIVATE
+  PROTECTED
 }
 
 model Game {

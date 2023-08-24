@@ -1,248 +1,340 @@
 import PageWrapper from "../navbar/pageWrapper";
-import React, { useEffect, useRef } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
+import io, {Socket} from "socket.io-client"
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import '../../styles/Play.css'
 
 const Play: React.FC = () => {
+
 	const gameBoardRef = useRef<HTMLCanvasElement>(null);
   	const scoreTextRef = useRef<HTMLDivElement>(null);
-  	const resetBtnRef = useRef<HTMLButtonElement>(null);
 
-	const gameWidth = 600; 
+	const gameWidth = 800; 
 	const gameHeight = 400;
 	const boardBackground = "white";
-	const paddle2Color = "#FF79AF";
-	const paddle1Color = "#FF8100";
 	const paddleBorder = "black";
-	// const ballColor = "#FF79AF";
 	const ballBordercolor = "black";
 	const ballRadius = 12.5;
-	const paddleSpeed = 50;
-	let intervalID: number | undefined;
-	let ballSpeed = 1;
-	let ballX = gameWidth / 2;
-	let ballY = gameHeight / 2;
-	let ballXDirection = 0;
-	let ballYDirection = 0;
-	let player1Score = 0;
-	let player2Score = 0;
 	
 	interface Paddle {
-	  width: number;
-	  height: number;
-	  x: number;
-	  y: number;
+	  socketId: string | undefined,
+	  Id: number,
+	  width: number,
+	  height: number,
+	  x: number,
+	  y: number,
+	  score: number,
+	  color: string,
 	}
-	
-	let paddle1: Paddle = {
-	  width: 25,
-	  height: 100,
-	  x: 0,
-	  y: 0,
-	};
-	
-	let paddle2: Paddle = {
-	  width: 25,
-	  height: 100,
-	  x: gameWidth - 25,
-	  y: gameHeight - 100,
+
+	interface Ball {
+		X: number;
+		Y: number;
+		color: string;
+	  }
+
+/*---------------------------------------Get User & Create NewSocket-------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+    
+const axiosPrivate = useAxiosPrivate();
+
+    const [socket, setSocket] = useState<Socket>();
+    const [currentUser, setCurrentUser] = useState<any>();
+	const [winner, setWinner] = useState<any>();
+	const [start, setStart] = useState<boolean>(false);
+	const [over, setOver] = useState<boolean>(false);
+	const [disconnect, setDisconnect] = useState<boolean>(false);
+	const [roomName, setRoomName] = useState<string>();
+	const roomNameRef = useRef<string | undefined>(roomName);
+
+	useEffect(() => { //Fetch current user data
+		const getCurrentUser = async () => { //definition de la fonction
+			try {
+                const response = await axiosPrivate.get('/users/me', {
+                    headers: { 'Content-Type': 'application/json'},
+                    withCredentials: true
+                })
+                setCurrentUser(response.data);
+                console.log({currentUser : response.data});
+			} catch (error:any) {
+				console.log(error.response );
+			}
+		}
+		getCurrentUser(); //appel de la fonction
+    }, [])
+
+	    //Création de la socket client
+	useEffect(() => {
+		if (currentUser && currentUser.id){
+		const newSocket = io(
+			"http://localhost:3333", //dès que j'essaie de changer le port j'ai une erreur
+			{
+				path: "/game",
+				withCredentials: true,
+				autoConnect: true,
+				auth: {token: "TODO : gérer les tokens d'authentification ici"},
+				query: {"Id": currentUser.id}
+			});
+		setSocket(newSocket)
+		console.log("!! SUB !! == " + currentUser.id);
+		}
+	}, [currentUser])
+
+	useEffect(() => {
+		
+		function onConnect() {
+			
+			socket?.on('roomAssigned', (room) => {
+				console.log("ROOMNAME == " + room);
+				setRoomName(room);
+				const data = {
+					currentUser: currentUser.id,
+					socketId: socket?.id,
+					roomName: room,
+				}
+				socket?.emit("playerData", data);
+			});
+		}
+
+		socket?.on('connect', onConnect);
+		socket?.on('playerDisconnected', () => {
+			setDisconnect(true);
+			setStart(false);
+		});
+
+		socket?.on('game',  (data: { ball: Ball, players: Paddle[] }) => {
+			const receivedBall = data.ball;
+			const receivedPlayers = data.players;
+		
+			// Appelle la fonction game en passant receivedBall et receivedPlayers comme arguments
+			setStart(true);
+			game(receivedBall, receivedPlayers);
+		});
+
+		window.addEventListener("keydown", changeDirection);
+
+		return () => {
+			socket?.disconnect(); // Assurez-vous de retirer l'écoute lors du démontage du composant
+			window.removeEventListener("keydown", changeDirection);
+		};
+
+	}, [socket]);
+
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------------------------------------*/
+
+
+// Mise à jour de la référence en utilisant l'effet
+useEffect(() => {
+  roomNameRef.current = roomName;
+}, [roomName]);
+
+	const changeDirection = (event: KeyboardEvent) => {
+
+		const currentRoomName = roomNameRef.current;
+		event.preventDefault();
+
+		const data = {
+			keyPressed: event.key,
+			roomName: currentRoomName,
+		}
+		
+		socket?.emit("changeDirection", data);
 	};
 
-	const ballColors = {
-		pink: "pink",
-		orange: "orange",
-	  };
-	
-	let ballColor = ballColors.pink;
-	let ballBorderColor = "black"
-	
-	useEffect(() => {
+	const game = (ball: Ball, players: Paddle[]) => {
+
+		// console.log("start == " + start);
 		const gameBoard = gameBoardRef.current;
 		const ctx = gameBoard?.getContext('2d');
 		const scoreText = scoreTextRef.current;
-		const resetBtn = resetBtnRef.current;
 	
-		if (!gameBoard || !ctx || !scoreText || !resetBtn) return;
-	
-		const changeDirection = (event: KeyboardEvent) => {
-			const keyPressed = event.key;
-			const paddle1Up = "w";
-			const paddle1Down = "s";
-			const paddle2Up = "ArrowUp";
-			const paddle2Down = "ArrowDown";
-	  
-			switch (keyPressed) {
-			  case paddle1Up:
-				if (paddle1.y > 0) {
-				  paddle1.y -= paddleSpeed;
-				}
-				break;
-			  case paddle1Down:
-				if (paddle1.y < gameHeight - paddle1.height) {
-				  paddle1.y += paddleSpeed;
-				}
-				break;
-			  case paddle2Up:
-				if (paddle2.y > 0) {
-				  paddle2.y -= paddleSpeed;
-				}
-				break;
-			  case paddle2Down:
-				if (paddle2.y < gameHeight - paddle2.height) {
-				  paddle2.y += paddleSpeed;
-				}
-				break;
-			}
+		if (!gameBoard || !ctx || !scoreText ) return;
+
+		  const drawBall = () => {
+			  ctx.fillStyle = ball.color;
+			  ctx.strokeStyle = ballBordercolor;
+			  ctx.lineWidth = 2;
+			  ctx.beginPath();
+			  ctx.arc(ball.X, ball.Y, ballRadius, 0, 2 * Math.PI);
+			  ctx.stroke();
+			  ctx.fill();
 		  };
-	  
-		const gameStart = () => {
-			createBall();
-			nextTick();
-		  };
-	
-	
-		const nextTick = () => {
-			intervalID = window.setInterval(() => {
-				cleanBoard();
-				drawPaddles();
-				moveBall();
-				drawBall(ballX, ballY);
-				checkCollision();
-			}, 10);
-		};
-	  
-		const cleanBoard = () => {
-			ctx.fillStyle = boardBackground;
-			ctx.fillRect(0, 0, gameWidth, gameHeight);
-			};
-		
-			const drawPaddles = () => {
+
+		const drawPaddles = () => {
 			ctx.strokeStyle = paddleBorder;
 			ctx.fillStyle = boardBackground;
 			ctx.fillRect(0, 0, gameWidth, gameHeight);
-		
-			ctx.fillStyle = paddle1Color;
-			ctx.fillRect(paddle1.x, paddle1.y, paddle1.width, paddle1.height);
-			ctx.strokeRect(paddle1.x, paddle1.y, paddle1.width, paddle1.height);
-		
-			ctx.fillStyle = paddle2Color;
-			ctx.fillRect(paddle2.x, paddle2.y, paddle2.width, paddle2.height);
-			ctx.strokeRect(paddle2.x, paddle2.y, paddle2.width, paddle2.height);
+			
+				ctx.fillStyle = players[0].color;
+				ctx.fillRect(players[0].x, players[0].y, players[0].width, players[0].height);
+				ctx.strokeRect(players[0].x, players[0].y, players[0].width, players[0].height);
+				
+				ctx.fillStyle = players[1].color;
+				ctx.fillRect(players[1].x, players[1].y, players[1].width, players[1].height);
+				ctx.strokeRect(players[1].x, players[1].y, players[1].width, players[1].height);
 		};
-	
-		const createBall = () => {
-			ballSpeed = 1;
-			ballXDirection = Math.random() < 0.5 ? -1 : 1;
-			ballYDirection = Math.random() < 0.5 ? -1 : 1;
-			ballX = gameWidth / 2;
-			ballY = gameHeight / 2;
-			drawBall(ballX, ballY);
-		};
-	
-		const moveBall = () => {
-			ballX += ballSpeed * ballXDirection;
-			ballY += ballSpeed * ballYDirection;
-		};
-	
-		const drawBall = (ballX: number, ballY: number) => {
-			ctx.fillStyle = ballColor;
-			ctx.strokeStyle = ballBordercolor;
-			ctx.lineWidth = 2;
-			ctx.beginPath();
-			ctx.arc(ballX, ballY, ballRadius, 0, 2 * Math.PI);
-			ctx.stroke();
-			ctx.fill();
-		};
-	
-		const checkCollision = () => {
-			if (ballY <= 0 + ballRadius) {
-				ballYDirection *= -1;
-			}
-			if (ballY >= gameHeight - ballRadius) {
-				ballYDirection *= -1;
-			}
-			if (ballX <= 0) {
-				player2Score += 1;
-				updateScore();
-				createBall();
-				return;
-			}
-			if (ballX >= gameWidth) {
-				player1Score += 1;
-				updateScore();
-				createBall();
-				return;
-			}
-			if (ballX <= paddle1.x + paddle1.width + ballRadius) {
-				if (ballY > paddle1.y && ballY < paddle1.y + paddle1.height) {
-				ballX = paddle1.x + paddle1.width + ballRadius; //if ball gets stuck
-				ballXDirection *= -1;
-				ballSpeed += 0.5;
-				ballColor = ballColors.orange; // Change ball color to pink
-				}
-			}
-			if (ballX >= paddle2.x - ballRadius) {
-				if (ballY > paddle2.y && ballY < paddle2.y + paddle2.height) {
-				ballX = paddle2.x - ballRadius; //if ball gets stuck
-				ballXDirection *= -1;
-				ballSpeed += 0.5;
-				ballColor = ballColors.pink; // Change ball color to orange
-				}
-			}
-		}
 	
 		const updateScore = () => {
 			const scoreText = scoreTextRef.current;
 			if (scoreText) {
-			scoreText.textContent = `${player1Score} : ${player2Score}`;
+			scoreText.textContent = `${players[0].score} : ${players[1].score}`;
+			}
+			if (players[0].score >= 3) {
+				setOver(true);
+				setWinner(players[0].Id);
+			}
+			if (players[1].score >= 3) {
+				setOver(true);
+				setWinner(players[1].Id);
 			}
 		}
-	
-		const resetGame = () => {
-			player1Score = 0;
-			player2Score = 0;
-			paddle1 = {
-				width: 25,
-				height: 100,
-				x: 0,
-				y: 0,
-			};
-			paddle2 = {
-				width: 25,
-				height: 100,
-				x: gameWidth - 25,
-				y: gameHeight - 100,
-			};
-			ballSpeed = 1;
-			ballX = 0;
-			ballY = 0;
-			ballXDirection = 0;
-			ballYDirection = 0;
-			updateScore();
-			clearInterval(intervalID);
-			gameStart();
-		}
-		window.addEventListener("keydown", changeDirection);
-    resetBtn.addEventListener("click", resetGame);
 
-    gameStart();
+		drawPaddles();
+		drawBall();
+		updateScore();
 
-    return () => {
-      // Clean up your timers or other resources if needed when the component unmounts
-      clearInterval(intervalID);
-      window.removeEventListener("keydown", changeDirection);
-      resetBtn.removeEventListener("click", resetGame);
-    };
-  }, []);
-	
-	return (
-		<PageWrapper>
-			<div id="gameContainer">
-				<canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
-				<div ref={scoreTextRef} id="scoreText">0 : 0</div>
-				<button ref={resetBtnRef} id="resetBtn">Reset</button>
-			</div>
-	  </PageWrapper>
-	);
-  };
-  
-  export default Play;
+}
+
+return (
+    <PageWrapper>
+        <div id="gameContainer">
+            {!start && !disconnect && <div className="waitingMessage">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
+            {start && !over && (
+                <>
+                    <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
+                    <div ref={scoreTextRef} id="scoreText">0 : 0</div>
+                </>
+            )}
+            {over && winner === currentUser.id && <div id="winnerMessage">You win!</div>}
+            {over && winner !== currentUser.id && <div id="looserMessage">You loose...</div>}
+            {disconnect && !start && <div id="disconnect">The other player has disconnected !</div>}
+
+        </div>
+    </PageWrapper>
+);
+
+};
+
+export default Play;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// {over && <div id="gameOverMessage">Game Over!</div>}
+
+// return (
+//     <PageWrapper>
+//         <div id="gameContainer">
+// 		{ !start ? (
+//                 <div id="waitingMessage">Waiting for an adversaire !</div>
+//             ) : start && !over ? (
+//                 <>
+//                     <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
+// 					<div ref={scoreTextRef} id="scoreText">0 : 0</div>
+//                     <button ref={resetBtnRef} id="resetBtn">Reset</button>
+//                 </>
+//             ) : (
+//                 <div id="gameOverMessage">Game Over!</div>
+//             )}
+//         </div>
+//     </PageWrapper>
+// );
+
+
+
+// return (
+// 	<PageWrapper>
+// 		<div id="gameContainer">
+// 			<canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
+// 			<div ref={scoreTextRef} id="scoreText">0 : 0</div>
+// 			<button ref={resetBtnRef} id="resetBtn">Reset</button>
+// 		</div>
+//   </PageWrapper>
+// );
+
+
+
+
+
+
+
+
+
+
+
+
+  		// const nextTick = () => {
+		// 	intervalID = window.setInterval(() => {
+		// 		// cleanBoard();
+		// 		drawPaddles();
+		// 		drawBall(ballX, ballY);
+		// 		// moveBall();
+		// 		// checkCollision();
+		// 	}, 10);
+		// };
+
+	// const moveBall = () => {
+	// 	ballX += ballSpeed * ballXDirection;
+	// 	ballY += ballSpeed * ballYDirection;
+	// };
+
+	// const checkCollision = () => {
+	// 	if (ballY <= 0 + ballRadius) {
+	// 		ballYDirection *= -1;
+	// 	}
+	// 	if (ballY >= gameHeight - ballRadius) {
+	// 		ballYDirection *= -1;
+	// 	}
+	// 	if (ballX <= 0) {
+	// 		player2Score += 1;
+	// 		updateScore();
+	// 		createBall();
+	// 		return;
+	// 	}
+	// 	if (ballX >= gameWidth) {
+	// 		player1Score += 1;
+	// 		updateScore();
+	// 		createBall();
+	// 		return;
+	// 	}
+
+	// 	if (ballX <= paddle.x + paddle.width + ballRadius) {
+	// 		if (ballY > paddle.y && ballY < paddle.y + paddle.height) {
+	// 		ballX = paddle.x + paddle.width + ballRadius; //if ball gets stuck
+	// 		ballXDirection *= -1;
+	// 		ballSpeed += 0.5;
+	// 		ballColor = ballColors.orange; // Change ball color to pink
+	// 		}
+	// 	}
+		// if (ballX >= paddle.x - ballRadius) {
+		// 	if (ballY > paddle.y && ballY < paddle.y + paddle.height) {
+		// 	ballX = paddle.x - ballRadius; //if ball gets stuck
+		// 	ballXDirection *= -1;
+		// 	ballSpeed += 0.5;
+		// 	ballColor = ballColors.pink; // Change ball color to orange
+		// 	}
+		// }
+	// }
+
+	// const updateScore = () => {
+	// 	const scoreText = scoreTextRef.current;
+	// 	if (scoreText) {
+	// 	scoreText.textContent = `${player1Score} : ${player2Score}`;
+	// 	}
+	// }

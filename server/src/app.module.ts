@@ -8,6 +8,7 @@ import { ChatModule } from './chat/chat.module';
 import { GameModule } from './game/game.module';
 import { DoubleAuthModule } from './auth/doubleauth.module';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({ //permet d'utiliser des variables d'env avec notre .env
@@ -19,7 +20,8 @@ import { DoubleAuthModule } from './auth/doubleauth.module';
     PrismaModule,
     HttpModule,
     ChatModule,
-	  GameModule
+    GameModule
+
   ],
 })
 export class AppModule {}

@@ -14,7 +14,7 @@ export class ChatService {
 	async createChat(participants, creatorId) {
 		try {
 			let participantsArray = participants.map((id: number) => {return {id : id}});
-			
+
 			//création du chat dans la DB : ajout dans la table et connexion
 			// avec les participants (table User)
 			const chat = await this.prisma.chat.create({
@@ -38,7 +38,7 @@ export class ChatService {
 	}
 
 	async findChatByParticipants(participantIds) {
-		//find chats that include exactly the specified participants 
+		//find chats that include exactly the specified participants
 		const chat = await this.prisma.chat.findFirst({
 			where: {
 				AND : [
@@ -70,7 +70,7 @@ export class ChatService {
 	}
 
 	async findAllMyChats(me) {
-		//find all the chats where I am 
+		//find all the chats where I am
 		const myChats = await this.prisma.chat.findMany({
 			where: {
 				participants : {
@@ -79,7 +79,8 @@ export class ChatService {
 			},
 			include: {
 				participants: true, // Include all participants in the returned object
-				messages : true // Include all messages in the returned object
+				messages : true, // Include all messages in the returned object
+				channelInfo : true
 			},
 		})
 		return myChats;

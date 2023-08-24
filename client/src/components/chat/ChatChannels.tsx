@@ -57,6 +57,7 @@ export default function ChatChannels() {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 })
+				console.log({findAllMyChats:response.data})
                 setMyChats(response.data);
 			} catch (error:any) {
 				console.log(error.response );
