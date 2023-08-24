@@ -14,6 +14,7 @@ import Profile from './profile/Profile';
 import FriendList from './friends/FriendList';
 import ChatChannels from './chat/ChatChannels'
 import OtherUserProfile from './profile/OtherUserProfile';
+import ChannelCreation from './chat/ChannelCreation';
 
 function App() {
 //Contient toutes les URLS / Routes de notre app front.
@@ -39,15 +40,16 @@ function App() {
                 <Route path="" element={<ChatChannels />} />
                 <Route path=":userId" element={<ChatChannels />} />
               </Route>
+              <Route path="createChannel" element={<ChannelCreation />} />
               <Route path="profile" element={<Profile />} />
               <Route path="profile">
                 <Route path=":userId" element={<OtherUserProfile />} />
                 <Route path="me" element={<Profile />} />
               </Route>
-              
+
             </Route>
           </Route>
-        
+
         </Route>
       </Routes>
 	  </main>
