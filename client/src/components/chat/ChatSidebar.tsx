@@ -60,7 +60,7 @@ export default function ChatSidebar({
 						<ChannelMiniature
 							key={"channel"+i}
 							notif={true}
-							userId={currentUser.id}
+							channelId={chat.id}
 							participants={chat.participants}
 							channelName={chat.channelInfo.name}
 							lastMessage={

@@ -54,6 +54,20 @@ export class ChatService {
 		return chat;
 	}
 
+	async findChatById(chatId:number) {
+		const chat = await this.prisma.chat.findFirst({
+			where: {
+				id : chatId
+			},
+			include: {
+				participants: true, // Include all participants in the returned object
+				messages : true,
+				channelInfo : true
+			},
+		})
+		return chat;
+	}
+
 	//if the chat exists, return it. If it does not, create it
 	async findOrCreateChat(participantIds, creatorId) {
 		try {

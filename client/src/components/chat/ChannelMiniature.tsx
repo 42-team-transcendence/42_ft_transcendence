@@ -17,22 +17,21 @@ import BadgeAvatar from "../miniature/BadgeAvatar";
 // =============================================================================
 // FUNCTION ====================================================================
 
-export default function ChannelMiniature({notif, channelName, lastMessage, userId, participants}: {
+export default function ChannelMiniature({notif, channelName, lastMessage, channelId, participants}: {
     notif:boolean,
     channelName:string,
     lastMessage:string,
-    userId:number,
+    channelId:number,
     participants:any
 }) {
     const navigate = useNavigate();
-    const location = useLocation();
-    console.log({participants});
+
     return (
 
         <Box
             onClick={() => {
                 //TODO : change/toggle hidden class here to make conversation appear
-                navigate(`/chat/${userId}`, {replace: false})
+                navigate('/chat', {state: {channelId}});
             }}
             sx={{
                 backgroundColor: notif ? 'white' : '#00000021',
@@ -47,14 +46,11 @@ export default function ChannelMiniature({notif, channelName, lastMessage, userI
         >
             {participants &&
                 <div className="chat-miniature">
-                    <AvatarGroup max={4}>
-                        {participants.map(()=>{
-                            return (
-                                <BadgeAvatar minAvatar={{url: tchoupi, name:'Tchoupi'}}></BadgeAvatar>
-                            )
-                        })}
+                    <AvatarGroup max={4}> {
+                        participants.map((e:any, idx:number)=><BadgeAvatar key={idx} minAvatar={{url: tchoupi, name:'Tchoupi'}}></BadgeAvatar>)
+                    }
                     </AvatarGroup>
-                    <span>{channelName}</span>
+                    <span>{"CHANNEL " + channelName}</span>
                     <Box ml={0} mt={0}><div>{lastMessage}</div></Box>
                 </div>
             }

@@ -5,7 +5,7 @@ import { GetUser } from "../auth/decorator"
 import { ChatService } from "./chat.service";
 import { CreateChatDto } from "./dto";
 
-@UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts. 
+@UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('chats') // définit la route "/users" de l'API
 export class ChatController {
 	constructor (
@@ -28,6 +28,14 @@ export class ChatController {
     ) {
 		const participantIds = [...payload.recipients, creator.sub];
 		return (this.chatService.findChatByParticipants(participantIds));
+	}
+
+	@Get('findById/:id')
+	findChatById(@Param('id') id: string,) {
+		const chatId = parseInt(id);
+		if ((isNaN(chatId)))
+			throw new ForbiddenException("incorrect id sent : not a number");
+		return (this.chatService.findChatById(chatId));
 	}
 
 	@Post('findOrCreate')
