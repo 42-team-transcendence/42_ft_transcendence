@@ -29,6 +29,7 @@ interface User {
 	email: string;
 	hash:string;
 	nickname: string;
+	auth2fa: boolean
 }
 
 
@@ -47,12 +48,11 @@ function Profile() {
 	const { auth, setAuth } = useContext(AuthContext);
 
 
-
 	// =============================================================================
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
-	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '' });
+	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false });
     useEffect(() => {
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
@@ -187,11 +187,12 @@ function Profile() {
 
 	// =============================================================================
 	// 2FA MODAL ===================================================================
-	const [is2fa, set2fa] = useState(false);
+	const [is2fa, setIs2fa] = useState(user?.auth2fa || false);
+
 
 	const handle2fa = () => {
 		const new2faState = !is2fa; // Toggle the state
-		set2fa(new2faState);
+		setIs2fa(new2faState);
 	  
 		// Save the new 2FA state to your backend
 		save2faState(new2faState); // Call a function to save the state
@@ -203,13 +204,14 @@ function Profile() {
 				'/users/update2fa',
 				JSON.stringify({ auth2fa: new2faState }),
 				{
-				headers: { "Content-Type": "application/json" },
-				withCredentials: true,
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
 				}
 			);
 		
 			if (response.status === 200) {
 				console.log('2FA state update successful');
+				setUser((prevUser) => ({...prevUser, auth2fa: new2faState}))
 			} else {
 				console.error('2FA state update failed');
 			}
@@ -269,7 +271,7 @@ function Profile() {
 					<div className="element-profile">
 					<div className="a-modifier">
 						<h2> Double factors </h2>
-						<Checkbox checked={is2fa} onChange={handle2fa}/>
+						<Checkbox checked={user.auth2fa} onChange={handle2fa}/>
 						<DoubleAuth/>
 					</div>
 				</div>
