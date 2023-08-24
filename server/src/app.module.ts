@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { ChatModule } from './chat/chat.module';
 import { GameModule } from './game/game.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ //permet d'utiliser des variables d'env avec notre .env
@@ -17,7 +16,7 @@ import { GameModule } from './game/game.module';
     PrismaModule,
     HttpModule,
     ChatModule,
-	GameModule
+    GameModule
   ],
 })
 export class AppModule {}
