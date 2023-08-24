@@ -16,7 +16,33 @@ import { Server, Socket, ServerOptions } from 'socket.io';
 import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 import { Paddle, Ball, GameInfo } from './game.types';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
+
+let player1Id: number;
+let player2Id: number;
+let player1Score: number;
+let player2Score: number;
+let winnerId: number;
+
+async function saveScoresToDatabase(player1Id: number, player2Id: number, player1Score: number, player2Score: number, winnerId: number) {
+    try{ 
+		const game = await prisma.game.create({
+			data: {
+				player_1_id: player1Id,
+				player_2_id: player2Id,
+				player_1_score: player1Score,
+				player_2_score: player2Score,
+				winnerId: winnerId,
+			},
+    	});
+    console.log('Game saved:', game);
+	} 
+	catch(error){
+		console.log("Error saving game:", error);
+	}
+}
 
 //The WebSocket gateway is responsible for handling WebSocket connections and events in NestJS.
 // the OnGatewayInit interface is a part of the WebSockets module.
@@ -103,6 +129,19 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
         }else {
           index = -1;
         }
+		if(gameInfo.players.length === 2 ){
+			player1Id = gameInfo.players[0].Id;
+			player2Id = gameInfo.players[1].Id;
+			player1Score = gameInfo.players[0].score;
+			player2Score = gameInfo.players[1].score;
+			if(player1Score > player2Score)
+			winnerId = player1Id;
+			else if(player1Score < player2Score)
+				winnerId = player2Id;
+			else if(player1Score = player2Score)
+				winnerId = 0;
+			saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
+		}
         if (index !== -1) {
           gameInfo.players.splice(index, 1);
           console.log("!!! DISCONNECTED !!! == " + gameInfo.players.length);
@@ -123,7 +162,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
   /*-------------------------------------------------------------------------------------------------------------------------------*/
 
 
-  assignPlayerToRoom(client: Socket, gameInfo: GameInfo): string {
+assignPlayerToRoom(client: Socket, gameInfo: GameInfo): string {
     for (const [roomName, objet] of this.rooms) {
       if (objet.players.length < 2) {
           client.join(roomName);
@@ -154,6 +193,17 @@ heartBeat(roomName: string, gameInfo: GameInfo) {
       this.checkCollision(gameInfo);
 
       if (gameInfo.players[0].score >= 3 || gameInfo.players[1].score >= 3) {
+		player1Id = info.players[0].Id;
+		player2Id = info.players[1].Id;
+		player1Score = gameInfo.players[0].score;
+		player2Score = gameInfo.players[1].score;
+		if(player1Score > player2Score)
+			winnerId = player1Id;
+		else if(player1Score < player2Score)
+			winnerId = player2Id;
+		else if(player1Score = player2Score)
+			winnerId = 0;
+		saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
         this.server.to(roomName).emit('game', gameData);
         clearInterval(gameInfo.intervalID); // Arrêtez l'intervalle
       }
