@@ -234,8 +234,8 @@ function Profile() {
 		}
 	};
 	  
-  
 	const handleUpload = async (formData: FormData) => {
+		console.log({formData});
 		try {
 		  	const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
 				headers: {'Content-Type': 'multipart/form-data'},
@@ -253,13 +253,17 @@ function Profile() {
 			}
 	 	};
 	  
-	  const handleUploadClick = () => {
-		if (selectedFile) {
-		  const formData = new FormData();
-		  formData.append('avatar', selectedFile);
-		  handleUpload(formData);
-		}
-	  };
+		const handleUploadClick = () => {
+			if (selectedFile) {
+				const formData = new FormData();
+				formData.append('avatar', selectedFile);
+				handleUpload(formData);
+			}
+			else
+			{
+				console.log('no upload');
+			}
+		};
 
 
 	// =============================================================================
