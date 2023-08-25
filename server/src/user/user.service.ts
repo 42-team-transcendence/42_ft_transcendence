@@ -178,7 +178,9 @@ export class UserService {
 				where: {id: userId},
 				data: { avatar: avatar }
 			});
+			console.log("avatar url = ", avatar);
 			console.log(`Avatar updated successfully for user with ID: ${userId}`);
+			
 		} catch (error) {
 		  	console.error('Error updating Avatar:', error);
 		}
