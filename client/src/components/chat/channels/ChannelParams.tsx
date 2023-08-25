@@ -8,20 +8,16 @@ import PageWrapper from "../../navbar/pageWrapper";
 import NickModal from "../../profile/NicknameModal";
 import StatusModal from "./StatusModal";
 
-import { statuses, Status } from "../types";
-import tchoupi from '../../../assets/tchoupi50x50.jpg'
-import { MiniatureUser } from "../../../utils/types";
-import Miniature from "../../miniature/Miniature";
+import ChannelParamsParticipants from "./ChannelParamsParticipants";
+import ChannelParamsAdmins from "./ChannelParamsAdmins";
+import ChannelParamsMutes from "./ChannelParamsMutes";
+import ChannelParamsBans from "./ChannelParamsBans";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {Box, Button, Checkbox, Fab, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem,} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import {Box} from '@mui/material';
 
 import "../../../styles/chat/ChanCreationParam.css"
-import ChannelParamsParticipants from "./ChannelParamsParticipants";
-
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -42,11 +38,9 @@ export default function ChannelParams() {
     const [pwd, setPwd] = useState(location.state.chat.channelInfo.password);
 
     const [participants, setParticipants] = useState(location.state.chat.participants);
-    const [admins, setadmins] = useState(location.state.chat.channelInfo.administrators);
+    const [admins, setAdmins] = useState(location.state.chat.channelInfo.administrators);
     const [bans, setBans] = useState(location.state.chat.channelInfo.bannedUsers);
     const [mutes, setMutes] = useState(location.state.chat.channelInfo.mutedUsers);
-
-    // console.log(location.state.chat.channelInfo);
 
 	const SaveName = async (newName: string) => {
         setName(newName)
@@ -58,8 +52,6 @@ export default function ChannelParams() {
         setPwd(newPwd)
 		setStatusModal(!statusModal);
 	};
-
-
 
     return (
         <PageWrapper> {
@@ -76,63 +68,19 @@ export default function ChannelParams() {
                     </div>
                 </Box>
 
-                <ChannelParamsParticipants participants={participants}></ChannelParamsParticipants>
-
-                <List subheader={<ListSubheader>Admins</ListSubheader>}>
-                    {admins.map((user:any, idx:number) => {
-                        const miniatureUser: MiniatureUser = {
-                            nickname: user?.nickname,
-                            id: user?.id,
-                            minAvatar: {url: tchoupi, name:'Tchoupi'}
-                        }
-                        return (
-                            <ListItem key={idx} disablePadding>
-                                <Miniature miniatureUser={miniatureUser} ></Miniature>
-                                <ListItemButton role={undefined}>
-                                    <ListItemIcon>
-                                        <Checkbox
-                                            edge="start"
-                                            checked={true}
-                                        />
-                                    </ListItemIcon>
-                                </ListItemButton>
-                                <ListItemText id={idx+"delete"} primary={`delete`} />
-                                <ListItemButton>
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemButton>
-                            </ListItem>
-                        )})}
-                </List>
-
-                <List subheader={<ListSubheader>Banned Users</ListSubheader>}>
-                    {bans.map((user:any, idx:number) => {
-                        const miniatureUser: MiniatureUser = {
-                            nickname: user?.nickname,
-                            id: user?.id,
-                            minAvatar: {url: tchoupi, name:'Tchoupi'}
-                        }
-                        return (
-                            <ListItem key={idx} disablePadding>
-                                <Miniature miniatureUser={miniatureUser} ></Miniature>
-                                <ListItemButton role={undefined}>
-                                    <ListItemIcon>
-                                        <Checkbox
-                                            edge="start"
-                                            checked={true}
-                                        />
-                                    </ListItemIcon>
-                                </ListItemButton>
-                                <ListItemText id={idx+"delete"} primary={`delete`} />
-                                <ListItemButton>
-                                    <IconButton edge="end" aria-label="delete">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </ListItemButton>
-                            </ListItem>
-                        )})}
-                </List>
+                <ChannelParamsParticipants
+                    participants={participants}
+                    setParticipants={setParticipants}
+                    admins={admins}
+                    setAdmins={setAdmins}
+                    bans={bans}
+                    setBans={setBans}
+                    mutes={mutes}
+                    setMutes={setMutes}
+                ></ChannelParamsParticipants>
+                <ChannelParamsAdmins admins={admins} setAdmins={setAdmins}></ChannelParamsAdmins>
+                <ChannelParamsMutes mutes={mutes} setMutes={setMutes}></ChannelParamsMutes>
+                <ChannelParamsBans bans={bans} setBans={setBans}></ChannelParamsBans>
 
                 <NickModal
                     open={nameModal}
