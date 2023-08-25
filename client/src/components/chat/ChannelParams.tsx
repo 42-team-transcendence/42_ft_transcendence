@@ -15,10 +15,14 @@ import Miniature from "../miniature/Miniature";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {Box, Button, Checkbox, Fab, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader,} from '@mui/material';
+import {Box, Button, Checkbox, Fab, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SchoolIcon from '@mui/icons-material/School';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import BlockIcon from '@mui/icons-material/Block';
+
 import "../../styles/chat/ChanCreationParam.css"
 
 
@@ -45,8 +49,11 @@ export default function ChannelParams() {
     const [bans, setBans] = useState(location.state.chat.channelInfo.bannedUsers);
     const [mutes, setMutes] = useState(location.state.chat.channelInfo.mutedUsers);
 
+    const [anchorUserMenu, setAnchorUserMenu] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorUserMenu);
 
-    console.log(location.state.chat.channelInfo);
+
+    // console.log(location.state.chat.channelInfo);
 
 	const SaveName = async (newName: string) => {
         setName(newName)
@@ -58,6 +65,14 @@ export default function ChannelParams() {
         setPwd(newPwd)
 		setStatusModal(!statusModal);
 	};
+
+    const handleClickUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorUserMenu(event.currentTarget);
+    };
+    const handleCloseUserMenu = () => {
+        setAnchorUserMenu(null);
+      };
+
 
     return (
         <PageWrapper> {
@@ -83,14 +98,40 @@ export default function ChannelParams() {
                         return (
                             <ListItem key={idx} disablePadding>
                                 <Miniature miniatureUser={miniatureUser} ></Miniature>
-                                <ListItemButton>
-                                    <ListItemText id={idx+"promote"} primary={`promote`} />
-                                    <IconButton edge="end" aria-label="delete"><SchoolIcon /></IconButton>
+                                <ListItemButton
+                                    id="chan_user_param_button"
+                                    aria-controls={open ? 'chan_user_param_menu' : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? 'true' : undefined}
+                                    onClick={handleClickUserMenu}
+                                >
+                                    <ListItemText primary={`options`} />
+                                    <KeyboardArrowDownIcon />
                                 </ListItemButton>
-                                <ListItemButton>
-                                    <ListItemText id={idx+"delete"} primary={`kick`} />
-                                    <IconButton edge="end" aria-label="delete"><DeleteIcon /></IconButton>
-                                </ListItemButton>
+                                <Menu
+                                    id="chan_user_param_menu"
+                                    anchorEl={anchorUserMenu}
+                                    open={open}
+                                    onClose={handleCloseUserMenu}
+                                >
+                                    <MenuItem onClick={handleCloseUserMenu} disableRipple>
+                                        <SchoolIcon />
+                                        Set admin
+                                    </MenuItem>
+                                    <MenuItem onClick={handleCloseUserMenu} disableRipple>
+                                        <VolumeOffIcon />
+                                        Mute
+                                    </MenuItem>
+                                    <MenuItem onClick={handleCloseUserMenu} disableRipple>
+                                        <DeleteIcon />
+                                        Kick
+                                    </MenuItem>
+                                    <MenuItem onClick={handleCloseUserMenu} disableRipple>
+                                        <BlockIcon />
+                                        Ban
+                                    </MenuItem>
+                                </Menu>
+
                             </ListItem>
                         )})}
                 </List>
