@@ -3,12 +3,12 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	justify-content: space-between;
+	/* justify-content: space-between; */
 	font-family: 'Lato';
 	/* padding: .7rem; */
 	position: fixed;
 	top: 0;
-	left: 0; 
+	left: 0;
 	width: 100vw;
 	min-height: 75px;
 	background-color: white;
@@ -23,12 +23,19 @@
 	font-size: 50px;
 	-webkit-text-stroke: 1px black;
 	color: #FF8100;
-	text-shadow: -4px -0px 0 rgba(0, 0, 0, .20),  
+	text-shadow: -4px -0px 0 rgba(0, 0, 0, .20),
 				0px -0px 0 rgba(0, 0, 0, .20),
 				-4px 0px 0 rgba(0, 0, 0, .20),
 				0px 0px 0 rgba(0, 0, 0, .20);
-	  
+
 }
+
+.search_bar {
+	margin-left: 2rem;
+	margin-right: 1rem;
+	max-width: 400px;
+}
+
 
 .navbar_links {
 	margin-right: 100px;
@@ -109,14 +116,14 @@
 		font-size: 5vw;
 		-webkit-text-stroke: 1px black;
 	}
-	
+
 	.textLogout {
 		padding-top: 70px;
 		color: white;
 		font-weight: 700;
 		font-size: 18px;
 	}
-	
+
 	/************************************/
 	/************** BURGER **************/
 	.navbar_burger {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -25,16 +25,24 @@ export default function ChatChannels() {
 	const [chatFound, setChatFound] = useState<boolean>(false)
 	const [currentChat, setCurrentChat] = useState<any>();
 	const [currentUser, setCurrentUser] = useState<any>();
+	const [showChatSidebar, setShowChatSidebar] = useState(true);
 
-    // Cas Chat en 1v1 : il faut checker le paramètre de l'URL
-    //pour avoir l'id du user avec qui on veut chater
-    let recipientId = parseInt(useParams().userId || ''); //vérifie si on a un userId dans l'URL
-    console.log({recipientId});
+	const location = useLocation(); //sert a recuperer le state passer avec useNavigate()
+	let recipientId:number | null = null;
+	let channelId: number|null = null;
+	if (location.state && location.state.recipientId) // Cas pour affichage du chat
+		recipientId = location.state.recipientId;
+	else if (location.state && location.state. channelId) //Cas pour affichage du channel
+		channelId = location.state.channelId;
 
+	console.log({location});
+    console.log({recipientId, channelId});
+
+	//GET CURRENT CHAT/CHANNEL CONVERSATION
     useEffect(() => { //If chat with recipientId does not exist, creates it
         const findOrCreateChat = async () => { //definition de la fonction
             try {
-                if (recipientId && currentUser && recipientId != currentUser.id) { //ne s'actionne que si on a recipientId (que si un userId est dans l'URL)
+                if (recipientId && currentUser && recipientId != currentUser.id) { //ne s'actionne que si on a recipientId
                     const response = await axiosPrivate.post('/chats/findOrCreate',
                         JSON.stringify({'recipients': [recipientId]}), {
                             headers: { 'Content-Type': 'application/json'},
@@ -42,15 +50,24 @@ export default function ChatChannels() {
                         })
                     setCurrentChat(response.data);
                     setChatFound(true);
-                }
+                } else if (channelId && currentUser) { //ne s'actionne que si on a un channelId
+                    const response = await axiosPrivate.get(`/chats/findById/${channelId}`, {
+						headers: { 'Content-Type': 'application/json'},
+						withCredentials: true
+					})
+					console.log("current_chat", response.data);
+                    setCurrentChat(response.data);
+                    setChatFound(true);
+				}
             } catch (error:any) {
                 console.log(error.response );
             }
         }
         findOrCreateChat(); //appel de la fonction
-    }, [recipientId, currentUser])
+    }, [recipientId, currentUser, channelId])
 
-    useEffect(() => { //Fetch chat data
+	//GET ALL CHATS & CHANNELS DATA
+    useEffect(() => {
 		const findAllMyChats = async () => { //definition de la fonction
 			try {
                 const response = await axiosPrivate.get('/chats/findAllMyChats', {
@@ -81,18 +98,13 @@ export default function ChatChannels() {
 		getCurrentUser(); //appel de la fonction
     }, [])
 
-	const [showChatSidebar, setShowChatSidebar] = useState(true);
-
-	useEffect(() => {
+	useEffect(() => { //Style : resize window
 	  const handleResize = () => {
 		setShowChatSidebar(window.innerWidth > 768);
 	  };
 
 	  window.addEventListener("resize", handleResize);
-
-	  // Call handleResize immediately to set initial state
-	  handleResize();
-
+	  handleResize(); // Call handleResize immediately to set initial state
 	  return () => {
 		window.removeEventListener("resize", handleResize);
 	  };
@@ -120,18 +132,18 @@ export default function ChatChannels() {
 				>
 				{currentChat && !showChatSidebar && (
 					<IconButton
-					className="back-button"
-					onClick={() => {
-						setShowChatSidebar(true);
-					}}
+						className="back-button"
+						onClick={() => {
+							setShowChatSidebar(true);
+						}}
 					>
 					<ArrowBackIcon />
 					</IconButton>
 				)}
 				{currentChat ? (
 					<Conversation
-					chat={currentChat}
-					currentUser={currentUser}
+						chat={currentChat}
+						currentUser={currentUser}
 					></Conversation>
 				) : (
 					<p> Select Chat</p>

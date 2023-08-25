@@ -1,4 +1,7 @@
-import * as React from 'react';
+import { useEffect, useState } from 'react';
+
+// =============================================================================
+// IMPORT STYLES ===============================================================
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -8,6 +11,13 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { useNavigate } from 'react-router-dom';
+
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -55,17 +65,80 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+  const axiosPrivate = useAxiosPrivate();
+	const navigate = useNavigate();
+
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  useEffect(() => { //search for channels
+    const searchResults = async () => {
+      try {
+        const response = await axiosPrivate.get(
+            `/channels/getByName/${searchInput}`, {
+                headers: {'Content-Type': 'application/json'},
+                withCredentials: true
+            }
+        );
+        console.log(response.data);
+        setSearchResults(response.data);
+        } catch (err: any) {
+            console.log(err);
+        }
+    }
+    if (searchInput) {
+      console.log("search database for", searchInput);
+      searchResults();
+    } else {
+      setSearchResults([])
+    }
+  }, [searchInput])
+
+  const handleSearchChange = (event:any) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleResultClick = async (channelId:number) => {
+    try {
+			const response = await axiosPrivate.post(
+				`/channels/join/${channelId}`,
+				{
+					headers: { "Content-Type": "application/json" },
+					withCredentials: true,
+				}
+			);
+      console.log(response.data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box className='search_bar' sx={{ flexGrow: 1 }}>
         <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search for friends/chans"
+              placeholder="Search for friends/channels"
               inputProps={{ 'aria-label': 'search' }}
+
+              value={searchInput}
+              onChange={handleSearchChange}
             />
         </Search>
+        {searchResults.length > 0 &&
+        <List subheader="Channels">
+          {searchResults.map((item, idx) => {
+            return (
+                <ListItem disablePadding key={idx}>
+                  <ListItemButton onClick={() => handleResultClick(item.id)}>
+                    <ListItemText primary={item.channelInfo.name} />
+                  </ListItemButton>
+                </ListItem>
+            )})}
+        </List>
+        }
     </Box>
   );
 }

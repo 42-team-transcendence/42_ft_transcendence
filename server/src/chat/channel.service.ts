@@ -10,7 +10,6 @@ export class ChannelService {
     ) {}
 
 	async createChannel(payload, creatorId) {
-
 		try {
 			//création du channel dans la DB : ajout dans la table chat et connexion avec la table channelInfos
 			const channel = await this.prisma.chat.create({
@@ -33,13 +32,61 @@ export class ChannelService {
 						}
 					}
 				},
+			})
+			console.log({channel});
+			return channel;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+	}
+
+	async getChannelsByName(input:string) {
+		try {
+			const channels = await this.prisma.chat.findMany({
+				where: {
+					channelInfo: {
+						name: {
+							contains: input,
+						}
+					}
+				},
+				include: {
+					participants: true, // Include all participants in the returned object
+					channelInfo : {
+						include : {
+							administrators: true,
+							kickedUsers: true,
+							bannedUsers: true,
+							mutedUsers: true,
+						}
+					}
+				},
+			})
+			console.log({channels});
+			return channels;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+	}
+
+	async joinChannel(channelId: number, userId:number) {
+		try {
+			const updatedChan = await this.prisma.chat.update({
+				where: {id: channelId},
+				data: {
+					participants: {
+						connect: {id: userId}, // connect: [{ id: 8 }, { id: 9 }, { id: 10 }],
+					},
+				},
 				include: {
 					participants: true, // Include all participants in the returned object
 					channelInfo : true
 				},
 			})
-			console.log({channel});
-			return channel;
+			console.log({updatedChan});
+			return updatedChan;
 		} catch (error) {
             console.log(error);
             throw error;

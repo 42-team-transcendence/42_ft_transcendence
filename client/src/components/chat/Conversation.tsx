@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import io, {Socket} from "socket.io-client"
-
+import { useNavigate } from "react-router-dom";
 
 
 // =============================================================================
@@ -10,6 +9,7 @@ import MessageInput from "./MessageInput";
 import MessageInConv from "./MessageInConv";
 import Miniature from "../miniature/Miniature";
 import tchoupi from '../../assets/tchoupi50x50.jpg'
+import GroupMiniature from "../miniature/GroupMiniature";
 
 // =============================================================================
 // IMPORT TYPES ===============================================================
@@ -17,10 +17,9 @@ import type {Message} from "../../utils/types"
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {Box} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import { MessageLeft, MessageRight } from "./MessageStyle";
 import '../../styles/chat/Conversation.css'
-
 
 
 // =============================================================================
@@ -28,16 +27,15 @@ import '../../styles/chat/Conversation.css'
 
 function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
     const [chatSocket, setChatSocket] = useState<Socket>();
-    // const [socketIsConnected, setSocketIsConnected] = useState<boolean>(false);
     const [messages, setMessages] = useState<Message[]>([]);
 
-    // ******** TO DO: A modifier quand on introduira les channels pour distinguer si la conv actuelle est un chat ou un channel
-    let isChat;
-    let recipients;
-    if (1) {
-        isChat = true;
-        recipients = (chat?.participants.filter((e:any) => e.id != currentUser.id));
-    }
+    const navigate = useNavigate();
+
+    let isChat = true;
+    if (chat.channelInfo) //Check si c'est un chat ou un channel
+      isChat = false;
+
+    const recipients = (chat?.participants.filter((e:any) => e.id != currentUser.id));
 
     //Update des messages displayed quand le chat est modifié
     useEffect(() => {
@@ -104,57 +102,77 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
         })
     }, [messageListener]);
 
+    //**************************************** AUTRES *****************************************//
+    const handleChannelTitleClick = () => {
+      navigate('/channelParams', {state: {chat}});
+    }
+
+    //Format Timestamp from msg stored in DB
+    const formattedTimestamp = (date:Date) => {
+      if (date)
+        return new Intl.DateTimeFormat("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }).format(new Date(date))
+      return "";
+    }
+
 	return (
-		<Box
-		  className="conversation"
+		<Box className="conversation"
 		  p={5} sx={{ backgroundColor: '#FF8100', width: '100%', height: '100%' }}
 		>
 		  <div className="conversation-container">
-			{isChat && recipients && messages ? (
-			  <>
-				<Miniature
-				  miniatureUser={{
-					nickname: recipients[0].nickname,
-					id: recipients[0].id,
-					minAvatar: { url: tchoupi, name: "Tchoupi" },
-				  }}
-				></Miniature>
-				<Box sx={{ width: "100%", marginTop: "30px" }}>
-				  {messages?.map((msg, index) => {
-					const formattedTimestamp = msg.createdAt
-					  ? new Intl.DateTimeFormat("en-GB", {
-						  day: "2-digit",
-						  month: "2-digit",
-						  year: "numeric",
-						  hour: "2-digit",
-						  minute: "2-digit",
-						}).format(new Date(msg.createdAt))
-					  : "";
-
-					if (msg.senderId === currentUser.id) {// Display messages sent by the current user on the right
-					  return (
-              <MessageRight
-                key={index}
-                message={msg.content}
-                timestamp={formattedTimestamp}/>
-					  );
-					} else {// Display messages sent by others on the left
-					    const sender = chat?.participants.find((e: any) => e.id === msg.senderId);
-              return (
-                <MessageLeft
-                  key={index}
-                  message={msg.content}
-                  timestamp={formattedTimestamp}
-                  displayName={sender.nickname}
-                  sender={chat?.participants.find((e: any) => e.id === msg.senderId)}/>
-          );}
-				  })}
-				</Box>
-				<Box>
-				  <MessageInput send={send}></MessageInput>
-				</Box>
-			  </>
-			) : (
+        {recipients && messages ? (
+          <>
+            { //CONVERSATION HEADER
+              isChat ? ( //Si la conversation est un chat
+                recipients.length > 0 &&
+                <Miniature
+                  miniatureUser={{
+                    nickname: recipients[0].nickname,
+                    id: recipients[0].id,
+                    minAvatar: { url: tchoupi, name: "Tchoupi" },
+                  }}
+                ></Miniature>
+              ) : (  //Si la conversation est un channel
+                <>
+                  {chat.participants.length > 0 && <GroupMiniature participants={chat.participants}></GroupMiniature>}
+                  {chat.channelInfo &&
+                    <Button onClick={handleChannelTitleClick}>{chat.channelInfo.name}</Button>}
+                </>
+              )
+            }
+            <Box sx={{ width: "100%", marginTop: "30px" }}> { //CONVERSATION BODY
+              messages?.map((msg, index) => {
+                if (msg.senderId === currentUser.id) {// Display messages sent by the current user on the right
+                  return (
+                    <MessageRight
+                      key={index}
+                      message={msg.content}
+                      timestamp={formattedTimestamp(msg.createdAt)}/>
+                  );
+                } else {// Display messages sent by others on the left
+                    const sender = chat?.participants.find((e: any) => e.id === msg.senderId);
+                    return (
+                      <MessageLeft
+                        key={index}
+                        message={msg.content}
+                        timestamp={formattedTimestamp(msg.createdAt)}
+                        displayName={sender?.nickname}
+                        sender={chat?.participants.find((e: any) => e.id === msg.senderId)}
+                    />);
+                }
+              })
+            }
+            </Box>
+            <Box>
+              <MessageInput send={send}></MessageInput>
+            </Box>
+          </>
+        ) : (
 			  <div>Select conversation</div>
 			)}
 		  </div>
