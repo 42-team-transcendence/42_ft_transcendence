@@ -75,6 +75,7 @@ export class AuthService {
         if (!pwdMatch) {
             throw new ForbiddenException("Credentials incorrect");
         }
+
         // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(user.id, user.email);
         // Stockage du refreshToken dans la DB

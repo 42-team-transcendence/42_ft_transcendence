@@ -272,7 +272,7 @@ function Profile() {
 					<div className="a-modifier">
 						<h2> Double factors </h2>
 						<Checkbox checked={user.auth2fa} onChange={handle2fa}/>
-						<DoubleAuth/>
+						{/* <DoubleAuth/> */}
 					</div>
 				</div>
 				</div>

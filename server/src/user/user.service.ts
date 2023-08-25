@@ -41,6 +41,14 @@ export class UserService {
 		console.log('---------GET SCORE---------');
 		return user?.score ?? 0;
 	}
+
+	async getAuth2fa(email: string) {
+		const user = await this.prisma.user.findUnique({
+		  where: { email: email },
+		  select: { auth2fa: true },
+		});
+		return user?.auth2fa;
+	}
 	
 
 	// =============================================================================
