@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, ChangeEvent } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import speakeasy from 'speakeasy';
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -38,12 +37,6 @@ interface User {
 // FUNCTION ====================================================================
 
 function Profile() {
-	// Sample game history data
-	const gameHistory = [
-		{ name: "User 1", score: 100, date: "2023-07-19", result: "Win" },
-		{ name: "User 2", score: 150, date: "2023-07-20", result: "Loss" },
-		{ name: "User 3", score: 120, date: "2023-07-21", result: "Win" },
-	];
 
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);

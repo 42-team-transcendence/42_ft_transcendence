@@ -103,6 +103,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
       ballXDirection: Math.random() < 0.5 ? -1 : 1,
       ballYDirection: Math.random() < 0.5 ? -1 : 1,
       intervalID: undefined,
+	  ifDBsaved: false,
     };
     gameInfo.ball.X = gameInfo.gameWidth / 2;
     gameInfo.ball.Y = gameInfo.gameHeight / 2;
@@ -134,7 +135,12 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
 				winnerId = player2Id;
 			else if(player1Score == player2Score || (player1Score == 0 && player2Score == 0))
 				winnerId = 0;
-			saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
+			//console.log(`ifDBsaved = ${gameInfo.ifDBsaved}`);
+			if(gameInfo.ifDBsaved == false)
+			{
+				saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
+				gameInfo.ifDBsaved = true;
+			}
 		}
         if (index !== -1) {
           gameInfo.players.splice(index, 1);
@@ -199,6 +205,7 @@ heartBeat(roomName: string, gameInfo: GameInfo, client: Socket) {
 		else if(player1Score == player2Score )
 			winnerId = 0;
 		saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
+		gameInfo.ifDBsaved = true;
         this.server.to(roomName).emit('game', gameData);
         clearInterval(gameInfo.intervalID); // Arrêtez l'intervalle
 		// this.disconnect(client);

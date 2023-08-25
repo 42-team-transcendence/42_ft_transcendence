@@ -4,16 +4,17 @@ import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead
 import PageWrapper from "../navbar/pageWrapper";
 import '../../styles/GameHistory.css';
 
+interface User {
+	email: string;
+	hash:string;
+	nickname: string;
+}
+
 function GameHistory() {
 
 const axiosPrivate = useAxiosPrivate();
-//const [gameHistory, setGameHistory] = useState([]);
-
-  const gameHistory = [
-    { name: "User 1", score: 100, date: "2023-07-19", result: "Win" },
-    { name: "User 2", score: 150, date: "2023-07-20", result: "Loss" },
-    { name: "User 3", score: 120, date: "2023-07-21", result: "Win" },
-  ];
+const [gameHistory, setGameHistory] = useState([]);
+const [currentUser, setCurrentUser] = useState<any>();
 
 useEffect(() => { //fetch game data
 	console.log("coucou useEffect")
@@ -23,7 +24,7 @@ useEffect(() => { //fetch game data
 				headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
 			})
-			//setGameHistory(response.data);
+			setGameHistory(response.data);
 			console.log({findAllMyGames:response.data}); 
 		} catch(error: any) {
 			console.log(error.response);
@@ -31,6 +32,21 @@ useEffect(() => { //fetch game data
 	}
 	findAllMyGames();
   }, [])
+
+  useEffect(() => { //Fetch current user data
+	const getCurrentUser = async () => { //definition de la fonction
+		try {
+			const response = await axiosPrivate.get('/users/me', {
+				headers: { 'Content-Type': 'application/json'},
+				withCredentials: true
+			})
+			setCurrentUser(response.data);
+		} catch (error:any) {
+			console.log(error.response );
+		}
+	}
+	getCurrentUser(); //appel de la fonction
+}, [])
 
 
   return (
@@ -60,20 +76,41 @@ useEffect(() => { //fetch game data
 						<TableCell>Result</TableCell>
 					</TableRow>
                 </TableHead>
-                <TableBody>
-                  {gameHistory.map((game, index) => (
-                    <TableRow
-						key={index}
-						sx={{
-							"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
-							"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
-                      <TableCell>{game.name}</TableCell>
-                      <TableCell>{game.score}</TableCell>
-                      <TableCell>{game.date}</TableCell>
-                      <TableCell>{game.result}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                {currentUser && <TableBody> {
+					gameHistory.map((game:any, index) => {
+					let adversaire;
+					const formattedTimestamp = game.createdAt
+					  ? new Intl.DateTimeFormat("en-GB", {
+						  day: "2-digit",
+						  month: "2-digit",
+						  year: "numeric",
+						  hour: "2-digit",
+						  minute: "2-digit",
+						}).format(new Date(game.createdAt))
+					  : "";
+					if (game.player_1_id === currentUser.id)
+						adversaire = game.player_2;
+					else
+						adversaire = game.player_1;
+					return (
+						<TableRow
+							key={index}
+							sx={{
+								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
+								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
+						<TableCell>{adversaire.nickname}</TableCell>
+						<TableCell>{game.player_1_score} - {game.player_2_score}</TableCell>
+						<TableCell>{formattedTimestamp}</TableCell>
+						<TableCell>{game.winnerId === 0
+									? "Match null"
+									: game.winnerId === currentUser.id
+									? "Win"
+									: "Loss"}</TableCell>
+						</TableRow>
+					)
+				  })}
+				  
+                </TableBody>}
               </Table>
             </TableContainer>
           </Box>

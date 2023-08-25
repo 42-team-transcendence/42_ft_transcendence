@@ -28,4 +28,5 @@ export interface GameInfo{
 	ballXDirection: number;
 	ballYDirection: number;
 	intervalID: NodeJS.Timeout | undefined;
+	ifDBsaved: boolean;
 };
