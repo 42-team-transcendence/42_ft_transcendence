@@ -50,16 +50,16 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [auth, setAuth] = useState<Auth>({} as Auth);
 
-  // useEffect(() => {
-  //   const storedAuth = localStorage.getItem("auth");
-  //   if (storedAuth) {
-  //     setAuth(JSON.parse(storedAuth) as Auth);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const storedAuth = localStorage.getItem("auth");
+    if (storedAuth) {
+      setAuth(JSON.parse(storedAuth) as Auth);
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   localStorage.setItem("auth", JSON.stringify(auth));
-  // }, [auth]);
+  useEffect(() => {
+    localStorage.setItem("auth", JSON.stringify(auth));
+  }, [auth]);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

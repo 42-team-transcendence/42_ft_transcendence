@@ -229,8 +229,10 @@ function Profile() {
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
+		console.log("ici");
 		if (file) {
-		  setSelectedFile(file);
+			console.log("file = ", file);
+		  	setSelectedFile(file);
 		}
 	};
 	  
@@ -242,7 +244,7 @@ function Profile() {
 				withCredentials: true,
 		  	});
 			console.log("reponse avatar, ", {response});
-			if (response.status === 201) {
+			if (response.status === 200) {
 				setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
 				console.log('Avatar update successful');
 			} else {
@@ -254,7 +256,9 @@ function Profile() {
 	 	};
 	  
 		const handleUploadClick = () => {
-			if (selectedFile) {
+			
+			console.log("selected file = ", selectedFile)
+			if (selectedFile) {;
 				const formData = new FormData();
 				formData.append('avatar', selectedFile);
 				handleUpload(formData);
@@ -273,12 +277,12 @@ function Profile() {
 			<div className="main-container">
 				<div className="container-wrap">
 					<div className="avatar">
-						<label htmlFor="avatarInput">
-							<img
+					<label htmlFor="avatarInput">
+						<img
 							className="img-profile"
 							src={user.avatar}
 							alt="Profile Image"
-							/>
+						/>
 						</label>
 						<input
 							type="file"
@@ -287,7 +291,7 @@ function Profile() {
 							accept="image/*"
 							onChange={handleFileChange}
 						/>
-						<button onClick={handleUploadClick}></button>
+						<button onClick={handleUploadClick}>ici</button>
 				
 						
 						<div className="avater-info">
