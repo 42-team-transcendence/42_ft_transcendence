@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, ChangeEvent } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import speakeasy from 'speakeasy';
 
@@ -29,7 +29,8 @@ interface User {
 	email: string;
 	hash:string;
 	nickname: string;
-	auth2fa: boolean
+	auth2fa: boolean;
+	avatar: string
 }
 
 
@@ -52,7 +53,7 @@ function Profile() {
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
-	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false });
+	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '' });
     useEffect(() => {
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
@@ -185,6 +186,7 @@ function Profile() {
 		handleClosePwdModal();
 	};
 
+
 	// =============================================================================
 	// 2FA MODAL ===================================================================
 	const [is2fa, setIs2fa] = useState(user?.auth2fa || false);
@@ -219,7 +221,55 @@ function Profile() {
 		  	console.error('Error updating 2FA state:', error);
 		}
 	};
-	
+
+
+	// =============================================================================
+	// AVATAR ======================================================================
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		console.log("ici");
+		if (file) {
+			console.log("file = ", file);
+		  	setSelectedFile(file);
+		}
+	};
+	  
+	const handleUpload = async (formData: FormData) => {
+		console.log({formData});
+		try {
+		  	const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
+				headers: {'Content-Type': 'multipart/form-data'},
+				withCredentials: true,
+		  	});
+			console.log("reponse avatar, ", {response});
+			if (response.status === 200) {
+				setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
+				console.log('Avatar update successful');
+			} else {
+				console.error('Avatar update failed');
+			}
+			} catch (error) {
+				console.error('Error updating avatar:', error);
+			}
+	 	};
+	  
+		const handleUploadClick = () => {
+			
+			console.log("selected file = ", selectedFile)
+			if (selectedFile) {;
+				const formData = new FormData();
+				formData.append('avatar', selectedFile);
+				handleUpload(formData);
+			}
+			else
+			{
+				console.log('no upload');
+			}
+		};
+
+
 	// =============================================================================
 	// RETURN ======================================================================
   	return (
@@ -227,11 +277,23 @@ function Profile() {
 			<div className="main-container">
 				<div className="container-wrap">
 					<div className="avatar">
-						<img 
+					<label htmlFor="avatarInput">
+						<img
 							className="img-profile"
-							src="https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg"
-							alt="image du profile"
+							src={user.avatar}
+							alt="Profile Image"
 						/>
+						</label>
+						<input
+							type="file"
+							id="avatarInput"
+							style={{ display: 'none' }}
+							accept="image/*"
+							onChange={handleFileChange}
+						/>
+						<button onClick={handleUploadClick}>ici</button>
+				
+						
 						<div className="avater-info">
 							{user ? (
 								<>

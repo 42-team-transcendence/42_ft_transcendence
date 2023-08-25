@@ -44,6 +44,8 @@ model User {
 	games_player_1 Game[] @relation(name: "GamePlayer1")
   	games_player_2 Game[] @relation(name: "GamePlayer2")
 
+	avatar        	String     @default("https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg")
+
   @@map("users")
 }
 
