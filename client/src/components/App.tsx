@@ -33,7 +33,7 @@ function App() {
           <Route element={<PersistLogin />}>
             <Route element= {<RequireAuth />}>
               <Route path="/" element={<Homepage />} />
-			        <Route path="play" element={<Play />} />
+			  <Route path="play" element={<Play />} />
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="rules" element={<Rules />} />
               <Route path="friendlist" element={<FriendList />} />
