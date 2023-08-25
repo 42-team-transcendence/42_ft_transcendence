@@ -55,7 +55,7 @@ export default function ChatChannels() {
 						headers: { 'Content-Type': 'application/json'},
 						withCredentials: true
 					})
-					console.log(response.data);
+					console.log("current_chat", response.data);
                     setCurrentChat(response.data);
                     setChatFound(true);
 				}

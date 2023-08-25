@@ -62,7 +62,14 @@ export class ChatService {
 			include: {
 				participants: true, // Include all participants in the returned object
 				messages : true,
-				channelInfo : true
+				channelInfo : {
+					include : {
+						administrators: true,
+						kickedUsers: true,
+						bannedUsers: true,
+						mutedUsers: true,
+					}
+				}
 			},
 		})
 		return chat;
@@ -94,7 +101,14 @@ export class ChatService {
 			include: {
 				participants: true, // Include all participants in the returned object
 				messages : true, // Include all messages in the returned object
-				channelInfo : true
+				channelInfo : {
+					include : {
+						administrators: true,
+						kickedUsers: true,
+						bannedUsers: true,
+						mutedUsers: true,
+					}
+				}
 			},
 		})
 		return myChats;

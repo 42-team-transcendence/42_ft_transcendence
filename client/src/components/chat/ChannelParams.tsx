@@ -16,10 +16,10 @@ import Miniature from "../miniature/Miniature";
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box, Button, Checkbox, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText,} from '@mui/material';
-
-import '../../styles/profile/Profile.css';
-import "../../styles/chat/ChanCreationParam.css"
 import DeleteIcon from '@mui/icons-material/Delete';
+
+import "../../styles/chat/ChanCreationParam.css"
+
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -40,6 +40,8 @@ export default function ChannelParams() {
     const [pwd, setPwd] = useState(location.state.chat.channelInfo.password);
 
     const [participants, setParticipants] = useState(location.state.chat.participants);
+    const [admins, setadmins] = useState(location.state.chat.channelInfo.administrators);
+
 
 
     console.log(location.state);
@@ -59,17 +61,48 @@ export default function ChannelParams() {
         <PageWrapper> {
         location.state.chat && (
             <Box className="chan-creation-param-container">
-                <div>
+                <div className="a-modifier">
+                    <div>NAME: </div>
                     <div>{name}</div>
                     <span className="modifier" onClick={() => setNameModal(!nameModal)}>modifier</span>
                 </div>
-                <div>
+                <div className="a-modifier">
+                    <div>STATUS: </div>
                     <div>{status}</div>
                     <span className="modifier" onClick={() => setStatusModal(!statusModal)}>modifier</span>
                 </div>
 
                 <List subheader="Participants">
                     {participants.map((user:any, idx:number) => {
+                        const miniatureUser: MiniatureUser = {
+                            nickname: user?.nickname,
+                            id: user?.id,
+                            minAvatar: {url: tchoupi, name:'Tchoupi'}
+                        }
+                        return (
+
+                            <ListItem key={idx} disablePadding>
+                                <Miniature miniatureUser={miniatureUser} ></Miniature>
+                                <ListItemButton role={undefined}>
+                                    <ListItemIcon>
+                                        <Checkbox
+                                            edge="start"
+                                            checked={true}
+                                        />
+                                    </ListItemIcon>
+                                </ListItemButton>
+                                <ListItemText id={idx+"delete"} primary={`delete`} />
+                                <ListItemButton>
+                                    <IconButton edge="end" aria-label="delete">
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </ListItemButton>
+                            </ListItem>
+                        )})}
+                </List>
+
+                <List subheader="Admins">
+                    {admins.map((user:any, idx:number) => {
                         const miniatureUser: MiniatureUser = {
                             nickname: user?.nickname,
                             id: user?.id,

@@ -53,7 +53,14 @@ export class ChannelService {
 				},
 				include: {
 					participants: true, // Include all participants in the returned object
-					channelInfo : true
+					channelInfo : {
+						include : {
+							administrators: true,
+							kickedUsers: true,
+							bannedUsers: true,
+							mutedUsers: true,
+						}
+					}
 				},
 			})
 			console.log({channels});

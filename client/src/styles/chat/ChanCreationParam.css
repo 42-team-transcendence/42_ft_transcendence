@@ -20,3 +20,24 @@
 	margin-bottom: 30px;
 }
 
+.chan-param-line {
+	display: flex;
+	/* flex-direction: column; */
+	/* align-items: flex-start; */
+	/* margin-top: 40px; */
+
+}
+
+.a-modifier {
+	display: flex;
+	text-align: center;
+	justify-content: space-between;
+	/* gap: 50px; */
+}
+
+.modifier {
+	font-size:0.9rem;
+	color: #0018F4;
+	cursor: pointer;
+	text-decoration: underline;
+}
