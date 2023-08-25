@@ -61,7 +61,7 @@ const DoubleAuth = () => {
 				withCredentials: true
 			});
 		
-			if (response.status === 200) {
+			if (response.status === 201) {
 				console.log('OTP is valid');
 				// Perform further actions here (e.g., authentication)
 			} else {

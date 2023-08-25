@@ -53,6 +53,16 @@ export class UserController {
   		return { score: score }; 
 	}
 
+	// @HttpCode(HttpStatus.OK)
+	@Get('auth2fa')
+	async getAuth2fa(
+		@Body() dto: any,
+	) {
+		console.log ({dto});
+		const auth2fa = await this.userService.getAuth2fa(dto.email)
+		return {auth2fa: auth2fa};
+	}
+
 
 	// =============================================================================
 	// UPDATES =====================================================================

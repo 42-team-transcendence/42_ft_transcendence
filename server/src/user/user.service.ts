@@ -41,6 +41,14 @@ export class UserService {
 		console.log('---------GET SCORE---------');
 		return user?.score ?? 0;
 	}
+
+	async getAuth2fa(email: string) {
+		const user = await this.prisma.user.findUnique({
+		  where: { email: email },
+		  select: { auth2fa: true },
+		});
+		return user?.auth2fa;
+	}
 	
 
 	// =============================================================================
@@ -140,6 +148,13 @@ export class UserService {
 
 	async update2fa(auth2fa: boolean,  userId: number) {
 		try {
+			if (auth2fa === false)
+			{
+				await this.prisma.user.update({
+					where: {id: userId},
+					data: { secret: null }
+				})
+			}
 			await this.prisma.user.update({
 				where: {id: userId},
 				data: { auth2fa: auth2fa }
@@ -149,6 +164,5 @@ export class UserService {
 		  	console.error('Error updating 2FA:', error);
 		}
 	}
-	
 
 }

@@ -52,6 +52,14 @@ const Login: React.FC<LoginProps> = () => {
 
     const fonctionUpdatePwd = {updatePwd};
 
+    // =============================================================================
+	// 2FA =========================================================================
+    const [show2FaPopup, set2FaPopup] = useState(false);
+
+
+
+
+
     /// =============================================================================
 	// 	=============================================================================
     const [errMsg, setErrMsg] = useState('');
@@ -71,12 +79,19 @@ const Login: React.FC<LoginProps> = () => {
                     withCredentials: true
                 }
             );
+
+            // 2FA 
+            const auth2fa = await axios.get("/users/auth2fa");
+            console.log({auth2fa});
+
             // console.log({"test": response?.data})
             const accessToken = response?.data?.accessToken;
             //TODO est ce important de set l'email et le pwd dans auth ? 
             setAuth({email, pwd, accessToken});
             setEmail('');
             setPwd('');
+
+
             navigate(from, { replace: true});
         } catch (err: AxiosError | any) {
             if (!err?.response) {
