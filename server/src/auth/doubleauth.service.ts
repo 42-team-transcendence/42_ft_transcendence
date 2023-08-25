@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import speakeasy from 'speakeasy';
+import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode'
 
 
@@ -12,7 +12,7 @@ export class DoubleAuthService {
     return new Promise<string>((resolve, reject) => {
       qrcode.toDataURL(otpauthUrl, function (err: any, data: string) {
         if (err) {
-          reject(err);
+          reject(err);  console.error("error secret")
         } else {
           resolve(data);
         }
@@ -42,7 +42,7 @@ export class DoubleAuthService {
       console.log("verified", {verified});
       return verified;
     } catch (error) {
-      console.error("error secret")
+      console.error("error secret = ", error)
     }
   }
 

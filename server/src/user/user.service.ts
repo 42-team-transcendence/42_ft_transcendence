@@ -148,6 +148,13 @@ export class UserService {
 
 	async update2fa(auth2fa: boolean,  userId: number) {
 		try {
+			if (auth2fa === false)
+			{
+				await this.prisma.user.update({
+					where: {id: userId},
+					data: { secret: null }
+				})
+			}
 			await this.prisma.user.update({
 				where: {id: userId},
 				data: { auth2fa: auth2fa }
@@ -157,6 +164,5 @@ export class UserService {
 		  	console.error('Error updating 2FA:', error);
 		}
 	}
-	
 
 }
