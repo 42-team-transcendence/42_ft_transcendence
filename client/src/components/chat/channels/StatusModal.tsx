@@ -10,7 +10,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 // =============================================================================
 // IMPORT COMPONENTS && TYPES ===========================================================
-import { statuses, Status } from "./types";
+import { statuses, Status } from "../types";
 import { MenuItem } from '@mui/material';
 
 export default function StatusModal({ data, open, onClose, onSave }: {
