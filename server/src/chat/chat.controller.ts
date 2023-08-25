@@ -6,7 +6,7 @@ import { ChatService } from "./chat.service";
 import { CreateChatDto } from "./dto";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
-@Controller('chats') // définit la route "/users" de l'API
+@Controller('chats') // définit la route "/chats" de l'API
 export class ChatController {
 	constructor (
 		private chatService: ChatService

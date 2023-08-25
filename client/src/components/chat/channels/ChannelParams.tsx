@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // =============================================================================
@@ -6,7 +6,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import PageWrapper from "../../navbar/pageWrapper";
 import NickModal from "../../profile/NicknameModal";
-import StatusModal from "./StatusModal";
+import StatusModal from "./ChannelParamsStatusModal";
+
+import { statuses, Status } from "../types";
 
 import ChannelParamsParticipants from "./ChannelParamsParticipants";
 import ChannelParamsAdmins from "./ChannelParamsAdmins";
@@ -23,39 +25,90 @@ import "../../../styles/chat/ChanCreationParam.css"
 // FUNCTION ====================================================================
 
 export default function ChannelParams() {
+    const shouldSaveRef = useRef(false); //React useRef hook to control updates on re-renders 
 	const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();
     const location = useLocation(); //sert a recuperer le state passer avec useNavigate()
 
-    if (!location.state)
+    if (!location.state || !location.state.chatId)
         navigate('/chat');
 
-    const [name, setName] = useState(location.state.chat.channelInfo.name);
-    const [nameModal, setNameModal] = useState(false);
+    const [name, setName] = useState<string>();
+    const [nameModal, setNameModal] = useState<boolean>(false);
 
-    const [status, setStatus] = useState(location.state.chat.channelInfo.status);
-    const [statusModal, setStatusModal] = useState(false);
-    const [pwd, setPwd] = useState(location.state.chat.channelInfo.password);
+    const [status, setStatus] = useState<Status>('PUBLIC');
+    const [statusModal, setStatusModal] = useState<boolean>(false);
+    const [pwd, setPwd] = useState<string>('');
 
-    const [participants, setParticipants] = useState(location.state.chat.participants);
-    const [admins, setAdmins] = useState(location.state.chat.channelInfo.administrators);
-    const [bans, setBans] = useState(location.state.chat.channelInfo.bannedUsers);
-    const [mutes, setMutes] = useState(location.state.chat.channelInfo.mutedUsers);
+    const [participants, setParticipants] = useState([]);
+    const [admins, setAdmins] = useState([]);
+    const [bans, setBans] = useState([]);
+    const [mutes, setMutes] = useState([]);
 
 	const SaveName = async (newName: string) => {
-        setName(newName)
+        if (newName != name)
+            setName(newName)
 		setNameModal(!nameModal);
 	};
 
-    const SaveStatus = async (newStatus: string, newPwd: string) => {
+    const SaveStatus = async (newStatus: Status, newPwd: string) => {
         setStatus(newStatus)
         setPwd(newPwd)
 		setStatusModal(!statusModal);
 	};
 
+    const setChatElements = (channel:any) => {
+        setName(channel.channelInfo.name);
+        setStatus(channel.channelInfo.status);
+        setPwd(channel.channelInfo.password ? channel.channelInfo.password: '');
+        setParticipants(channel.participants);
+        setAdmins(channel.channelInfo.administrators);
+        setBans(channel.channelInfo.bannedUsers);
+        setMutes(channel.channelInfo.mutedUsers);
+    }
+
+    //GET CURRENT CHANNEL
+    useEffect(() => {
+        const getChat = async () => {
+            const response = await axiosPrivate.get(`/chats/findById/${location.state.chatId}`, {
+                headers: { 'Content-Type': 'application/json'},
+                withCredentials: true
+            })
+            setChatElements(response.data);
+            shouldSaveRef.current = false;
+        }
+        getChat();
+    },[])
+
+    //UPDATE NAME
+    useEffect(() => {
+        const saveNameInDb = async () => {
+            if (shouldSaveRef.current) {
+                try {
+                    const response = await axiosPrivate.post(
+                        `channels/update/${location.state.chatId}`,
+                        JSON.stringify({ name }),
+                        {
+                            headers: {'Content-Type': 'application/json'},
+                            withCredentials: true
+                        }
+                    );
+                    console.log('saveNameInDb', response.data);
+                } catch (err: any) {
+                    console.log(err);
+                }
+            } else {
+                // Reset the ref value to allow subsequent calls
+                shouldSaveRef.current = true;
+            }
+        }
+        saveNameInDb();
+    },[name])
+
     return (
-        <PageWrapper> {
-        location.state.chat && (
+        <PageWrapper> { 
+        participants && name && status && (pwd === '' || pwd) && admins && mutes && bans
+        && (
             <Box className="chan-creation-param-container">
                 <Box className="chan-param-subcontainer">
                     <div className="a-modifier">

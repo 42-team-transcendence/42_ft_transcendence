@@ -92,4 +92,22 @@ export class ChannelService {
             throw error;
 		}
 	}
+
+	async updateChannelInfos(chatId: number, userId:number, payload:any) {
+		try {
+			const updatedChan = await this.prisma.channelInfo.update({
+				where: {chatId: chatId},
+				data: { //undefined = do not include this in the update:
+					name: payload.name? payload.name : undefined, // If there is no payload.name, don't include in update!
+					status: payload.status? payload.status : undefined,
+				},
+				include: {chat: true},
+			})
+			console.log({updatedChan});
+			return updatedChan;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+	}
 }

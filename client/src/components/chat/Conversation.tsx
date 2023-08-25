@@ -104,7 +104,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //**************************************** AUTRES *****************************************//
     const handleChannelTitleClick = () => {
-      navigate('/channelParams', {state: {chat}});
+      navigate('/channelParams', {state: {chatId : chat.id}});
     }
 
     //Format Timestamp from msg stored in DB
