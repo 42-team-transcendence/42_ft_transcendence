@@ -15,9 +15,10 @@ import Miniature from "../miniature/Miniature";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {Box, Button, Checkbox, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText,} from '@mui/material';
+import {Box, Button, Checkbox, Fab, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import AddIcon from '@mui/icons-material/Add';
+import SchoolIcon from '@mui/icons-material/School';
 import "../../styles/chat/ChanCreationParam.css"
 
 
@@ -41,10 +42,11 @@ export default function ChannelParams() {
 
     const [participants, setParticipants] = useState(location.state.chat.participants);
     const [admins, setadmins] = useState(location.state.chat.channelInfo.administrators);
+    const [bans, setBans] = useState(location.state.chat.channelInfo.bannedUsers);
+    const [mutes, setMutes] = useState(location.state.chat.channelInfo.mutedUsers);
 
 
-
-    console.log(location.state);
+    console.log(location.state.chat.channelInfo);
 
 	const SaveName = async (newName: string) => {
         setName(newName)
@@ -61,18 +63,17 @@ export default function ChannelParams() {
         <PageWrapper> {
         location.state.chat && (
             <Box className="chan-creation-param-container">
-                <div className="a-modifier">
-                    <div>NAME: </div>
-                    <div>{name}</div>
-                    <span className="modifier" onClick={() => setNameModal(!nameModal)}>modifier</span>
-                </div>
-                <div className="a-modifier">
-                    <div>STATUS: </div>
-                    <div>{status}</div>
-                    <span className="modifier" onClick={() => setStatusModal(!statusModal)}>modifier</span>
-                </div>
-
-                <List subheader="Participants">
+                <Box className="chan-param-subcontainer">
+                    <div className="a-modifier">
+                        <div>NAME: {name}</div>
+                        <span className="modifier" onClick={() => setNameModal(!nameModal)}>modifier</span>
+                    </div>
+                    <div className="a-modifier">
+                        <div>STATUS: {status}</div>
+                        <span className="modifier" onClick={() => setStatusModal(!statusModal)}>modifier</span>
+                    </div>
+                </Box>
+                <List subheader={<ListSubheader>Participants</ListSubheader>}>
                     {participants.map((user:any, idx:number) => {
                         const miniatureUser: MiniatureUser = {
                             nickname: user?.nickname,
@@ -80,7 +81,28 @@ export default function ChannelParams() {
                             minAvatar: {url: tchoupi, name:'Tchoupi'}
                         }
                         return (
+                            <ListItem key={idx} disablePadding>
+                                <Miniature miniatureUser={miniatureUser} ></Miniature>
+                                <ListItemButton>
+                                    <ListItemText id={idx+"promote"} primary={`promote`} />
+                                    <IconButton edge="end" aria-label="delete"><SchoolIcon /></IconButton>
+                                </ListItemButton>
+                                <ListItemButton>
+                                    <ListItemText id={idx+"delete"} primary={`kick`} />
+                                    <IconButton edge="end" aria-label="delete"><DeleteIcon /></IconButton>
+                                </ListItemButton>
+                            </ListItem>
+                        )})}
+                </List>
 
+                <List subheader={<ListSubheader>Admins</ListSubheader>}>
+                    {admins.map((user:any, idx:number) => {
+                        const miniatureUser: MiniatureUser = {
+                            nickname: user?.nickname,
+                            id: user?.id,
+                            minAvatar: {url: tchoupi, name:'Tchoupi'}
+                        }
+                        return (
                             <ListItem key={idx} disablePadding>
                                 <Miniature miniatureUser={miniatureUser} ></Miniature>
                                 <ListItemButton role={undefined}>
@@ -101,15 +123,14 @@ export default function ChannelParams() {
                         )})}
                 </List>
 
-                <List subheader="Admins">
-                    {admins.map((user:any, idx:number) => {
+                <List subheader={<ListSubheader>Banned Users</ListSubheader>}>
+                    {bans.map((user:any, idx:number) => {
                         const miniatureUser: MiniatureUser = {
                             nickname: user?.nickname,
                             id: user?.id,
                             minAvatar: {url: tchoupi, name:'Tchoupi'}
                         }
                         return (
-
                             <ListItem key={idx} disablePadding>
                                 <Miniature miniatureUser={miniatureUser} ></Miniature>
                                 <ListItemButton role={undefined}>
