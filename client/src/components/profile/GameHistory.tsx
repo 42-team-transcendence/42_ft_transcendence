@@ -84,6 +84,8 @@ useEffect(() => { //fetch game data
 						  day: "2-digit",
 						  month: "2-digit",
 						  year: "numeric",
+						  hour: "2-digit",
+						  minute: "2-digit",
 						}).format(new Date(game.createdAt))
 					  : "";
 					if (game.player_1_id === currentUser.id)
@@ -99,7 +101,11 @@ useEffect(() => { //fetch game data
 						<TableCell>{adversaire.nickname}</TableCell>
 						<TableCell>{game.player_1_score} - {game.player_2_score}</TableCell>
 						<TableCell>{formattedTimestamp}</TableCell>
-						<TableCell>{game.winnerId === currentUser.id ? "Win" : "Loss"}</TableCell>
+						<TableCell>{game.winnerId === 0
+									? "Match null"
+									: game.winnerId === currentUser.id
+									? "Win"
+									: "Loss"}</TableCell>
 						</TableRow>
 					)
 				  })}
