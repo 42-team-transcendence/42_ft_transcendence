@@ -31,7 +31,8 @@ export default function ChannelParams() {
 
     if (!location.state || !location.state.chatId)
         navigate('/chat');
-
+        
+    const [chatId, setChatId] = useState<number>(location.state.chatId);
     const [name, setName] = useState<string>();
     const [nameModal, setNameModal] = useState<boolean>(false);
 
@@ -57,6 +58,7 @@ export default function ChannelParams() {
     },[location.state.chatId])
 
     const setChatElements = (channel:any) => {
+        setChatId(channel.id)
         setName(channel.channelInfo.name);
         setStatus(channel.channelInfo.status);
         setPwd(channel.channelInfo.password ? channel.channelInfo.password: '');
@@ -69,16 +71,12 @@ export default function ChannelParams() {
 	const SaveName = async (newName: string) => {
         if (newName != name) {
             try {
-                console.log({newName})
                 const response = await axiosPrivate.post(
-                    `channels/update/${location.state.chatId}`,
-                    JSON.stringify({ name: newName }),
-                    {
-                        headers: {'Content-Type': 'application/json'},
-                        withCredentials: true
+                    `channels/update/${chatId}`,
+                    JSON.stringify({ name: newName }),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-                console.log('saveNameInDb', response.data);
                 setName(newName)
             } catch (err: any) {
                 console.log(err);
@@ -88,8 +86,24 @@ export default function ChannelParams() {
 	};
 
     const SaveStatus = async (newStatus: Status, newPwd: string) => {
-        setStatus(newStatus)
-        setPwd(newPwd)
+        if (newStatus != status || newStatus === 'PROTECTED' && newPwd != pwd) {
+            try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({
+                        status: newStatus != status ? newStatus: null,
+                        password: newStatus === 'PROTECTED' && newPwd != pwd ? newPwd: null
+                    }), {
+                        headers: {'Content-Type': 'application/json'},withCredentials: true
+                    }
+                );
+                setStatus(newStatus)
+                if (newStatus === 'PROTECTED' && newPwd != pwd)
+                    setPwd(newPwd)
+            } catch (err: any) {
+                console.log(err);
+            }
+        }
 		setStatusModal(!statusModal);
 	};
 
@@ -108,8 +122,8 @@ export default function ChannelParams() {
                         <span className="modifier" onClick={() => setStatusModal(!statusModal)}>modifier</span>
                     </div>
                 </Box>
-
                 <ChannelParamsParticipants
+                    chatId={chatId}
                     participants={participants}
                     setParticipants={setParticipants}
                     admins={admins}
@@ -119,9 +133,9 @@ export default function ChannelParams() {
                     mutes={mutes}
                     setMutes={setMutes}
                 ></ChannelParamsParticipants>
-                <ChannelParamsAdmins admins={admins} setAdmins={setAdmins}></ChannelParamsAdmins>
-                <ChannelParamsMutes mutes={mutes} setMutes={setMutes}></ChannelParamsMutes>
-                <ChannelParamsBans bans={bans} setBans={setBans}></ChannelParamsBans>
+                <ChannelParamsAdmins chatId={chatId} admins={admins} setAdmins={setAdmins}></ChannelParamsAdmins>
+                <ChannelParamsMutes chatId={chatId} mutes={mutes} setMutes={setMutes}></ChannelParamsMutes>
+                <ChannelParamsBans chatId={chatId} bans={bans} setBans={setBans}></ChannelParamsBans>
 
                 <NickModal
                     open={nameModal}

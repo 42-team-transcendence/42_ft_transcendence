@@ -32,7 +32,6 @@ model User {
 
 	channelsOwned 			ChannelInfo[]		@relation("channelOwner")
 	channelsAdministrated	ChannelInfo[] 		@relation("channelAdministrator")
-	channelsKickedOf		ChannelInfo[]		@relation("channelKicked")
 	channelsBannedOf		ChannelInfo[]		@relation("channelBanned")
 	channelsMutedOf			ChannelInfo[]		@relation("channelMuted")
 
@@ -94,7 +93,6 @@ model ChannelInfo {
 	ownerId			Int
 
 	administrators	User[]		@relation("channelAdministrator")
-	kickedUsers		User[]		@relation("channelKicked")
 	bannedUsers		User[]		@relation("channelBanned")
 	mutedUsers		User[]		@relation("channelMuted")
 

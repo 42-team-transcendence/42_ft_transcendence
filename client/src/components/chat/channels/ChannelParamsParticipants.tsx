@@ -10,7 +10,7 @@ import Miniature from "../../miniature/Miniature";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {Box, Button, Checkbox, Fab, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem,} from '@mui/material';
+import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SchoolIcon from '@mui/icons-material/School';
@@ -18,8 +18,10 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import BlockIcon from '@mui/icons-material/Block';
 
+
 export default function ChannelParamsParticipants(
-	{participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes}: {
+	{chatId, participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes}: {
+	chatId:number
 	participants:any,
 	setParticipants:any,
 	admins:any,
@@ -29,37 +31,90 @@ export default function ChannelParamsParticipants(
 	mutes:any,
 	setMutes:any
 }) {
+	const axiosPrivate = useAxiosPrivate();
+
     const [anchorUserMenu, setAnchorUserMenu] = useState<null | HTMLElement>(null);
     const openUserMenu = Boolean(anchorUserMenu);
 	const [userSelected, setUserSelected] = useState()
 
 	const handleClickUserMenu = (event: React.MouseEvent<HTMLElement>, user: any) => {
 		setAnchorUserMenu(event.currentTarget);
-		setUserSelected(user); // You'll need to define selectedUser state
+		setUserSelected(user); // define selectedUser state
 	  };
 
-	const handleAddAdmin = (newAdmin:any) => {
-		if (!admins.find((e:any) => e.id === newAdmin.id))
-			setAdmins([...admins, newAdmin]);
+	const handleAddAdmin = async (newAdmin:any) => {
+		if (!admins.find((e:any) => e.id === newAdmin.id)) {
+			try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({ newAdmin: newAdmin.id }),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
+                    }
+                );
+                setAdmins([...admins, newAdmin]);
+            } catch (err: any) {
+                console.log(err);
+            }
+		}
 		setAnchorUserMenu(null);
     };
 
-	const handleMute = (muted:any) => {
-		if (!mutes.find((e:any) => e.id === muted.id))
-			setMutes([...mutes, muted]);
+	const handleMute = async (muted:any) => {
+		if (!mutes.find((e:any) => e.id === muted.id)) {
+			try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({ newMuted: muted.id }),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
+                    }
+                );
+				setMutes([...mutes, muted]);
+            } catch (err: any) {
+                console.log(err);
+            }
+		}
 		setAnchorUserMenu(null);
     };
 
-	const handleKick = (kicked:any) => {//kick out of participants
-		if (participants.find((e:any) => e.id === kicked.id))
-			setParticipants(participants.filter((user:any)=> user.id != kicked.id));
+	const handleKick = async (kicked:any, ban:boolean) => {//kick out of participants
+		if (participants.find((e:any) => e.id === kicked.id)) {
+			try {
+				//if user is kicked, also need to strip of admins and mutes
+				let erase = {admin: null, mute: null };
+				if (admins.find((e:any) => e.id === kicked.id)) {
+					erase.admin = kicked.id;
+					setAdmins(admins.filter((user:any)=> kicked.id != user.id));
+				}
+				if (mutes.find((e:any) => e.id === kicked.id)) {
+					erase.mute = kicked.id;
+					setMutes(mutes.filter((user:any)=> kicked.id != user.id));
+				}
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({
+						oldParticipant: kicked.id,
+						newBanned:  ban? kicked.id: null,
+						oldAdmin: erase.admin,
+						oldMuted: erase.mute,
+					}),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
+                    }
+                );
+				setParticipants(participants.filter((user:any)=> user.id != kicked.id));
+				
+            } catch (err: any) {
+                console.log(err);
+            }
+		}
 		setAnchorUserMenu(null);
     };
 
 	const handleBan = (banned:any) => { //Add to banned list and kick out of chan
-		if (!bans.find((e:any) => e.id === banned.id))
+		if (!bans.find((e:any) => e.id === banned.id)) {
+			handleKick(banned, true);
 			setBans([...bans, banned]);
-		handleKick(banned);
+		} else
+			handleKick(banned, false);
     };
 
 	return (
@@ -97,7 +152,7 @@ export default function ChannelParamsParticipants(
 							<VolumeOffIcon />
 							Mute
 						</MenuItem>
-						<MenuItem onClick={() => handleKick(userSelected)} disableRipple>
+						<MenuItem onClick={() => handleKick(userSelected, false)} disableRipple>
 							<DeleteIcon />
 							Kick
 						</MenuItem>

@@ -13,16 +13,28 @@ import Miniature from "../../miniature/Miniature";
 import {IconButton, List, ListItem, ListItemButton, ListSubheader,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-
-
-
-export default function ChannelParamsParticipants({admins, setAdmins}: {
+export default function ChannelParamsParticipants({chatId, admins, setAdmins}: {
+	chatId:number,
 	admins:any,
 	setAdmins:any,
 }) {
-
-	const handleDeleteAdmin = (event:any, user:any) => {
-		setAdmins(admins.filter((admin:any)=> admin.id != user.id));
+	const axiosPrivate = useAxiosPrivate();
+	
+	const handleDeleteAdmin = async (event:any, user:any) => {
+		if (admins.find((e:any) => e.id === user.id)) {
+			try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({ oldAdmin: user.id }),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
+                    }
+                );
+                console.log('saveNameInDb', response.data);
+				setAdmins(admins.filter((admin:any)=> admin.id != user.id));
+            } catch (err: any) {
+                console.log(err);
+            }
+		}
     };
 
 	return (
