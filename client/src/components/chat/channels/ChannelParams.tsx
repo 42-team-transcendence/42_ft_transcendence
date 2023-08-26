@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // =============================================================================
@@ -25,7 +25,6 @@ import "../../../styles/chat/ChanCreationParam.css"
 // FUNCTION ====================================================================
 
 export default function ChannelParams() {
-    const shouldSaveRef = useRef(false); //React useRef hook to control updates on re-renders 
 	const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();
     const location = useLocation(); //sert a recuperer le state passer avec useNavigate()
@@ -45,17 +44,17 @@ export default function ChannelParams() {
     const [bans, setBans] = useState([]);
     const [mutes, setMutes] = useState([]);
 
-	const SaveName = async (newName: string) => {
-        if (newName != name)
-            setName(newName)
-		setNameModal(!nameModal);
-	};
-
-    const SaveStatus = async (newStatus: Status, newPwd: string) => {
-        setStatus(newStatus)
-        setPwd(newPwd)
-		setStatusModal(!statusModal);
-	};
+    //GET CURRENT CHANNEL
+    useEffect(() => {
+        const getChat = async () => {
+            const response = await axiosPrivate.get(`/chats/findById/${location.state.chatId}`, {
+                headers: { 'Content-Type': 'application/json'},
+                withCredentials: true
+            })
+            setChatElements(response.data);
+        }
+        getChat();
+    },[location.state.chatId])
 
     const setChatElements = (channel:any) => {
         setName(channel.channelInfo.name);
@@ -67,43 +66,32 @@ export default function ChannelParams() {
         setMutes(channel.channelInfo.mutedUsers);
     }
 
-    //GET CURRENT CHANNEL
-    useEffect(() => {
-        const getChat = async () => {
-            const response = await axiosPrivate.get(`/chats/findById/${location.state.chatId}`, {
-                headers: { 'Content-Type': 'application/json'},
-                withCredentials: true
-            })
-            setChatElements(response.data);
-            shouldSaveRef.current = false;
-        }
-        getChat();
-    },[])
-
-    //UPDATE NAME
-    useEffect(() => {
-        const saveNameInDb = async () => {
-            if (shouldSaveRef.current) {
-                try {
-                    const response = await axiosPrivate.post(
-                        `channels/update/${location.state.chatId}`,
-                        JSON.stringify({ name }),
-                        {
-                            headers: {'Content-Type': 'application/json'},
-                            withCredentials: true
-                        }
-                    );
-                    console.log('saveNameInDb', response.data);
-                } catch (err: any) {
-                    console.log(err);
-                }
-            } else {
-                // Reset the ref value to allow subsequent calls
-                shouldSaveRef.current = true;
+	const SaveName = async (newName: string) => {
+        if (newName != name) {
+            try {
+                console.log({newName})
+                const response = await axiosPrivate.post(
+                    `channels/update/${location.state.chatId}`,
+                    JSON.stringify({ name: newName }),
+                    {
+                        headers: {'Content-Type': 'application/json'},
+                        withCredentials: true
+                    }
+                );
+                console.log('saveNameInDb', response.data);
+                setName(newName)
+            } catch (err: any) {
+                console.log(err);
             }
         }
-        saveNameInDb();
-    },[name])
+		setNameModal(!nameModal);
+	};
+
+    const SaveStatus = async (newStatus: Status, newPwd: string) => {
+        setStatus(newStatus)
+        setPwd(newPwd)
+		setStatusModal(!statusModal);
+	};
 
     return (
         <PageWrapper> { 
