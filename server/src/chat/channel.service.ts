@@ -57,7 +57,6 @@ export class ChannelService {
 					channelInfo : {
 						include : {
 							administrators: true,
-							kickedUsers: true,
 							bannedUsers: true,
 							mutedUsers: true,
 						}

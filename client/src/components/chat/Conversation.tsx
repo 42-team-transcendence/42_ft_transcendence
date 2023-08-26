@@ -22,6 +22,9 @@ import { MessageLeft, MessageRight } from "./MessageStyle";
 import '../../styles/chat/Conversation.css'
 
 
+//TODO : problème quand on utilise la search bar directement depuis la page du chat, et qu'on join un nouveau canal, et qu'on envoie un message : il ne s'affiche pas (probleme de socket ?)
+//TODO : mieux cleaner les sockets id côté server
+
 // =============================================================================
 // FUNCTION ====================================================================
 
@@ -86,6 +89,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             senderId: currentUser.id,
             chatId: chat.id
         }
+        console.log({payload})
         chatSocket?.emit("message", payload)
         //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
         // setMessages([...messages, {content: value, senderId: currentUser.id, chatId: chat.id}])
@@ -93,6 +97,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Réception et stockage des messages par le client
     const messageListener = (message:Message) => {
+      console.log("mesage received", message)
         setMessages([...messages, message])
     }
     useEffect(() => {

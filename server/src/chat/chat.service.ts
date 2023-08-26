@@ -65,7 +65,6 @@ export class ChatService {
 				channelInfo : {
 					include : {
 						administrators: true,
-						kickedUsers: true,
 						bannedUsers: true,
 						mutedUsers: true,
 					}
@@ -104,7 +103,6 @@ export class ChatService {
 				channelInfo : {
 					include : {
 						administrators: true,
-						kickedUsers: true,
 						bannedUsers: true,
 						mutedUsers: true,
 					}
