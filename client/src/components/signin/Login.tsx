@@ -54,7 +54,6 @@ const Login: React.FC<LoginProps> = () => {
 
     // =============================================================================
 	// 2FA =========================================================================
-    const [show2FaPopup, set2FaPopup] = useState(false);
 
 
 
@@ -80,9 +79,6 @@ const Login: React.FC<LoginProps> = () => {
                 }
             );
 
-            // 2FA 
-            const auth2fa = await axios.get("/users/auth2fa");
-            console.log({auth2fa});
 
             // console.log({"test": response?.data})
             const accessToken = response?.data?.accessToken;

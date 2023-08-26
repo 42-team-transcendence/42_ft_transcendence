@@ -238,6 +238,7 @@ function Profile() {
 		  	});
 			console.log("reponse avatar, ", {response});
 			if (response.status === 200) {
+				window.location.reload();
 				setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
 				console.log('Avatar update successful');
 			} else {
@@ -254,6 +255,7 @@ function Profile() {
 			if (selectedFile) {;
 				const formData = new FormData();
 				formData.append('avatar', selectedFile);
+				console.log('formData:', formData);
 				handleUpload(formData);
 			}
 			else
@@ -273,7 +275,14 @@ function Profile() {
 					<label htmlFor="avatarInput">
 						<img
 							className="img-profile"
-							src={user.avatar}
+							// src={"storage/uploads/"+ user.avatar}
+							// src={process.env.PUBLIC_URL + user.avatar}
+							// src={`http://${process.env.localhost}:3000/api/public/picture/` + user.avatar}
+							src={`http://localhost:3000/api/public/picture/${user.avatar}`}
+							// src="storage/uploads/368697414_247091924364906_7576220192864277534_n-a6d7.jpg"
+							// src={user.avatar}
+							// src='../../assets/tchoupi50x50.jpg'
+							// src="../../assets/alf50x50.jpg"
 							alt="Profile Image"
 						/>
 						</label>
@@ -283,6 +292,7 @@ function Profile() {
 							style={{ display: 'none' }}
 							accept="image/*"
 							onChange={handleFileChange}
+						
 						/>
 						<button onClick={handleUploadClick}>ici</button>
 				
@@ -337,7 +347,7 @@ function Profile() {
 					</div>
 				</div>
 				</div>
-				<GameHistory/>
+				{/* <GameHistory/> */}
 			</div>
 
 			{/* Render the EmailModal component */}
