@@ -29,10 +29,6 @@ const Search = styled('div')(({ theme }) => ({
   },
   marginLeft: 0,
   width: '100%',
-//   [theme.breakpoints.up('sm')]: {
-//     marginLeft: theme.spacing(1),
-//     width: 'auto',
-//   },
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -64,12 +60,30 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+
+
 export default function SearchAppBar() {
   const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();
 
+  const [currentUser, setCurrentUser] = useState<any>();
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+
+  useEffect(() => { //Fetch current user data
+		const getCurrentUser = async () => {
+			try {
+          const response = await axiosPrivate.get('/users/me', {
+              headers: { 'Content-Type': 'application/json'},
+              withCredentials: true
+          })
+          setCurrentUser(response.data);
+			} catch (error:any) {
+				console.log(error.response );
+			}
+		}
+		getCurrentUser();
+    }, [])
 
   useEffect(() => { //search for channels
     const searchResults = async () => {
@@ -98,19 +112,21 @@ export default function SearchAppBar() {
     setSearchInput(event.target.value);
   };
 
-  const handleResultClick = async (channelId:number) => {
-    try {
-			const response = await axiosPrivate.post(
-				`/channels/join/${channelId}`,
-				{
-					headers: { "Content-Type": "application/json" },
-					withCredentials: true,
-				}
-			);
-      console.log(response.data);
-		} catch (error) {
-			console.error(error);
-		}
+  const handleResultClick = async (channel:any) => {
+    if (!channel.participants.find((e:any) => e.id === currentUser.id)) {
+      try {
+        const response = await axiosPrivate.post(
+          `/channels/join/${channel.id}`, {
+            headers: { "Content-Type": "application/json" }, withCredentials: true,
+        });
+        navigate('/chat', {state: {channelId: channel.id}});
+        setSearchInput('');
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    navigate('/chat', {state: {channelId: channel.id}});
+    setSearchInput('');
 	};
 
   return (
@@ -132,7 +148,7 @@ export default function SearchAppBar() {
           {searchResults.map((item, idx) => {
             return (
                 <ListItem disablePadding key={idx}>
-                  <ListItemButton onClick={() => handleResultClick(item.id)}>
+                  <ListItemButton onClick={() => handleResultClick(item)}>
                     <ListItemText primary={item.channelInfo.name} />
                   </ListItemButton>
                 </ListItem>

@@ -32,7 +32,7 @@ export default function ChatChannels() {
 	let channelId: number|null = null;
 	if (location.state && location.state.recipientId) // Cas pour affichage du chat
 		recipientId = location.state.recipientId;
-	else if (location.state && location.state. channelId) //Cas pour affichage du channel
+	else if (location.state && location.state.channelId) //Cas pour affichage du channel
 		channelId = location.state.channelId;
 
 	console.log({location});

@@ -37,4 +37,18 @@ export class ChannelController {
 		console.log(user, channelId);
 		return (this.channelService.joinChannel(channelId, user.sub));
 	}
+
+	@Post('update/:id')
+	updateChannelInfos(
+		@GetUser() user,
+		@Param('id') id: string,
+		@Body() payload
+    ) {
+		console.log("update channel controller")
+		const channelId = parseInt(id);
+		if ((isNaN(channelId)))
+			throw new ForbiddenException("incorrect id sent : not a number");
+		console.log(user, channelId, payload);
+		return (this.channelService.updateChannelInfos(channelId, user.sub, payload));
+	}
 }

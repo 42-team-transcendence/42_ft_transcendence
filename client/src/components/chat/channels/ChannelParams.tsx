@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // =============================================================================
@@ -6,7 +6,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import PageWrapper from "../../navbar/pageWrapper";
 import NickModal from "../../profile/NicknameModal";
-import StatusModal from "./StatusModal";
+import StatusModal from "./ChannelParamsStatusModal";
+
+import { statuses, Status } from "../types";
 
 import ChannelParamsParticipants from "./ChannelParamsParticipants";
 import ChannelParamsAdmins from "./ChannelParamsAdmins";
@@ -27,35 +29,88 @@ export default function ChannelParams() {
 	const navigate = useNavigate();
     const location = useLocation(); //sert a recuperer le state passer avec useNavigate()
 
-    if (!location.state)
+    if (!location.state || !location.state.chatId)
         navigate('/chat');
+        
+    const [chatId, setChatId] = useState<number>(location.state.chatId);
+    const [name, setName] = useState<string>();
+    const [nameModal, setNameModal] = useState<boolean>(false);
 
-    const [name, setName] = useState(location.state.chat.channelInfo.name);
-    const [nameModal, setNameModal] = useState(false);
+    const [status, setStatus] = useState<Status>('PUBLIC');
+    const [statusModal, setStatusModal] = useState<boolean>(false);
+    const [pwd, setPwd] = useState<string>('');
 
-    const [status, setStatus] = useState(location.state.chat.channelInfo.status);
-    const [statusModal, setStatusModal] = useState(false);
-    const [pwd, setPwd] = useState(location.state.chat.channelInfo.password);
+    const [participants, setParticipants] = useState([]);
+    const [admins, setAdmins] = useState([]);
+    const [bans, setBans] = useState([]);
+    const [mutes, setMutes] = useState([]);
 
-    const [participants, setParticipants] = useState(location.state.chat.participants);
-    const [admins, setAdmins] = useState(location.state.chat.channelInfo.administrators);
-    const [bans, setBans] = useState(location.state.chat.channelInfo.bannedUsers);
-    const [mutes, setMutes] = useState(location.state.chat.channelInfo.mutedUsers);
+    //GET CURRENT CHANNEL
+    useEffect(() => {
+        const getChat = async () => {
+            const response = await axiosPrivate.get(`/chats/findById/${location.state.chatId}`, {
+                headers: { 'Content-Type': 'application/json'},
+                withCredentials: true
+            })
+            setChatElements(response.data);
+        }
+        getChat();
+    },[location.state.chatId])
+
+    const setChatElements = (channel:any) => {
+        setChatId(channel.id)
+        setName(channel.channelInfo.name);
+        setStatus(channel.channelInfo.status);
+        setPwd(channel.channelInfo.password ? channel.channelInfo.password: '');
+        setParticipants(channel.participants);
+        setAdmins(channel.channelInfo.administrators);
+        setBans(channel.channelInfo.bannedUsers);
+        setMutes(channel.channelInfo.mutedUsers);
+    }
 
 	const SaveName = async (newName: string) => {
-        setName(newName)
+        if (newName != name) {
+            try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({ name: newName }),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
+                    }
+                );
+                setName(newName)
+            } catch (err: any) {
+                console.log(err);
+            }
+        }
 		setNameModal(!nameModal);
 	};
 
-    const SaveStatus = async (newStatus: string, newPwd: string) => {
-        setStatus(newStatus)
-        setPwd(newPwd)
+    const SaveStatus = async (newStatus: Status, newPwd: string) => {
+        if (newStatus != status || newStatus === 'PROTECTED' && newPwd != pwd) {
+            try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({
+                        status: newStatus != status ? newStatus: null,
+                        password: newStatus === 'PROTECTED' && newPwd != pwd ? newPwd: null
+                    }), {
+                        headers: {'Content-Type': 'application/json'},withCredentials: true
+                    }
+                );
+                setStatus(newStatus)
+                if (newStatus === 'PROTECTED' && newPwd != pwd)
+                    setPwd(newPwd)
+            } catch (err: any) {
+                console.log(err);
+            }
+        }
 		setStatusModal(!statusModal);
 	};
 
     return (
-        <PageWrapper> {
-        location.state.chat && (
+        <PageWrapper> { 
+        participants && name && status && (pwd === '' || pwd) && admins && mutes && bans
+        && (
             <Box className="chan-creation-param-container">
                 <Box className="chan-param-subcontainer">
                     <div className="a-modifier">
@@ -67,8 +122,8 @@ export default function ChannelParams() {
                         <span className="modifier" onClick={() => setStatusModal(!statusModal)}>modifier</span>
                     </div>
                 </Box>
-
                 <ChannelParamsParticipants
+                    chatId={chatId}
                     participants={participants}
                     setParticipants={setParticipants}
                     admins={admins}
@@ -78,9 +133,9 @@ export default function ChannelParams() {
                     mutes={mutes}
                     setMutes={setMutes}
                 ></ChannelParamsParticipants>
-                <ChannelParamsAdmins admins={admins} setAdmins={setAdmins}></ChannelParamsAdmins>
-                <ChannelParamsMutes mutes={mutes} setMutes={setMutes}></ChannelParamsMutes>
-                <ChannelParamsBans bans={bans} setBans={setBans}></ChannelParamsBans>
+                <ChannelParamsAdmins chatId={chatId} admins={admins} setAdmins={setAdmins}></ChannelParamsAdmins>
+                <ChannelParamsMutes chatId={chatId} mutes={mutes} setMutes={setMutes}></ChannelParamsMutes>
+                <ChannelParamsBans chatId={chatId} bans={bans} setBans={setBans}></ChannelParamsBans>
 
                 <NickModal
                     open={nameModal}

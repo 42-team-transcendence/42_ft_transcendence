@@ -16,13 +16,27 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
-export default function ChannelParamsBans({bans, setBans}: {
+export default function ChannelParamsBans({chatId, bans, setBans}: {
+	chatId:number,
 	bans:any,
 	setBans:any,
 }) {
+	const axiosPrivate = useAxiosPrivate();
 
-	const handleDeleteMutes = (event:any, user:any) => {
-		setBans(bans.filter((ban:any)=> ban.id != user.id));
+	const handleDeleteMutes = async (event:any, user:any) => {
+		if (bans.find((e:any) => e.id === user.id)) {
+			try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({ oldBanned: user.id }),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
+                    }
+                );
+				setBans(bans.filter((ban:any)=> ban.id != user.id));
+            } catch (err: any) {
+                console.log(err);
+            }
+		}
     };
 
 	return (

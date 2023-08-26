@@ -14,21 +14,19 @@ import { statuses, Status } from "../types";
 import { MenuItem } from '@mui/material';
 
 export default function StatusModal({ data, open, onClose, onSave }: {
-  data:{status:string, pwd:string},
+  data:{status:Status, pwd:string},
   open:boolean,
   onClose: () => void;
-  onSave: (newStatus: string, newPwd: string) => void;
+  onSave: (newStatus: Status, newPwd: string) => any;
 }) {
   const [newStatus, setNewStatus] = useState(data.status);
   const [newPwd, setNewPwd] = useState(data.pwd);
   const [matchPwd, setMatchPwd] = useState<string>('');
   const [validMatch, setValidMatch] = useState<boolean>(false);
 
-  console.log(newStatus)
-
   useEffect(() => {
     setValidMatch(newPwd === matchPwd);
-}, [newPwd, matchPwd])
+  }, [newPwd, matchPwd])
 
   const handleSave = () => {
     onSave(newStatus, newPwd);

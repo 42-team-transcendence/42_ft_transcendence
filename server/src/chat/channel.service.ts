@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { disconnect } from "process";
 import { PrismaService } from "src/prisma/prisma.service";
 // import { CreateChatParams, } from "./chat";
 
@@ -56,7 +57,6 @@ export class ChannelService {
 					channelInfo : {
 						include : {
 							administrators: true,
-							kickedUsers: true,
 							bannedUsers: true,
 							mutedUsers: true,
 						}
@@ -84,6 +84,50 @@ export class ChannelService {
 					participants: true, // Include all participants in the returned object
 					channelInfo : true
 				},
+			})
+			console.log({updatedChan});
+			return updatedChan;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+	}
+
+	async updateChannelInfos(chatId: number, userId:number, payload:any) {
+		try {
+			const updatedChan = await this.prisma.channelInfo.update({
+				where: {chatId: chatId},
+				data: { //undefined = do not include this in the update:
+					name: payload.name? payload.name : undefined, // If there is no payload.name, don't include in update!
+					status: payload.status? payload.status : undefined,
+					password: payload.password? payload.password : undefined,
+					administrators: {//conditionnaly add or erase admin passed in payload
+						...(payload.newAdmin ? {connect: {id: payload.newAdmin}}: {}), //ternary + spread operator
+						...(payload.oldAdmin? {disconnect: {id: payload.oldAdmin}}: {})
+					},
+					mutedUsers: {
+						...(payload.newMuted ? {connect: {id: payload.newMuted}}: {}),
+						...(payload.oldMuted? {disconnect: {id: payload.oldMuted}}: {})
+					},
+					bannedUsers: {
+						...(payload.newBanned ? {connect: {id: payload.newBanned}}: {}),
+						...(payload.oldBanned? {disconnect: {id: payload.oldBanned}}: {})
+					},
+					chat: { 
+						update: {
+							participants: {
+								...(payload.newParticipant ? {connect: {id: payload.newParticipant}}: {}),
+								...(payload.oldParticipant? {disconnect: {id: payload.oldParticipant}}: {})
+							}
+						}
+					}
+				},
+				include: {
+					chat : {include: {participants : true},},
+					administrators : true,
+					mutedUsers: true,
+					bannedUsers: true
+				}
 			})
 			console.log({updatedChan});
 			return updatedChan;
