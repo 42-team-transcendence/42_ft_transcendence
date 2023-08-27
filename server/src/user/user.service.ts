@@ -184,8 +184,6 @@ export class UserService {
 	// 	}
 	// }
 	  
-	  
-	  
 	async uploadAvatar(file: any,  userId: number) {
 		try {
 			await this.prisma.user.update({
@@ -200,4 +198,12 @@ export class UserService {
 		}
 	}
 
+	async findPP (username: string) {
+		const user = await this.prisma.user.findUnique({
+			where: { nickname: username},
+			select: { avatar: true}
+        });
+        return user?.avatar;
+    }
 }
+

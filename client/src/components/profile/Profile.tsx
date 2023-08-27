@@ -238,6 +238,8 @@ function Profile() {
 					window.location.reload();
 					setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
 					console.log('Avatar update successful');
+					console.log('Constructed image URL:', `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`);
+
 			  	} else {
 					console.error('Avatar update failed');
 			  	}
@@ -284,7 +286,7 @@ function Profile() {
 	// 			console.log('no upload');
 	// 		}
 	// 	};
-
+	const imageUrl = `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`;
 
 	// =============================================================================
 	// RETURN ======================================================================
@@ -299,12 +301,13 @@ function Profile() {
 							// src={"storage/uploads/"+ user.avatar}
 							// src={process.env.PUBLIC_URL + user.avatar}
 							// src={`http://${process.env.localhost}:3000/api/public/picture/` + user.avatar}
-							src={`http://localhost:3000/api/public/picture/${user.avatar}`}
+							// src={`http://localhost:3000/api/public/picture/${user.avatar}`}
+							src={imageUrl} alt={`Profile of ${user.nickname}`}
 							// src="storage/uploads/368697414_247091924364906_7576220192864277534_n-a6d7.jpg"
 							// src={user.avatar}
 							// src='../../assets/tchoupi50x50.jpg'
 							// src="../../assets/alf50x50.jpg"
-							alt="Profile Image"
+							// alt="Profile Image"
 						/>
 						</label>
 						<input
