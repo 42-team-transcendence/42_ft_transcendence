@@ -81,19 +81,25 @@ export default function ChannelParamsParticipants(
 		setAnchorUserMenu(null);
     };
 
+	const eraseData = (userId: number) => {
+		let erase : {admin: null | number, mute: null | number} = {admin: null, mute: null};
+		if (admins.find((e:any) => e.id === userId)) {
+			erase.admin = userId;
+			setAdmins(admins.filter((e:any)=> userId != e.id));
+		}
+		if (mutes.find((e:any) => e.id === userId)) {
+			erase.mute = userId;
+			setMutes(mutes.filter((e:any)=> userId != e.id));
+		}
+		return erase;
+	}
+
 	const handleKick = async (kicked:any, ban:boolean) => {//kick out of participants
 		if (participants.find((e:any) => e.id === kicked.id)) {
 			try {
 				//if user is kicked, also need to strip of admins and mutes
-				let erase = {admin: null, mute: null };
-				if (admins.find((e:any) => e.id === kicked.id)) {
-					erase.admin = kicked.id;
-					setAdmins(admins.filter((user:any)=> kicked.id != user.id));
-				}
-				if (mutes.find((e:any) => e.id === kicked.id)) {
-					erase.mute = kicked.id;
-					setMutes(mutes.filter((user:any)=> kicked.id != user.id));
-				}
+				let erase = eraseData(kicked.id);
+				console.log({erase});
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
                     JSON.stringify({
@@ -116,9 +122,15 @@ export default function ChannelParamsParticipants(
 	const handleLeave = async () => {//leave this channel
 		if (participants.find((e:any) => e.id === currentUser.id)) {
 			try {
+				//if user leaves, also need to strip of admins and mutes
+				let erase = eraseData(currentUser.id);
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
-                    JSON.stringify({oldParticipant: currentUser.id,}),{
+                    JSON.stringify({
+						oldParticipant: currentUser.id,
+						oldAdmin: erase.admin,
+						oldMuted: erase.mute,
+					}),{
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
