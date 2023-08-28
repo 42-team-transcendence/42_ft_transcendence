@@ -197,7 +197,9 @@ heartBeat(roomName: string, gameInfo: GameInfo, client: Socket) {
 		player1Id = info.players[0].Id;
 		player2Id = info.players[1].Id;
 		player1Score = gameInfo.players[0].score;
+		console.log(`player1 id ${player1Id}`);
 		player2Score = gameInfo.players[1].score;
+		console.log(`player2 id ${player2Id}`);
 		if(player1Score > player2Score)
 			winnerId = player1Id;
 		else if(player1Score < player2Score)
@@ -235,7 +237,6 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
     @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ): string {
 
-    console.log("!! HERE == " + data.roomName);
     let info = this.rooms.get(data.roomName);
     //Add new socket connection to players list
     let paddleInstance: Paddle;

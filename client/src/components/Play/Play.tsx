@@ -76,7 +76,7 @@ const axiosPrivate = useAxiosPrivate();
 				query: {"Id": currentUser.id}
 			});
 		setSocket(newSocket)
-		console.log("!! SUB !! == " + currentUser.id);
+		console.log("!! current user ID !! == " + currentUser.id);
 		}
 	}, [currentUser])
 
