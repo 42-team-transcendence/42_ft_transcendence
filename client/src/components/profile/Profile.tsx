@@ -297,12 +297,13 @@ function Profile() {
 					<div className="avatar">
 					<label htmlFor="avatarInput">
 						<img
+						 	width= "150px"
 							className="img-profile"
 							// src={"storage/uploads/"+ user.avatar}
 							// src={process.env.PUBLIC_URL + user.avatar}
 							// src={`http://${process.env.localhost}:3000/api/public/picture/` + user.avatar}
-							// src={`http://localhost:3000/api/public/picture/${user.avatar}`}
-							src={imageUrl} alt={`Profile of ${user.nickname}`}
+							src={`http://localhost:3333/public/picture/${user.nickname}`}
+							// src={imageUrl} alt={`Profile of ${user.nickname}`}
 							// src="storage/uploads/368697414_247091924364906_7576220192864277534_n-a6d7.jpg"
 							// src={user.avatar}
 							// src='../../assets/tchoupi50x50.jpg'
