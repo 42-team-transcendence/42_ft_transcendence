@@ -31,7 +31,7 @@ export default function ChannelParams() {
 
     if (!location.state || !location.state.chatId)
         navigate('/chat');
-        
+
     const [chatId, setChatId] = useState<number>(location.state.chatId);
     const [name, setName] = useState<string>();
     const [nameModal, setNameModal] = useState<boolean>(false);
@@ -40,6 +40,7 @@ export default function ChannelParams() {
     const [statusModal, setStatusModal] = useState<boolean>(false);
     const [pwd, setPwd] = useState<string>('');
 
+    const [owner, setOwner] = useState();
     const [participants, setParticipants] = useState([]);
     const [admins, setAdmins] = useState([]);
     const [bans, setBans] = useState([]);
@@ -66,6 +67,7 @@ export default function ChannelParams() {
         setAdmins(channel.channelInfo.administrators);
         setBans(channel.channelInfo.bannedUsers);
         setMutes(channel.channelInfo.mutedUsers);
+        setOwner(channel.channelInfo.owner);
     }
 
 	const SaveName = async (newName: string) => {
@@ -108,7 +110,7 @@ export default function ChannelParams() {
 	};
 
     return (
-        <PageWrapper> { 
+        <PageWrapper> {
         participants && name && status && (pwd === '' || pwd) && admins && mutes && bans
         && (
             <Box className="chan-creation-param-container">
@@ -132,6 +134,8 @@ export default function ChannelParams() {
                     setBans={setBans}
                     mutes={mutes}
                     setMutes={setMutes}
+                    owner={owner}
+                    setOwner={setOwner}
                 ></ChannelParamsParticipants>
                 <ChannelParamsAdmins chatId={chatId} admins={admins} setAdmins={setAdmins}></ChannelParamsAdmins>
                 <ChannelParamsMutes chatId={chatId} mutes={mutes} setMutes={setMutes}></ChannelParamsMutes>

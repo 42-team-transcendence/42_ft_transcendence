@@ -20,6 +20,7 @@ import type {Message} from "../../utils/types"
 import {Box, Button} from "@mui/material";
 import { MessageLeft, MessageRight } from "./MessageStyle";
 import '../../styles/chat/Conversation.css'
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 //TODO : problème quand on utilise la search bar directement depuis la page du chat, et qu'on join un nouveau canal, et qu'on envoie un message : il ne s'affiche pas (probleme de socket ?)
@@ -146,7 +147,9 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 <>
                   {chat.participants.length > 0 && <GroupMiniature participants={chat.participants}></GroupMiniature>}
                   {chat.channelInfo &&
-                    <Button onClick={handleChannelTitleClick}>{chat.channelInfo.name}</Button>}
+                    <Button onClick={handleChannelTitleClick} endIcon={<SettingsIcon />}>
+                      {chat.channelInfo.name}
+                    </Button>}
                 </>
               )
             }

@@ -17,10 +17,12 @@ import SchoolIcon from '@mui/icons-material/School';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import BlockIcon from '@mui/icons-material/Block';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ClearIcon from '@mui/icons-material/Clear';
 
 
 export default function ChannelParamsParticipants(
-	{chatId, participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes}: {
+	{chatId, participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes, owner, setOwner}: {
 	chatId:number
 	participants:any,
 	setParticipants:any,
@@ -29,7 +31,9 @@ export default function ChannelParamsParticipants(
 	bans:any,
 	setBans:any,
 	mutes:any,
-	setMutes:any
+	setMutes:any,
+	owner:any,
+	setOwner:any
 }) {
 	const axiosPrivate = useAxiosPrivate();
 
@@ -101,7 +105,7 @@ export default function ChannelParamsParticipants(
                     }
                 );
 				setParticipants(participants.filter((user:any)=> user.id != kicked.id));
-				
+
             } catch (err: any) {
                 console.log(err);
             }
@@ -135,8 +139,7 @@ export default function ChannelParamsParticipants(
 						aria-expanded={openUserMenu ? 'true' : undefined}
 						onClick={(event) => handleClickUserMenu(event, user)}
 					>
-						<ListItemText primary={`options`} />
-						<KeyboardArrowDownIcon />
+						<MoreVertIcon />
 					</ListItemButton>
 					<Menu
 						id="chan_user_param_menu"
