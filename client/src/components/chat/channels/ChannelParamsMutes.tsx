@@ -14,11 +14,12 @@ import {IconButton, List, ListItem, ListItemButton, ListSubheader,} from '@mui/m
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-export default function ChannelParamsMutes({chatId, mutes, setMutes, currentUser}: {
+export default function ChannelParamsMutes({chatId, mutes, setMutes, currentUser, admins}: {
 	chatId:number,
 	mutes:any,
 	setMutes:any,
-	currentUser:any
+	currentUser:any,
+	admins:any
 }) {
 	const axiosPrivate = useAxiosPrivate();
 
@@ -49,7 +50,7 @@ export default function ChannelParamsMutes({chatId, mutes, setMutes, currentUser
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(user.id != currentUser.id) &&
+						{(user.id != currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
 							<ListItemButton onClick={(event)=>handleDeleteMutes(event, user)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />

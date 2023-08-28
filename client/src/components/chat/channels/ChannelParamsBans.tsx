@@ -16,11 +16,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
-export default function ChannelParamsBans({chatId, bans, setBans, currentUser}: {
+export default function ChannelParamsBans({chatId, bans, setBans, currentUser, admins}: {
 	chatId:number,
 	bans:any,
 	setBans:any,
 	currentUser:any
+	admins:any
 }) {
 	const axiosPrivate = useAxiosPrivate();
 
@@ -51,7 +52,7 @@ export default function ChannelParamsBans({chatId, bans, setBans, currentUser}: 
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(user.id != currentUser.id) &&
+						{(user.id != currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
 							<ListItemButton onClick={(event)=>handleDeleteBans(event, user)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />

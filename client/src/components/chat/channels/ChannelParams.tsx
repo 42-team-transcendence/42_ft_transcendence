@@ -135,11 +135,15 @@ export default function ChannelParams() {
                 <Box className="chan-param-subcontainer">
                     <div className="a-modifier">
                         <div>NAME: {name}</div>
-                        <span className="modifier" onClick={() => setNameModal(!nameModal)}>modifier</span>
+                        {admins.find((e:any) => e.id === currentUser.id) &&
+                            <span className="modifier" onClick={() => setNameModal(!nameModal)}>modifier</span>
+                        }
                     </div>
                     <div className="a-modifier">
                         <div>STATUS: {status}</div>
-                        <span className="modifier" onClick={() => setStatusModal(!statusModal)}>modifier</span>
+                        {(ownerId === currentUser.id) &&
+                            <span className="modifier" onClick={() => setStatusModal(!statusModal)}>modifier</span>
+                        }
                     </div>
                 </Box>
                 <ChannelParamsParticipants
@@ -162,8 +166,20 @@ export default function ChannelParams() {
                     ownerId={ownerId}
                     currentUser={currentUser}
                 ></ChannelParamsAdmins>
-                <ChannelParamsMutes chatId={chatId} mutes={mutes} setMutes={setMutes} currentUser={currentUser}></ChannelParamsMutes>
-                <ChannelParamsBans chatId={chatId} bans={bans} setBans={setBans} currentUser={currentUser}></ChannelParamsBans>
+                <ChannelParamsMutes
+                    chatId={chatId}
+                    mutes={mutes}
+                    setMutes={setMutes}
+                    currentUser={currentUser}
+                    admins={admins}
+                ></ChannelParamsMutes>
+                <ChannelParamsBans
+                    chatId={chatId}
+                    bans={bans}
+                    setBans={setBans}
+                    currentUser={currentUser}
+                    admins={admins}
+                ></ChannelParamsBans>
 
                 <NickModal
                     open={nameModal}

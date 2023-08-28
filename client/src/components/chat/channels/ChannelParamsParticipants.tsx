@@ -163,40 +163,41 @@ export default function ChannelParamsParticipants(
 				<ListItem key={"user_"+idx} disablePadding>
 					<Miniature miniatureUser={miniatureUser} ></Miniature>
 					{user.id != currentUser.id ? (
-					<>
-						<ListItemButton
-							id="chan_user_param_button"
-							aria-controls={openUserMenu ? 'chan_user_param_menu' : undefined}
-							aria-haspopup="true"
-							aria-expanded={openUserMenu ? 'true' : undefined}
-							onClick={(event) => handleClickUserMenu(event, user)}
-						>
-							<MoreVertIcon />
-						</ListItemButton>
-						<Menu
-							id="chan_user_param_menu"
-							anchorEl={anchorUserMenu}
-							open={openUserMenu}
-							onClose={() => setAnchorUserMenu(null)}
-						>
-							<MenuItem onClick={() => handleAddAdmin(userSelected)} disableRipple>
-								<SchoolIcon />
-								Set admin
-							</MenuItem>
-							<MenuItem onClick={() => handleMute(userSelected)} disableRipple>
-								<VolumeOffIcon />
-								Mute
-							</MenuItem>
-							<MenuItem onClick={() => handleKick(userSelected, false)} disableRipple>
-								<DeleteIcon />
-								Kick
-							</MenuItem>
-							<MenuItem onClick={() => handleBan(userSelected)} disableRipple>
-								<BlockIcon />
-								Ban
-							</MenuItem>
-						</Menu>
-					</>
+						admins.find((e:any) => e.id === currentUser.id ) && user.id != ownerId &&
+						<>
+							<ListItemButton
+								id="chan_user_param_button"
+								aria-controls={openUserMenu ? 'chan_user_param_menu' : undefined}
+								aria-haspopup="true"
+								aria-expanded={openUserMenu ? 'true' : undefined}
+								onClick={(event) => handleClickUserMenu(event, user)}
+							>
+								<MoreVertIcon />
+							</ListItemButton>
+							<Menu
+								id="chan_user_param_menu"
+								anchorEl={anchorUserMenu}
+								open={openUserMenu}
+								onClose={() => setAnchorUserMenu(null)}
+							>
+								<MenuItem onClick={() => handleAddAdmin(userSelected)} disableRipple>
+									<SchoolIcon />
+									Set admin
+								</MenuItem>
+								<MenuItem onClick={() => handleMute(userSelected)} disableRipple>
+									<VolumeOffIcon />
+									Mute
+								</MenuItem>
+								<MenuItem onClick={() => handleKick(userSelected, false)} disableRipple>
+									<DeleteIcon />
+									Kick
+								</MenuItem>
+								<MenuItem onClick={() => handleBan(userSelected)} disableRipple>
+									<BlockIcon />
+									Ban
+								</MenuItem>
+							</Menu>
+						</>
 					): (
 						<ListItemButton onClick={handleLeave}>
 							<IconButton edge="end" aria-label="delete">
