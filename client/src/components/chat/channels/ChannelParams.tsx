@@ -32,6 +32,8 @@ export default function ChannelParams() {
     if (!location.state || !location.state.chatId)
         navigate('/chat');
 
+    const [currentUser, setCurrentUser] = useState<any>();
+
     const [chatId, setChatId] = useState<number>(location.state.chatId);
     const [name, setName] = useState<string>();
     const [nameModal, setNameModal] = useState<boolean>(false);
@@ -40,7 +42,7 @@ export default function ChannelParams() {
     const [statusModal, setStatusModal] = useState<boolean>(false);
     const [pwd, setPwd] = useState<string>('');
 
-    const [owner, setOwner] = useState();
+    const [ownerId, setOwnerId] = useState<number>();
     const [participants, setParticipants] = useState([]);
     const [admins, setAdmins] = useState([]);
     const [bans, setBans] = useState([]);
@@ -54,6 +56,7 @@ export default function ChannelParams() {
                 withCredentials: true
             })
             setChatElements(response.data);
+            console.log(response.data);
         }
         getChat();
     },[location.state.chatId])
@@ -67,8 +70,23 @@ export default function ChannelParams() {
         setAdmins(channel.channelInfo.administrators);
         setBans(channel.channelInfo.bannedUsers);
         setMutes(channel.channelInfo.mutedUsers);
-        setOwner(channel.channelInfo.owner);
+        setOwnerId(channel.channelInfo.ownerId);
     }
+
+    useEffect(() => { //Fetch current user data
+		const getCurrentUser = async () => { //definition de la fonction
+			try {
+                const response = await axiosPrivate.get('/users/me', {
+                    headers: { 'Content-Type': 'application/json'},
+                    withCredentials: true
+                })
+                setCurrentUser(response.data);
+			} catch (error:any) {
+				console.log(error.response );
+			}
+		}
+		getCurrentUser(); //appel de la fonction
+    }, [])
 
 	const SaveName = async (newName: string) => {
         if (newName != name) {
@@ -112,7 +130,7 @@ export default function ChannelParams() {
     return (
         <PageWrapper> {
         participants && name && status && (pwd === '' || pwd) && admins && mutes && bans
-        && (
+        && ownerId && currentUser && (
             <Box className="chan-creation-param-container">
                 <Box className="chan-param-subcontainer">
                     <div className="a-modifier">
@@ -134,12 +152,18 @@ export default function ChannelParams() {
                     setBans={setBans}
                     mutes={mutes}
                     setMutes={setMutes}
-                    owner={owner}
-                    setOwner={setOwner}
+                    ownerId={ownerId}
+                    currentUser={currentUser}
                 ></ChannelParamsParticipants>
-                <ChannelParamsAdmins chatId={chatId} admins={admins} setAdmins={setAdmins}></ChannelParamsAdmins>
-                <ChannelParamsMutes chatId={chatId} mutes={mutes} setMutes={setMutes}></ChannelParamsMutes>
-                <ChannelParamsBans chatId={chatId} bans={bans} setBans={setBans}></ChannelParamsBans>
+                <ChannelParamsAdmins
+                    chatId={chatId}
+                    admins={admins}
+                    setAdmins={setAdmins}
+                    ownerId={ownerId}
+                    currentUser={currentUser}
+                ></ChannelParamsAdmins>
+                <ChannelParamsMutes chatId={chatId} mutes={mutes} setMutes={setMutes} currentUser={currentUser}></ChannelParamsMutes>
+                <ChannelParamsBans chatId={chatId} bans={bans} setBans={setBans} currentUser={currentUser}></ChannelParamsBans>
 
                 <NickModal
                     open={nameModal}

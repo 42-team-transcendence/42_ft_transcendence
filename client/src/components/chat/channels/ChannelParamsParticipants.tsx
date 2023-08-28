@@ -10,7 +10,7 @@ import Miniature from "../../miniature/Miniature";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem,} from '@mui/material';
+import {IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SchoolIcon from '@mui/icons-material/School';
@@ -22,7 +22,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 
 export default function ChannelParamsParticipants(
-	{chatId, participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes, owner, setOwner}: {
+	{chatId, participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes, ownerId, currentUser}: {
 	chatId:number
 	participants:any,
 	setParticipants:any,
@@ -32,9 +32,10 @@ export default function ChannelParamsParticipants(
 	setBans:any,
 	mutes:any,
 	setMutes:any,
-	owner:any,
-	setOwner:any
+	ownerId:number,
+	currentUser:any
 }) {
+	const navigate = useNavigate();
 	const axiosPrivate = useAxiosPrivate();
 
     const [anchorUserMenu, setAnchorUserMenu] = useState<null | HTMLElement>(null);
@@ -105,13 +106,30 @@ export default function ChannelParamsParticipants(
                     }
                 );
 				setParticipants(participants.filter((user:any)=> user.id != kicked.id));
-
             } catch (err: any) {
                 console.log(err);
             }
 		}
 		setAnchorUserMenu(null);
     };
+
+	const handleLeave = async () => {//leave this channel
+		if (participants.find((e:any) => e.id === currentUser.id)) {
+			try {
+                const response = await axiosPrivate.post(
+                    `channels/update/${chatId}`,
+                    JSON.stringify({oldParticipant: currentUser.id,}),{
+                        headers: {'Content-Type': 'application/json'}, withCredentials: true
+                    }
+                );
+				setParticipants(participants.filter((user:any)=> user.id != currentUser.id));
+				navigate('/chat');
+            } catch (err: any) {
+                console.log(err);
+            }
+		}
+    };
+
 
 	const handleBan = (banned:any) => { //Add to banned list and kick out of chan
 		if (!bans.find((e:any) => e.id === banned.id)) {
@@ -132,39 +150,48 @@ export default function ChannelParamsParticipants(
 			return (
 				<ListItem key={"user_"+idx} disablePadding>
 					<Miniature miniatureUser={miniatureUser} ></Miniature>
-					<ListItemButton
-						id="chan_user_param_button"
-						aria-controls={openUserMenu ? 'chan_user_param_menu' : undefined}
-						aria-haspopup="true"
-						aria-expanded={openUserMenu ? 'true' : undefined}
-						onClick={(event) => handleClickUserMenu(event, user)}
-					>
-						<MoreVertIcon />
-					</ListItemButton>
-					<Menu
-						id="chan_user_param_menu"
-						anchorEl={anchorUserMenu}
-						open={openUserMenu}
-						onClose={() => setAnchorUserMenu(null)}
-					>
-						<MenuItem onClick={() => handleAddAdmin(userSelected)} disableRipple>
-							<SchoolIcon />
-							Set admin
-						</MenuItem>
-						<MenuItem onClick={() => handleMute(userSelected)} disableRipple>
-							<VolumeOffIcon />
-							Mute
-						</MenuItem>
-						<MenuItem onClick={() => handleKick(userSelected, false)} disableRipple>
-							<DeleteIcon />
-							Kick
-						</MenuItem>
-						<MenuItem onClick={() => handleBan(userSelected)} disableRipple>
-							<BlockIcon />
-							Ban
-						</MenuItem>
-					</Menu>
-
+					{user.id != currentUser.id ? (
+					<>
+						<ListItemButton
+							id="chan_user_param_button"
+							aria-controls={openUserMenu ? 'chan_user_param_menu' : undefined}
+							aria-haspopup="true"
+							aria-expanded={openUserMenu ? 'true' : undefined}
+							onClick={(event) => handleClickUserMenu(event, user)}
+						>
+							<MoreVertIcon />
+						</ListItemButton>
+						<Menu
+							id="chan_user_param_menu"
+							anchorEl={anchorUserMenu}
+							open={openUserMenu}
+							onClose={() => setAnchorUserMenu(null)}
+						>
+							<MenuItem onClick={() => handleAddAdmin(userSelected)} disableRipple>
+								<SchoolIcon />
+								Set admin
+							</MenuItem>
+							<MenuItem onClick={() => handleMute(userSelected)} disableRipple>
+								<VolumeOffIcon />
+								Mute
+							</MenuItem>
+							<MenuItem onClick={() => handleKick(userSelected, false)} disableRipple>
+								<DeleteIcon />
+								Kick
+							</MenuItem>
+							<MenuItem onClick={() => handleBan(userSelected)} disableRipple>
+								<BlockIcon />
+								Ban
+							</MenuItem>
+						</Menu>
+					</>
+					): (
+						<ListItemButton onClick={handleLeave}>
+							<IconButton edge="end" aria-label="delete">
+								<DeleteIcon />
+							</IconButton>
+						</ListItemButton>
+					)}
 				</ListItem>
 			)})}
 	</List>
