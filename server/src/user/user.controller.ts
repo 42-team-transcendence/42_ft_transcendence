@@ -6,6 +6,7 @@ import { GetUser } from "../auth/decorator"
 import { UserService } from "./user.service";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express'; 
+import { MulterConfig } from './middlewares';
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts. 
 @Controller('users') // définit la route "/users" de l'API
@@ -153,13 +154,17 @@ export class UserController {
 
 	@HttpCode(HttpStatus.OK)
 	@Post('uploadAvatar')
+	@UseInterceptors(
+		FileInterceptor('avatar', MulterConfig)
+	)
 	async uploadAvatar(
-		@Body() body: {avatar: string},
+		// @Body() body: {avatar: string},
+		@UploadedFile() file: any,
 		@GetUser() user
 	) {
-		const { avatar } = body;
-		console.log(`Avatar = ${avatar}`);
-		await this.userService.uploadAvatar(avatar, user.sub);
+
+		console.log(`Avatar file = ${file}`);
+		await this.userService.uploadAvatar(file, user.sub);
 	}
 
 	// @Post('uploadAvatar')

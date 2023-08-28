@@ -184,15 +184,13 @@ export class UserService {
 	// 	}
 	// }
 	  
-	  
-	  
-	async uploadAvatar(avatar: string,  userId: number) {
+	async uploadAvatar(file: any,  userId: number) {
 		try {
 			await this.prisma.user.update({
 				where: {id: userId},
-				data: { avatar: avatar }
+				data: { avatar: file.path }
 			});
-			console.log("avatar url = ", avatar);
+			console.log("avatar url = ", file.path);
 			console.log(`Avatar updated successfully for user with ID: ${userId}`);
 			
 		} catch (error) {
@@ -200,4 +198,12 @@ export class UserService {
 		}
 	}
 
+	async findPP (username: string) {
+		const user = await this.prisma.user.findUnique({
+			where: { nickname: username},
+			select: { avatar: true}
+        });
+        return user?.avatar;
+    }
 }
+

@@ -220,48 +220,73 @@ function Profile() {
 	// AVATAR ======================================================================
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
-		console.log("ici");
+
 		if (file) {
 			console.log("file = ", file);
 		  	setSelectedFile(file);
-		}
-	};
-	  
-	const handleUpload = async (formData: FormData) => {
-		console.log({formData});
-		try {
-		  	const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
-				headers: {'Content-Type': 'multipart/form-data'},
-				withCredentials: true,
-		  	});
-			console.log("reponse avatar, ", {response});
-			if (response.status === 200) {
-				setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
-				console.log('Avatar update successful');
-			} else {
-				console.error('Avatar update failed');
-			}
+			const formData = new FormData();
+			formData.append('avatar', file);
+			try {
+				const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
+					headers: {'Content-Type': 'multipart/form-data'},
+					withCredentials: true,
+				});
+			  	console.log("reponse avatar, ", {response});
+				if (response.status === 200) {
+					window.location.reload();
+					setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
+					console.log('Avatar update successful');
+					console.log('Constructed image URL:', `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`);
+
+			  	} else {
+					console.error('Avatar update failed');
+			  	}
 			} catch (error) {
 				console.error('Error updating avatar:', error);
 			}
-	 	};
-	  
-		const handleUploadClick = () => {
-			
-			console.log("selected file = ", selectedFile)
-			if (selectedFile) {;
-				const formData = new FormData();
-				formData.append('avatar', selectedFile);
-				handleUpload(formData);
-			}
-			else
-			{
-				console.log('no upload');
-			}
+	
 		};
 
+	}
+	// };
+	  
+	// const handleUpload = async (formData: FormData) => {
+	// 	console.log({formData});
+	// 	try {
+	// 	  	const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
+	// 			headers: {'Content-Type': 'multipart/form-data'},
+	// 			withCredentials: true,
+	// 	  	});
+	// 		console.log("reponse avatar, ", {response});
+	// 		if (response.status === 200) {
+	// 			window.location.reload();
+	// 			setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
+	// 			console.log('Avatar update successful');
+	// 		} else {
+	// 			console.error('Avatar update failed');
+	// 		}
+	// 		} catch (error) {
+	// 			console.error('Error updating avatar:', error);
+	// 		}
+	//  	};
+	  
+	// 	const handleUploadClick = () => {
+			
+	// 		console.log("selected file = ", selectedFile)
+	// 		if (selectedFile) {;
+	// 			const formData = new FormData();
+	// 			formData.append('avatar', selectedFile);
+	// 			console.log('formData:', formData);
+	// 			handleUpload(formData);
+	// 		}
+	// 		else
+	// 		{
+	// 			console.log('no upload');
+	// 		}
+	// 	};
+	const imageUrl = `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`;
 
 	// =============================================================================
 	// RETURN ======================================================================
@@ -272,9 +297,18 @@ function Profile() {
 					<div className="avatar">
 					<label htmlFor="avatarInput">
 						<img
+						 	width= "150px"
 							className="img-profile"
-							src={user.avatar}
-							alt="Profile Image"
+							// src={"storage/uploads/"+ user.avatar}
+							// src={process.env.PUBLIC_URL + user.avatar}
+							// src={`http://${process.env.localhost}:3000/api/public/picture/` + user.avatar}
+							src={`http://localhost:3333/public/picture/${user.nickname}`}
+							// src={imageUrl} alt={`Profile of ${user.nickname}`}
+							// src="storage/uploads/368697414_247091924364906_7576220192864277534_n-a6d7.jpg"
+							// src={user.avatar}
+							// src='../../assets/tchoupi50x50.jpg'
+							// src="../../assets/alf50x50.jpg"
+							// alt="Profile Image"
 						/>
 						</label>
 						<input
@@ -283,8 +317,9 @@ function Profile() {
 							style={{ display: 'none' }}
 							accept="image/*"
 							onChange={handleFileChange}
+						
 						/>
-						<button onClick={handleUploadClick}>ici</button>
+						{/* <button onClick={handleUploadClick}>ici</button> */}
 				
 						
 						<div className="avater-info">
@@ -337,7 +372,7 @@ function Profile() {
 					</div>
 				</div>
 				</div>
-				<GameHistory/>
+				{/* <GameHistory/> */}
 			</div>
 
 			{/* Render the EmailModal component */}
@@ -365,3 +400,43 @@ function Profile() {
 }
 
 export default Profile;
+
+
+// const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+// const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+// 	const file = event.target.files?.[0];
+// 	console.log("ici");
+// 	if (file) {
+// 		const formData = new FormData();
+// 		formData.append('avatar', file);
+// 		console.log('formData:', formData);
+// 		handleUpload(formData);
+// 	}
+// 	else
+// 	{
+// 		console.log('no upload');
+// 	}
+
+// };
+  
+// const handleUpload = async (formData: FormData) => {
+// 	console.log({formData});
+// 	try {
+// 		  const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
+// 			headers: {'Content-Type': 'multipart/form-data'},
+// 			withCredentials: true,
+// 		  });
+// 		console.log("reponse avatar, ", {response});
+// 		if (response.status === 200) {
+// 			window.location.reload();
+// 			setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
+// 			console.log('Avatar update successful');
+// 		} else {
+// 			console.error('Avatar update failed');
+// 		}
+// 		} catch (error) {
+// 			console.error('Error updating avatar:', error);
+// 		}
+// 	 };
+  
