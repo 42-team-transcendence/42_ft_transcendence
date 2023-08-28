@@ -31,7 +31,6 @@ export default function ChannelParamsParticipants({chatId, admins, setAdmins, ow
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-                console.log('saveNameInDb', response.data);
 				setAdmins(admins.filter((admin:any)=> admin.id != user.id));
             } catch (err: any) {
                 console.log(err);

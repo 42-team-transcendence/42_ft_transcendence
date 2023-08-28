@@ -56,7 +56,6 @@ export default function ChannelParams() {
                 withCredentials: true
             })
             setChatElements(response.data);
-            console.log(response.data);
         }
         getChat();
     },[location.state.chatId])

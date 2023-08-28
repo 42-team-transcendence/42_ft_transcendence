@@ -99,7 +99,6 @@ export default function ChannelParamsParticipants(
 			try {
 				//if user is kicked, also need to strip of admins and mutes
 				let erase = eraseData(kicked.id);
-				console.log({erase});
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
                     JSON.stringify({

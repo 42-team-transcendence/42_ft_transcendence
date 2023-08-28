@@ -35,9 +35,6 @@ export default function ChatChannels() {
 	else if (location.state && location.state.channelId) //Cas pour affichage du channel
 		channelId = location.state.channelId;
 
-	console.log({location});
-    console.log({recipientId, channelId});
-
 	//GET CURRENT CHAT/CHANNEL CONVERSATION
     useEffect(() => { //If chat with recipientId does not exist, creates it
         const findOrCreateChat = async () => { //definition de la fonction
@@ -55,7 +52,6 @@ export default function ChatChannels() {
 						headers: { 'Content-Type': 'application/json'},
 						withCredentials: true
 					})
-					console.log("current_chat", response.data);
                     setCurrentChat(response.data);
                     setChatFound(true);
 				}
@@ -74,7 +70,6 @@ export default function ChatChannels() {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 })
-				console.log({findAllMyChats:response.data})
                 setMyChats(response.data);
 			} catch (error:any) {
 				console.log(error.response );

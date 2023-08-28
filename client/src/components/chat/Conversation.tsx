@@ -63,16 +63,13 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 auth: {token: "//TODO : gérer les tokens d'authentification ici"},
                 query: {"userId": currentUser.id}
             });
-        console.log({newChatSocket});
         setChatSocket(newChatSocket)
     }, [setChatSocket])
 
     //On Connect : actions supplémentaires possibles à la connexion de la socket client
     useEffect(() => {
         function onConnect() {
-            console.log("socket onConnect useEffect")
             // setSocketIsConnected(true);
-
             const userData = {
                 userId : currentUser.id,
                 socketId : chatSocket?.id
@@ -90,7 +87,6 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             senderId: currentUser.id,
             chatId: chat.id
         }
-        console.log({payload})
         chatSocket?.emit("message", payload)
         //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
         // setMessages([...messages, {content: value, senderId: currentUser.id, chatId: chat.id}])
@@ -98,7 +94,6 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Réception et stockage des messages par le client
     const messageListener = (message:Message) => {
-      console.log("mesage received", message)
         setMessages([...messages, message])
     }
     useEffect(() => {

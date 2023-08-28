@@ -50,6 +50,7 @@ export default function ChannelCreation() {
             setNameErrorText("");
         }
         try {
+            console.log({pwd});
             const response = await axiosPrivate.post(
                 CHANNEL_CREATION_ROUTE,
                 JSON.stringify({ name, status, password: pwd}),

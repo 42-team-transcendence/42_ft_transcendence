@@ -24,6 +24,7 @@ export class ChannelService {
 						create: {
 							name: payload.name,
 							status: payload.status,
+							password: payload.status? payload.password: undefined, // If undefined, does not include field in update!
 							owner: {
 								connect: {id: creatorId}
 							},
@@ -113,7 +114,7 @@ export class ChannelService {
 						...(payload.newBanned ? {connect: {id: payload.newBanned}}: {}),
 						...(payload.oldBanned? {disconnect: {id: payload.oldBanned}}: {})
 					},
-					chat: { 
+					chat: {
 						update: {
 							participants: {
 								...(payload.newParticipant ? {connect: {id: payload.newParticipant}}: {}),
