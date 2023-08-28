@@ -10,7 +10,7 @@ import { Box, Table, TableHead, TableBody, TableRow, TableCell, Paper } from "@m
 function Leaderboard() {
   const axiosPrivate = useAxiosPrivate();
   const [leaderboardData, setLeaderboardData] = useState<
-    { rank: string; name: string; score: number }[]
+    { rank: string; name: string; score: number, id: number }[]
   >([]);
 
   useEffect(() => {
@@ -46,6 +46,7 @@ function Leaderboard() {
           .map((user: any) => ({
             rank: "",
             name: user.nickname,
+			id: user.id,
             score: winCount[user.id] ? winCount[user.id] * 100 : 0,
           }))
           .sort((a: any, b: any) => b.score - a.score);
@@ -75,7 +76,15 @@ function Leaderboard() {
             {leaderboardData.map((user, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{user.name}</TableCell>
+                <TableCell>
+					{/* {user.name} */}
+					<Miniature miniatureUser={{
+					nickname: user.name,
+					id: user.id,
+					minAvatar: {url: tchoupi, name:'Tchoupi'}
+				}}
+				></Miniature>
+					</TableCell>
                 <TableCell>{user.score}</TableCell>
               </TableRow>
             ))}
