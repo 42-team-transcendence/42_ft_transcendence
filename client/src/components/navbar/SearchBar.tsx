@@ -99,7 +99,8 @@ export default function SearchAppBar() {
                 withCredentials: true
             }
         );
-        setSearchResults(response.data);
+        const chansNotPrivate = response.data.filter((e:any)=>e.channelInfo.status != "PRIVATE")
+        setSearchResults(chansNotPrivate);
         } catch (err: any) {
             console.log(err);
         }
