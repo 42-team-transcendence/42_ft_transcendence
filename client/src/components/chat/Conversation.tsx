@@ -172,7 +172,10 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             }
             </Box>
             <Box>
-              <MessageInput send={send}></MessageInput>
+            {  !isChat && chat.channelInfo.mutedUsers.find((e:any)=>e.id === currentUser.id) ? (
+                "YOU ARE MUTED!"
+              ) : <MessageInput send={send}></MessageInput>
+            }
             </Box>
           </>
         ) : (

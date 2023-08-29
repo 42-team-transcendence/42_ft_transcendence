@@ -55,10 +55,18 @@ export default function ChannelParams() {
                 headers: { 'Content-Type': 'application/json'},
                 withCredentials: true
             })
+            //Si currentUser ne fait pas parti du channel 
+            //ou est ban du channel, redirection hors du channel
+            if (
+                !response.data.participants.find((e:any)=>e.id === currentUser.id) ||
+                response.data.channelInfo.bannedUsers.find((e:any)=>e.id === currentUser.id)
+            )
+                navigate('/chat');
             setChatElements(response.data);
         }
-        getChat();
-    },[location.state.chatId])
+        if (currentUser)
+            getChat();
+    },[location.state.chatId, currentUser])
 
     const setChatElements = (channel:any) => {
         setChatId(channel.id)

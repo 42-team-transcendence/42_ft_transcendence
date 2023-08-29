@@ -2,12 +2,14 @@ import { Controller, ForbiddenException, Get, Post, UseGuards, Body, Param, } fr
 import { JwtGuard } from "../auth/guard";
 import { GetUser } from "../auth/decorator"
 import { ChannelService } from "./channel.service";
+import { ChatService } from "./chat.service";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('channels') // définit la route "/channels" de l'API
 export class ChannelController {
 	constructor (
-		private channelService: ChannelService
+		private channelService: ChannelService,
+		private chatService: ChatService,
 	) {}
 
 	@Post('create')
@@ -26,16 +28,22 @@ export class ChannelController {
 	}
 
 	@Post('join/:id')
-	joinChannel(
+	async joinChannel(
 		@GetUser() user,
 		@Param('id') id: string
     ) {
-		console.log("join channel controller")
-		const channelId = parseInt(id);
-		if ((isNaN(channelId)))
-			throw new ForbiddenException("incorrect id sent : not a number");
-		console.log(user, channelId);
-		return (this.channelService.joinChannel(channelId, user.sub));
+		try {
+			const channelId = parseInt(id);
+			if ((isNaN(channelId)))
+				throw new ForbiddenException("incorrect id sent : not a number");
+			
+			const chat = await this.chatService.findChatById(channelId);
+			if (chat.channelInfo.bannedUsers.find((e:any)=>e.id === user.sub))
+				throw new ForbiddenException(`user is banned from channel ${chat.channelInfo.name}`);
+			return (this.channelService.joinChannel(channelId, user.sub));
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	@Post('update/:id')

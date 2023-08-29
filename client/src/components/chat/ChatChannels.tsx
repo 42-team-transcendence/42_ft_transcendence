@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { redirect } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -20,6 +21,7 @@ import '../../styles/chat/ChatChannel.css';
 
 export default function ChatChannels() {
 	const axiosPrivate = useAxiosPrivate();
+	const navigate = useNavigate();
 
 	const [myChats, setMyChats] = useState<any>();
 	const [chatFound, setChatFound] = useState<boolean>(false)
@@ -52,8 +54,16 @@ export default function ChatChannels() {
 						headers: { 'Content-Type': 'application/json'},
 						withCredentials: true
 					})
-                    setCurrentChat(response.data);
-                    setChatFound(true);
+					console.log("bannedUsers", response.data.channelInfo.bannedUsers)
+					//Si currentUser ne fait pas parti du channel 
+					//ou est ban du channel, redirection hors du channel
+					if (
+						!response.data.participants.find((e:any)=>e.id === currentUser.id) ||
+						response.data.channelInfo.bannedUsers.find((e:any)=>e.id === currentUser.id)
+					)
+						return redirect("/chat");
+					setCurrentChat(response.data);
+					setChatFound(true);
 				}
             } catch (error:any) {
                 console.log(error.response );
@@ -72,7 +82,7 @@ export default function ChatChannels() {
                 })
                 setMyChats(response.data);
 			} catch (error:any) {
-				console.log(error.response );
+				console.log(error.response);
 			}
 		}
 		findAllMyChats(); //appel de la fonction
