@@ -4,8 +4,8 @@ import { redirect } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
-import Conversation from "./Conversation";
-import ChatSidebar from "./ChatSidebar";
+import Conversation from "./conversation/Conversation";
+import ChatSidebar from "./chatSidebar/ChatSidebar";
 import PageWrapper from "../navbar/pageWrapper";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
@@ -102,17 +102,16 @@ export default function ChatChannels() {
 		getCurrentUser(); //appel de la fonction
     }, [])
 
-	useEffect(() => { //Style : resize window
-	  const handleResize = () => {
-		setShowChatSidebar(window.innerWidth > 768);
-	  };
-
-	  window.addEventListener("resize", handleResize);
-	  handleResize(); // Call handleResize immediately to set initial state
-	  return () => {
-		window.removeEventListener("resize", handleResize);
-	  };
-	}, []);
+	// useEffect(() => { //Style : resize window
+	//   const handleResize = () => {
+	// 	setShowChatSidebar(window.innerWidth > 768);
+	//   };
+	//   window.addEventListener("resize", handleResize);
+	//   handleResize(); // Call handleResize immediately to set initial state
+	//   return () => {
+	// 	window.removeEventListener("resize", handleResize);
+	//   };
+	// }, []);
 
 	return (
 		<PageWrapper>
@@ -121,25 +120,19 @@ export default function ChatChannels() {
 				<ChatSidebar
 					myChats={myChats}
 					currentUser={currentUser}
+					showChatSidebar={showChatSidebar}
+					setShowChatSidebar={setShowChatSidebar}
 				></ChatSidebar>
 				)}
 				<Box className="chat-box"></Box>
 				<Box
 					className={`chat-content ${showChatSidebar ? 'hidden' : ''}`}
-					sx={{
-
-						width:"100%",
-						height: "100%",
-						// justifyContent : currentChat? 'space-between': 'center',
-
-					}}
+					sx={{width:"100%", height: "100%"}}
 				>
 				{currentChat && !showChatSidebar && (
 					<IconButton
 						className="back-button"
-						onClick={() => {
-							setShowChatSidebar(true);
-						}}
+						onClick={()=>setShowChatSidebar(true)}
 					>
 					<ArrowBackIcon />
 					</IconButton>

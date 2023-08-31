@@ -3,29 +3,32 @@ import { Container, Box } from "@mui/material";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
-import Miniature from "../miniature/Miniature";
-import tchoupi from '../../assets/tchoupi50x50.jpg'
+import Miniature from "../../miniature/Miniature";
+import tchoupi from '../../../assets/tchoupi50x50.jpg'
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { CenterFocusStrong } from "@mui/icons-material";
-import  "../../styles/chat/ChatMiniature.css";
+import  "../../../styles/chat/ChatMiniature.css";
 
 
 
 // =============================================================================
 // FUNCTION ====================================================================
 
-export default function ChatMiniature({notif, nickname, lastMessage, userId}: {
+export default function ChatMiniature({notif, nickname, lastMessage, userId, showChatSidebar, setShowChatSidebar}: {
     notif:boolean,
     nickname:string,
     lastMessage:string,
-    userId:number
+    userId:number,
+    showChatSidebar:any,
+    setShowChatSidebar:any,
 }) {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        //TODO : change/toggle hidden class here to make conversation appear
+        if (window.innerWidth < 768)
+            setShowChatSidebar(!showChatSidebar);
 		navigate('/chat', {state: {recipientId: userId}});
     }
 

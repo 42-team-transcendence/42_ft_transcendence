@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import ChatMiniature from "./ChatMiniature";
+import ChannelMiniature from "./ChannelMiniature";
+import CustomButton from "../../../styles/buttons/CustomButton";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import "../../styles/chat/ChatSidebar.css"
-import CustomButton from "../../styles/buttons/CustomButton";
-import ChannelMiniature from "./ChannelMiniature";
+import "../../../styles/chat/ChatSidebar.css"
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -19,9 +19,13 @@ import ChannelMiniature from "./ChannelMiniature";
 export default function ChatSidebar({
   myChats,
   currentUser,
+  showChatSidebar,
+  setShowChatSidebar
 }: {
   myChats: any;
   currentUser: any;
+  showChatSidebar:any;
+  setShowChatSidebar:any;
 }) {
 	const navigate = useNavigate();
 
@@ -53,6 +57,8 @@ export default function ChatSidebar({
 									? chat.messages[chat.messages.length - 1].message
 									: ""
 								}
+								showChatSidebar={showChatSidebar}
+								setShowChatSidebar={setShowChatSidebar}
 							></ChatMiniature>
 					);}
 				} else { //CHANNEL
@@ -68,6 +74,8 @@ export default function ChatSidebar({
 								? chat.messages[chat.messages.length - 1].message
 								: ""
 							}
+							showChatSidebar={showChatSidebar}
+							setShowChatSidebar={setShowChatSidebar}
 						></ChannelMiniature>
 					)
 				}

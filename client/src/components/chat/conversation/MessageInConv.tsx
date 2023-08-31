@@ -1,7 +1,7 @@
 import {Box, styled} from '@mui/material'
-import Miniature from "../miniature/Miniature";
+import Miniature from "../../miniature/Miniature";
 
-import tchoupi from '../../assets/tchoupi50x50.jpg'
+import tchoupi from '../../../assets/tchoupi50x50.jpg'
 import alf from '../../assets/alf50x50.jpg'
 
 const MsgInConv = styled('div')(({ theme }) => ({

@@ -3,26 +3,28 @@ import { Container, Box, AvatarGroup, Avatar } from "@mui/material";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
-import tchoupi from '../../assets/tchoupi50x50.jpg'
+import tchoupi from '../../../assets/tchoupi50x50.jpg'
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { CenterFocusStrong } from "@mui/icons-material";
-import  "../../styles/chat/ChatMiniature.css";
-import BadgeAvatar from "../miniature/BadgeAvatar";
-import GroupMiniature from "../miniature/GroupMiniature";
+import  "../../../styles/chat/ChatMiniature.css";
+import BadgeAvatar from "../../miniature/BadgeAvatar";
+import GroupMiniature from "../../miniature/GroupMiniature";
 
 
 
 // =============================================================================
 // FUNCTION ====================================================================
 
-export default function ChannelMiniature({notif, channelName, lastMessage, channelId, participants}: {
+export default function ChannelMiniature({notif, channelName, lastMessage, channelId, participants, showChatSidebar, setShowChatSidebar}: {
     notif:boolean,
     channelName:string,
     lastMessage:string,
     channelId:number,
-    participants:any
+    participants:any,
+    showChatSidebar:any,
+    setShowChatSidebar:any,
 }) {
     const navigate = useNavigate();
 
@@ -30,7 +32,8 @@ export default function ChannelMiniature({notif, channelName, lastMessage, chann
 
         <Box
             onClick={() => {
-                //TODO : change/toggle hidden class here to make conversation appear
+                if (window.innerWidth < 768)
+                    setShowChatSidebar(!showChatSidebar);
                 navigate('/chat', {state: {channelId}});
             }}
             sx={{

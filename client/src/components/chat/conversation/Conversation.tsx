@@ -7,19 +7,19 @@ import { useNavigate } from "react-router-dom";
 // IMPORT COMPONENTS ===========================================================
 import MessageInput from "./MessageInput";
 import MessageInConv from "./MessageInConv";
-import Miniature from "../miniature/Miniature";
-import tchoupi from '../../assets/tchoupi50x50.jpg'
-import GroupMiniature from "../miniature/GroupMiniature";
+import Miniature from "../../miniature/Miniature";
+import tchoupi from '../../../assets/tchoupi50x50.jpg'
+import GroupMiniature from "../../miniature/GroupMiniature";
 
 // =============================================================================
 // IMPORT TYPES ===============================================================
-import type {Message} from "../../utils/types"
+import type {Message} from "../../../utils/types"
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box, Button} from "@mui/material";
 import { MessageLeft, MessageRight } from "./MessageStyle";
-import '../../styles/chat/Conversation.css'
+import '../../../styles/chat/Conversation.css'
 import SettingsIcon from '@mui/icons-material/Settings';
 
 

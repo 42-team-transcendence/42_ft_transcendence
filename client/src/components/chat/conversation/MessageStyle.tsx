@@ -3,11 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 
 import {Box} from "@mui/material";
-
-import tchoupi from '../../assets/tchoupi50x50.jpg'
-
-import Miniature from "../miniature/Miniature";
-import BadgeAvatar from "../miniature/BadgeAvatar";
+import BadgeAvatar from "../../miniature/BadgeAvatar";
 
 type MessageProps = {
   message: string;
