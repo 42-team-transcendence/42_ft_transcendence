@@ -137,7 +137,7 @@ export default function ChannelParamsParticipants(
 				if (erase.mute) {
 					const eraseMute = await axiosPrivate.post(
 						`channels/updateMutes/${chatId}`,
-						JSON.stringify({oldMuted: erase.mute}),
+						JSON.stringify({oldMuted: erase.mute, channelInfoId}),
 						{headers: {'Content-Type': 'application/json'}, withCredentials: true}
 					);
 				}
