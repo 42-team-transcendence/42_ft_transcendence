@@ -372,7 +372,7 @@ function Profile() {
 					</div>
 				</div>
 				</div>
-				{/* <GameHistory/> */}
+				<GameHistory/>
 			</div>
 
 			{/* Render the EmailModal component */}
