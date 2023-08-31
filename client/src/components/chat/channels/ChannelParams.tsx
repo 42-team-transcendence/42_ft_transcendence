@@ -35,7 +35,9 @@ export default function ChannelParams() {
     const [currentUser, setCurrentUser] = useState<any>();
 
     const [chatId, setChatId] = useState<number>(location.state.chatId);
+    const [channelInfoId, setChannelInfoId] = useState<number>();
     const [name, setName] = useState<string>();
+    
     const [nameModal, setNameModal] = useState<boolean>(false);
 
     const [status, setStatus] = useState<Status>('PUBLIC');
@@ -63,6 +65,7 @@ export default function ChannelParams() {
             )
                 navigate('/chat');
             setChatElements(response.data);
+            console.log(response.data);
         }
         if (currentUser)
             getChat();
@@ -71,6 +74,7 @@ export default function ChannelParams() {
     const setChatElements = (channel:any) => {
         setChatId(channel.id)
         setName(channel.channelInfo.name);
+        setChannelInfoId(channel.channelInfo.id);
         setStatus(channel.channelInfo.status);
         setPwd(channel.channelInfo.password ? channel.channelInfo.password: '');
         setParticipants(channel.participants);
@@ -137,7 +141,7 @@ export default function ChannelParams() {
     return (
         <PageWrapper> {
         participants && name && status && (pwd === '' || pwd) && admins && mutes && bans
-        && ownerId && currentUser && (
+        && ownerId && currentUser && channelInfoId && (
             <Box className="chan-creation-param-container">
                 <Box className="chan-param-subcontainer">
                     <div className="a-modifier">
@@ -155,6 +159,7 @@ export default function ChannelParams() {
                 </Box>
                 <ChannelParamsParticipants
                     chatId={chatId}
+                    channelInfoId={channelInfoId}
                     participants={participants}
                     setParticipants={setParticipants}
                     admins={admins}
@@ -175,6 +180,7 @@ export default function ChannelParams() {
                 ></ChannelParamsAdmins>
                 <ChannelParamsMutes
                     chatId={chatId}
+                    channelInfoId={channelInfoId}
                     mutes={mutes}
                     setMutes={setMutes}
                     currentUser={currentUser}

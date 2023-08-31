@@ -59,7 +59,7 @@ export class ChannelService {
 						include : {
 							administrators: true,
 							bannedUsers: true,
-							mutedUsers: true,
+							mutedUsers: {include: {user: true}},
 						}
 					}
 				},
@@ -94,6 +94,67 @@ export class ChannelService {
 		}
 	}
 
+	async deleteChannelMutedUser(channelInfoId: number, userId:number) {
+		try {
+			const updateMutedUsers = await this.prisma.channelMutedUsers.delete({
+				where: { userId_channelId: { channelId: channelInfoId, userId: userId } },
+				include: {
+					channel: {
+						include: {
+							chat:{include: {participants : true}},
+							administrators: true,
+							bannedUsers: true
+						}
+					}
+				}
+			})
+			console.log({updateMutedUsers});
+			return updateMutedUsers;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+
+	}
+
+	async upsertChannelMutedUsers(chatId: number, userId:number, payload:any) {
+		//payload create new connexion
+		// Adding 45000 milliseconds to current datetime
+		const futureDate = new Date(new Date().getTime() + 45000);
+	
+		try {
+			const updateMutedUsers = await this.prisma.channelInfo.update({
+				where: {chatId: chatId},
+				data: { //undefined = do not include this in the update:
+					mutedUsers: {
+						upsert: payload.newMuted ? {
+							where: {
+								userId_channelId: {
+									userId: payload.newMuted,
+									channelId: payload.channelInfoId,
+								}
+							},
+							update: { endsAt: futureDate },
+							create: { endsAt: futureDate, user: {connect: {id: payload.newMuted}}}
+						} : undefined,
+					},
+				},
+				include: {
+					chat : {include: {participants : true},},
+					administrators : true,
+					mutedUsers: {include: {user: true}},
+					bannedUsers: true
+				}
+			})
+			console.log({updateMutedUsers});
+			return updateMutedUsers;
+		} catch (error) {
+            console.log(error);
+            throw error;
+		}
+
+	}
+
 	async updateChannelInfos(chatId: number, userId:number, payload:any) {
 		try {
 			const updatedChan = await this.prisma.channelInfo.update({
@@ -105,10 +166,6 @@ export class ChannelService {
 					administrators: {//conditionnaly add or erase admin passed in payload
 						...(payload.newAdmin ? {connect: {id: payload.newAdmin}}: {}), //ternary + spread operator
 						...(payload.oldAdmin? {disconnect: {id: payload.oldAdmin}}: {})
-					},
-					mutedUsers: {
-						...(payload.newMuted ? {connect: {id: payload.newMuted}}: {}),
-						...(payload.oldMuted? {disconnect: {id: payload.oldMuted}}: {})
 					},
 					bannedUsers: {
 						...(payload.newBanned ? {connect: {id: payload.newBanned}}: {}),
@@ -126,7 +183,7 @@ export class ChannelService {
 				include: {
 					chat : {include: {participants : true},},
 					administrators : true,
-					mutedUsers: true,
+					mutedUsers: {include: {user: true}},
 					bannedUsers: true
 				}
 			})

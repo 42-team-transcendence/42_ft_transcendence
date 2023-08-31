@@ -21,8 +21,9 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 
 export default function ChannelParamsParticipants(
-	{chatId, participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes, ownerId, currentUser}: {
-	chatId:number
+	{chatId,channelInfoId,  participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes, ownerId, currentUser}: {
+	chatId:number,
+	channelInfoId:number,
 	participants:any,
 	setParticipants:any,
 	admins:any,
@@ -63,19 +64,19 @@ export default function ChannelParamsParticipants(
 		setAnchorUserMenu(null);
     };
 
-	const handleMute = async (muted:any) => {
-		if (!mutes.find((e:any) => e.id === muted.id)) {
-			try {
-                const response = await axiosPrivate.post(
-                    `channels/update/${chatId}`,
-                    JSON.stringify({ newMuted: muted.id }),{
-                        headers: {'Content-Type': 'application/json'}, withCredentials: true
-                    }
-                );
-				setMutes([...mutes, muted]);
-            } catch (err: any) {
-                console.log(err);
-            }
+	const handleMute = async (muted:any) => {//Can mute multiple times same user, adds muted time in DB
+		try {
+			console.log({ muted });
+			const response = await axiosPrivate.post(
+				`channels/updateMutes/${chatId}`,
+				JSON.stringify({ newMuted: muted.id, channelInfoId }), {
+					headers: {'Content-Type': 'application/json'}, withCredentials: true
+				}
+			);
+			const newMuted = response.data.mutedUsers.find((e:any)=>e.userId === muted.id);
+			setMutes([...mutes, newMuted]);
+		} catch (err: any) {
+			console.log(err);
 		}
 		setAnchorUserMenu(null);
     };
@@ -88,7 +89,7 @@ export default function ChannelParamsParticipants(
 		}
 		if (mutes.find((e:any) => e.id === userId)) {
 			erase.mute = userId;
-			setMutes(mutes.filter((e:any)=> userId != e.id));
+			setMutes(mutes.filter((e:any)=> userId != e.userId));
 		}
 		return erase;
 	}
@@ -98,18 +99,22 @@ export default function ChannelParamsParticipants(
 			try {
 				//if user is kicked, also need to strip of admins and mutes
 				let erase = eraseData(kicked.id);
-                const response = await axiosPrivate.post(
-                    `channels/update/${chatId}`,
+                const response = await axiosPrivate.post(`channels/update/${chatId}`,
                     JSON.stringify({
 						oldParticipant: kicked.id,
 						newBanned:  ban? kicked.id: null,
 						oldAdmin: erase.admin,
-						oldMuted: erase.mute,
-					}),{
-                        headers: {'Content-Type': 'application/json'}, withCredentials: true
-                    }
+					}),{headers: {'Content-Type': 'application/json'}, withCredentials: true}
                 );
 				setParticipants(participants.filter((user:any)=> user.id != kicked.id));
+
+				if (erase.mute) {
+					const eraseMute = await axiosPrivate.post(
+						`channels/updateMutes/${chatId}`,
+						JSON.stringify({oldMuted: erase.mute}),
+						{headers: {'Content-Type': 'application/json'}, withCredentials: true}
+					);
+				}
             } catch (err: any) {
                 console.log(err);
             }
@@ -122,17 +127,21 @@ export default function ChannelParamsParticipants(
 			try {
 				//if user leaves, also need to strip of admins and mutes
 				let erase = eraseData(currentUser.id);
-                const response = await axiosPrivate.post(
-                    `channels/update/${chatId}`,
+                const response = await axiosPrivate.post(`channels/update/${chatId}`,
                     JSON.stringify({
 						oldParticipant: currentUser.id,
 						oldAdmin: erase.admin,
-						oldMuted: erase.mute,
-					}),{
-                        headers: {'Content-Type': 'application/json'}, withCredentials: true
-                    }
+					}),{headers: {'Content-Type': 'application/json'}, withCredentials: true}
                 );
 				setParticipants(participants.filter((user:any)=> user.id != currentUser.id));
+				
+				if (erase.mute) {
+					const eraseMute = await axiosPrivate.post(
+						`channels/updateMutes/${chatId}`,
+						JSON.stringify({oldMuted: erase.mute}),
+						{headers: {'Content-Type': 'application/json'}, withCredentials: true}
+					);
+				}
 				navigate('/chat');
             } catch (err: any) {
                 console.log(err);

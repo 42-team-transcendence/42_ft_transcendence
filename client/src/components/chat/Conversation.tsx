@@ -117,9 +117,19 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
           year: "numeric",
           hour: "2-digit",
           minute: "2-digit",
+          second: "2-digit",
         }).format(new Date(date))
       return "";
     }
+
+const isMute = (mutedUsers:any, currentUser:any) => {
+  //if element is found, currentUser is muted
+  return mutedUsers.find((e:any) => {
+    return (
+      e.userId === currentUser.id
+      && new Date(e.endsAt) > new Date())
+  })
+}
 
 	return (
 		<Box className="conversation"
@@ -172,8 +182,10 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             }
             </Box>
             <Box>
-            {  !isChat && chat.channelInfo.mutedUsers.find((e:any)=>e.id === currentUser.id) ? (
-                "YOU ARE MUTED!"
+            {!isChat && isMute(chat?.channelInfo.mutedUsers, currentUser) ? (
+                `YOU ARE MUTED UNTIL ${formattedTimestamp(chat?.channelInfo.mutedUsers.find(
+                  (e:any)=>e.userId === currentUser.id
+                ).endsAt)}`
               ) : <MessageInput send={send}></MessageInput>
             }
             </Box>

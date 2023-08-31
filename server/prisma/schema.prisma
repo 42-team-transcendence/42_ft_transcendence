@@ -33,7 +33,7 @@ model User {
 	channelsOwned 			ChannelInfo[]		@relation("channelOwner")
 	channelsAdministrated	ChannelInfo[] 		@relation("channelAdministrator")
 	channelsBannedOf		ChannelInfo[]		@relation("channelBanned")
-	channelsMutedOf			ChannelInfo[]		@relation("channelMuted")
+	channelsMutedOf			ChannelMutedUsers[]		
 
 
 
@@ -96,9 +96,24 @@ model ChannelInfo {
 
 	administrators	User[]		@relation("channelAdministrator")
 	bannedUsers		User[]		@relation("channelBanned")
-	mutedUsers		User[]		@relation("channelMuted")
+	mutedUsers		ChannelMutedUsers[]
 
 	@@map("channelInfos")
+}
+
+model ChannelMutedUsers {
+	createdAt       DateTime  	@default(now())
+	updatedAt       DateTime  	@updatedAt
+	endsAt       	DateTime
+
+	user			User		@relation(fields: [userId], references: [id])
+	userId			Int
+
+	channel			ChannelInfo	@relation(fields: [channelId], references: [id])
+	channelId		Int
+
+	@@id([userId, channelId])
+	@@map("channelMutedUsers")
 }
 
 enum ChannelStatus {

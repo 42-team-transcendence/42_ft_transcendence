@@ -14,8 +14,16 @@ import {IconButton, List, ListItem, ListItemButton, ListSubheader,} from '@mui/m
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
-export default function ChannelParamsMutes({chatId, mutes, setMutes, currentUser, admins}: {
+export default function ChannelParamsMutes({
+	chatId,
+	channelInfoId,
+	mutes,
+	setMutes,
+	currentUser,
+	admins
+}: {
 	chatId:number,
+	channelInfoId:number
 	mutes:any,
 	setMutes:any,
 	currentUser:any,
@@ -23,16 +31,16 @@ export default function ChannelParamsMutes({chatId, mutes, setMutes, currentUser
 }) {
 	const axiosPrivate = useAxiosPrivate();
 
-	const handleDeleteMutes = async (event:any, user:any) => {
-		if (mutes.find((e:any) => e.id === user.id)) {
+	const handleDeleteMutes = async (event:any, mute:any) => {
+		if (mutes.find((e:any) => e.userId === mute.userId)) {
 			try {
                 const response = await axiosPrivate.post(
-                    `channels/update/${chatId}`,
-                    JSON.stringify({ oldMuted: user.id }),{
+                    `channels/updateMutes/${chatId}`,
+                    JSON.stringify({ oldMuted: mute.userId, channelInfoId }),{
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-				setMutes(mutes.filter((mute:any)=> mute.id != user.id));
+				setMutes(mutes.filter((e:any)=> e.userId != mute.userId));
             } catch (err: any) {
                 console.log(err);
             }
@@ -41,17 +49,22 @@ export default function ChannelParamsMutes({chatId, mutes, setMutes, currentUser
 
 	return (
 		<List subheader={<ListSubheader>Muted Users</ListSubheader>}>
-			{mutes.map((user:any, idx:number) => {
+			{mutes.map((mute:any, idx:number) => {
+				console.log("mute endsAt: ",new Date(mute.endsAt));
+				console.log("current date and time: ", new Date());
+				if (new Date(mute.endsAt) < new Date())
+					return;
+
 				const miniatureUser: MiniatureUser = {
-					nickname: user?.nickname,
-					id: user?.id,
+					nickname: mute?.user?.nickname,
+					id: mute?.userId,
 					minAvatar: {url: tchoupi, name:'Tchoupi'}
 				}
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(user.id != currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
-							<ListItemButton onClick={(event)=>handleDeleteMutes(event, user)}>
+						{(mute.userId != currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
+							<ListItemButton onClick={(event)=>handleDeleteMutes(event, mute)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />
 								</IconButton>
