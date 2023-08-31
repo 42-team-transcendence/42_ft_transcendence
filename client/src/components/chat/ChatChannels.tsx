@@ -54,7 +54,6 @@ export default function ChatChannels() {
 						headers: { 'Content-Type': 'application/json'},
 						withCredentials: true
 					})
-					console.log("bannedUsers", response.data.channelInfo.bannedUsers)
 					//Si currentUser ne fait pas parti du channel 
 					//ou est ban du channel, redirection hors du channel
 					if (

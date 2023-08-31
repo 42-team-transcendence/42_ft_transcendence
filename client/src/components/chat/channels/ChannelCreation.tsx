@@ -50,7 +50,6 @@ export default function ChannelCreation() {
             setNameErrorText("");
         }
         try {
-            console.log({pwd});
             const response = await axiosPrivate.post(
                 CHANNEL_CREATION_ROUTE,
                 JSON.stringify({ name, status, password: pwd}),
@@ -59,14 +58,13 @@ export default function ChannelCreation() {
                     withCredentials: true
                 }
 			);
-			console.log(response.data);
             navigate('/chat', { replace: false});
         } catch (err: any) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response) {
                 setErrMsg('Channel creation failed');
-                console.log(err);
+                console.log(err.response);
             }
         }
 	}

@@ -36,7 +36,7 @@ export default function ChannelParamsBans({chatId, bans, setBans, currentUser, a
                 );
 				setBans(bans.filter((ban:any)=> ban.id != user.id));
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
 		}
     };

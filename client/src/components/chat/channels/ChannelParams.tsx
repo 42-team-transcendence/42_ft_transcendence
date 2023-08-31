@@ -65,7 +65,6 @@ export default function ChannelParams() {
             )
                 navigate('/chat');
             setChatElements(response.data);
-            console.log(response.data);
         }
         if (currentUser)
             getChat();
@@ -110,7 +109,7 @@ export default function ChannelParams() {
                 );
                 setName(newName)
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
         }
 		setNameModal(!nameModal);
@@ -132,7 +131,7 @@ export default function ChannelParams() {
                 if (newStatus === 'PROTECTED' && newPwd != pwd)
                     setPwd(newPwd)
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
         }
 		setStatusModal(!statusModal);

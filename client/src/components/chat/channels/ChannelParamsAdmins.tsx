@@ -33,7 +33,7 @@ export default function ChannelParamsParticipants({chatId, admins, setAdmins, ow
                 );
 				setAdmins(admins.filter((admin:any)=> admin.id != user.id));
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
 		}
     };

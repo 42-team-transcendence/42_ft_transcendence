@@ -58,7 +58,7 @@ export default function ChannelParamsParticipants(
                 );
                 setAdmins([...admins, newAdmin]);
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
 		}
 		setAnchorUserMenu(null);
@@ -66,7 +66,6 @@ export default function ChannelParamsParticipants(
 
 	const handleMute = async (muted:any) => {//Can mute multiple times same user, adds muted time in DB
 		try {
-			console.log({ muted });
 			const response = await axiosPrivate.post(
 				`channels/updateMutes/${chatId}`,
 				JSON.stringify({ newMuted: muted.id, channelInfoId }), {
@@ -76,7 +75,7 @@ export default function ChannelParamsParticipants(
 			const newMuted = response.data.mutedUsers.find((e:any)=>e.userId === muted.id);
 			setMutes([...mutes, newMuted]);
 		} catch (err: any) {
-			console.log(err);
+			console.log(err.response);
 		}
 		setAnchorUserMenu(null);
     };
@@ -87,7 +86,7 @@ export default function ChannelParamsParticipants(
 			erase.admin = userId;
 			setAdmins(admins.filter((e:any)=> userId != e.id));
 		}
-		if (mutes.find((e:any) => e.id === userId)) {
+		if (mutes.find((e:any) => e.userId === userId)) {
 			erase.mute = userId;
 			setMutes(mutes.filter((e:any)=> userId != e.userId));
 		}
@@ -99,7 +98,7 @@ export default function ChannelParamsParticipants(
 			try {
 				//if user is kicked, also need to strip of admins and mutes
 				let erase = eraseData(kicked.id);
-                const response = await axiosPrivate.post(`channels/update/${chatId}`,
+				const response = await axiosPrivate.post(`channels/update/${chatId}`,
                     JSON.stringify({
 						oldParticipant: kicked.id,
 						newBanned:  ban? kicked.id: null,
@@ -111,12 +110,12 @@ export default function ChannelParamsParticipants(
 				if (erase.mute) {
 					const eraseMute = await axiosPrivate.post(
 						`channels/updateMutes/${chatId}`,
-						JSON.stringify({oldMuted: erase.mute}),
+						JSON.stringify({oldMuted: erase.mute, channelInfoId}),
 						{headers: {'Content-Type': 'application/json'}, withCredentials: true}
 					);
 				}
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
 		}
 		setAnchorUserMenu(null);
@@ -144,11 +143,10 @@ export default function ChannelParamsParticipants(
 				}
 				navigate('/chat');
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
 		}
     };
-
 
 	const handleBan = (banned:any) => { //Add to banned list and kick out of chan
 		if (!bans.find((e:any) => e.id === banned.id)) {
@@ -206,7 +204,7 @@ export default function ChannelParamsParticipants(
 							</Menu>
 						</>
 					): (
-						<ListItemButton onClick={handleLeave}>
+						user.id != ownerId && <ListItemButton onClick={handleLeave}>
 							<IconButton edge="end" aria-label="delete">
 								<DeleteIcon />
 							</IconButton>

@@ -42,7 +42,7 @@ export default function ChannelParamsMutes({
                 );
 				setMutes(mutes.filter((e:any)=> e.userId != mute.userId));
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
 		}
     };
@@ -50,8 +50,6 @@ export default function ChannelParamsMutes({
 	return (
 		<List subheader={<ListSubheader>Muted Users</ListSubheader>}>
 			{mutes.map((mute:any, idx:number) => {
-				console.log("mute endsAt: ",new Date(mute.endsAt));
-				console.log("current date and time: ", new Date());
 				if (new Date(mute.endsAt) < new Date())
 					return;
 
