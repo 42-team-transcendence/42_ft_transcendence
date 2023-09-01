@@ -53,17 +53,41 @@ function Profile() {
 	// const [user, setUser] = useState<any>();
 
 	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false });
-    useEffect(() => {
+    const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
+
+	useEffect(() => {
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
             .then(response => {
                 setUser(response.data);
+				console.log("AUTH = " + response.data.auth2fa);
             })
             .catch(error => {
                 console.error('Error fetching user details:', error);
             });
+			
     }, []);
 	
+	const updateUser = () => {
+
+		axiosPrivate.get('/users/me')
+		.then(response => {
+			setUser(response.data);
+		})
+		.catch(error => {
+			console.error('Error fetching user details:', error);
+		});
+	}
+	const disabled2fa = async () => {
+        const response = await axiosPrivate.post(
+			'/users/update2fa',
+			JSON.stringify({ auth2fa: false }),
+			{
+			  headers: { "Content-Type": "application/json" },
+			  withCredentials: true,
+			}
+		)
+	  };
 
 	// =============================================================================
 	// EMAIL MODAL =================================================================
@@ -184,68 +208,10 @@ function Profile() {
 	  
 		handleClosePwdModal();
 	};
-
-	// =============================================================================
-	// 2FA MODAL ===================================================================
-	const [is2fa, setIs2fa] = useState(user?.auth2fa || false);
-
-
-	const handle2fa = () => {
-		const new2faState = !is2fa; // Toggle the state
-		setIs2fa(new2faState);
-	  
-		// Save the new 2FA state to your backend
-		save2faState(new2faState); // Call a function to save the state
-	};
-
-	const save2faState = async (new2faState: boolean) => {
-		try {
-			const response = await axiosPrivate.post(
-				'/users/update2fa',
-				JSON.stringify({ auth2fa: new2faState }),
-				{
-					headers: { "Content-Type": "application/json" },
-					withCredentials: true,
-				}
-			);
-		
-			if (response.status === 200) {
-				console.log('2FA state update successful');
-				setUser((prevUser) => ({...prevUser, auth2fa: new2faState}))
-			} else {
-				console.error('2FA state update failed');
-			}
-		} catch (error) {
-		  	console.error('Error updating 2FA state:', error);
-		}
-	};
 	
-
-	const handleSendOTPClick = () => {
-		// Call validateOTP when the user clicks the "Send OTP" button
-		validateOTP()
-		  .then((result) => {
-			setIsValid(result);
-			if (!result) {
-			  // If OTP is invalid, reset the 2FA state to its original value
-			  setIs2fa(user?.auth2fa || false);
-			}
-		  })
-		  .catch((error) => {
-			console.error('Error verifying OTP:', error);
-			// Reset the 2FA state to its original value
-			setIs2fa(user?.auth2fa || false);
-		  });
-	  };
-	
-	  const handleCloseModal = () => {
-		// Reset the 2FA state to its original value when the modal is closed
-		setIs2fa(user?.auth2fa || false);
-		// Close the modal
-		// ... (other close modal logic) ...
-	  };
 	// =============================================================================
 	// RETURN ======================================================================
+
   	return (
 		<PageWrapper>
 			<div className="main-container">
@@ -295,17 +261,24 @@ function Profile() {
 					<div className="element-profile">
 					<div className="a-modifier">
 						<h2> Double factors </h2>
-						<Checkbox checked={user.auth2fa} onChange={handle2fa}/>
-						{user.auth2fa ?(
-						<>
-							<DoubleAuth/>
-						</>
-					 ) : (
-						<p>Desactivated...</p>
-					)}
+
+					{!user.auth2fa ? (
+						<Checkbox checked={user.auth2fa} onChange={() =>
+						 	setIsDoubleAuthEnabled(!isDoubleAuthEnabled) } />
+							
+							) : (
+						<div>
+							<button onClick={() => {disabled2fa() 
+												setIsDoubleAuthEnabled(false)
+												updateUser() }}>Disable 2FA</button>
+						</div>)
+
+					}
+							
+					{isDoubleAuthEnabled && <DoubleAuth /> }
+						</div>
 					</div>
-				</div>
-				</div>
+					</div>
 				<GameHistory/>
 			</div>
 
@@ -334,3 +307,20 @@ function Profile() {
 }
 
 export default Profile;
+
+
+
+
+
+// <Checkbox checked={isDoubleAuthEnabled} onChange={() => {
+// 	if (!user.auth2fa) {
+// 		 setIsDoubleAuthEnabled(!isDoubleAuthEnabled) 
+// 	} else {
+// 		disabled2fa();
+// 		setIsDoubleAuthEnabled(false);
+// 		// window.location.reload();
+// 	} } }/>
+// </div>
+// </div>
+
+// {isDoubleAuthEnabled && <DoubleAuth />}

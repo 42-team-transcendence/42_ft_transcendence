@@ -1,49 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Box, Button } from '@mui/material';
 import QRCode from 'qrcode.react';
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 
 
 
 	// =============================================================================
 	// 2FA MODAL ===================================================================
-	// const [is2fa, setIs2fa] = useState(user?.auth2fa || false);
 
-
-	// const handle2fa = () => {
-	// 	const new2faState = !is2fa; // Toggle the state
-	// 	setIs2fa(new2faState);
-	  
-	// 	// Save the new 2FA state to your backend
-	// 	save2faState(new2faState); // Call a function to save the state
-	// };
-
-	// const save2faState = async (new2faState: boolean) => {
-	// 	try {
-	// 		const response = await axiosPrivate.post(
-	// 			'/users/update2fa',
-	// 			JSON.stringify({ auth2fa: new2faState }),
-	// 			{
-	// 				headers: { "Content-Type": "application/json" },
-	// 				withCredentials: true,
-	// 			}
-	// 		);
-		
-	// 		if (response.status === 200) {
-	// 			console.log('2FA state update successful');
-	// 			setUser((prevUser) => ({...prevUser, auth2fa: new2faState}))
-	// 		} else {
-	// 			console.error('2FA state update failed');
-	// 		}
-	// 	} catch (error) {
-	// 	  	console.error('Error updating 2FA state:', error);
-	// 	}
-	// };
 	
-
-
-
-
 
 
 interface QRCodeModalProps {
@@ -65,7 +31,31 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
   validateOTP,
   closeModal,
 }) => {
+
+  const axiosPrivate = useAxiosPrivate();
   const [isValid, setIsValid] = useState(false); // State to track validation result
+
+  const save2faState = async (new2faState: boolean) => {
+
+      try {
+        const response = await axiosPrivate.post(
+          '/users/update2fa',
+          JSON.stringify({ auth2fa: new2faState }),
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+      
+        if (response.status === 200) {
+          console.log('2FA state update successful');
+        } else {
+          console.error('2FA state update failed');
+        }
+      } catch (error) {
+          console.error('Error updating 2FA state:', error);
+      }
+    };
 
   const handleSendOTPClick = () => {
     // Call validateOTP when the user clicks the "Send OTP" button
@@ -73,12 +63,14 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
       .then((result) => {
         setIsValid(result);
         if (result) {
+          save2faState(true);
             // If OTP is valid, close the modal
             closeModal();
       }
     })
       .catch((error) => console.error('Error verifying OTP:', error));
   };
+
 
   return (
     <Modal open={isOpen} onClose={onClose}>
