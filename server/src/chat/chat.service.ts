@@ -66,7 +66,7 @@ export class ChatService {
 					include : {
 						administrators: true,
 						bannedUsers: true,
-						mutedUsers: true,
+						mutedUsers: {include: {user: true}},
 					}
 				}
 			},
@@ -104,7 +104,7 @@ export class ChatService {
 					include : {
 						administrators: true,
 						bannedUsers: true,
-						mutedUsers: true,
+						mutedUsers: {include: {user: true}},
 					}
 				}
 			},

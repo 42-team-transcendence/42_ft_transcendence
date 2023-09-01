@@ -17,6 +17,7 @@ import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui
 // IMPORT COMPONENTS ===========================================================
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import { useNavigate } from 'react-router-dom';
+import SearchChanPwdModal from './ChannelPwdModal';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -69,6 +70,10 @@ export default function SearchAppBar() {
   const [currentUser, setCurrentUser] = useState<any>();
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [pwdModal, setPwdModal] = useState<boolean>(false);
+  const [channelPwd, setChannelPwd] = useState<string>('');
+  const [channelId, setChannelId] = useState<any>();
+
 
   useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => {
@@ -94,14 +99,13 @@ export default function SearchAppBar() {
                 withCredentials: true
             }
         );
-        console.log(response.data);
-        setSearchResults(response.data);
+        const chansNotPrivate = response.data.filter((e:any)=>e.channelInfo.status != "PRIVATE")
+        setSearchResults(chansNotPrivate);
         } catch (err: any) {
             console.log(err);
         }
     }
     if (searchInput) {
-      console.log("search database for", searchInput);
       searchResults();
     } else {
       setSearchResults([])
@@ -112,26 +116,47 @@ export default function SearchAppBar() {
     setSearchInput(event.target.value);
   };
 
+  const joinChannel = async (channelId:number) => {
+    try { //JOIN CHANNEL
+      const response = await axiosPrivate.post(
+        `/channels/join/${channelId}`, {
+          headers: { "Content-Type": "application/json" }, withCredentials: true,
+      });
+      navigate('/chat', {state: {channelId}});
+      setSearchInput('');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const handleResultClick = async (channel:any) => {
     if (!channel.participants.find((e:any) => e.id === currentUser.id)) {
-      try {
-        const response = await axiosPrivate.post(
-          `/channels/join/${channel.id}`, {
-            headers: { "Content-Type": "application/json" }, withCredentials: true,
-        });
-        navigate('/chat', {state: {channelId: channel.id}});
-        setSearchInput('');
-      } catch (error) {
-        console.error(error);
-      }
+      if (channel.channelInfo?.status === "PROTECTED") { //OPEN PWD MODAL CHECK
+        setChannelPwd(channel.channelInfo.password);
+        setPwdModal(!pwdModal);
+        setChannelId(channel.id);
+      } else //JOIN DIRECTLY CHANNEL
+          joinChannel(channel.id);
+    } else {// IF USER IS ALREADY IN CHANNEL GO DIRECTLY TO CHANNEL
+      navigate('/chat', {state: {channelId: channel.id}});
+      setSearchInput('');
     }
-    navigate('/chat', {state: {channelId: channel.id}});
-    setSearchInput('');
 	};
+
+  const handlePwdInput = async (inputPwd: string, channelPwd: string, channelId: number) => {
+    if (inputPwd != channelPwd) {
+      console.log("!!! PWD IS INVALID !!!")
+      setPwdModal(!pwdModal)
+    } else {
+      joinChannel(channelId)
+      setPwdModal(!pwdModal)
+      console.log("PWD IS VALID !")
+    }
+  };
 
   return (
     <Box className='search_bar' sx={{ flexGrow: 1 }}>
-        <Search>
+        <Search key="search_bar_1">
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -152,9 +177,18 @@ export default function SearchAppBar() {
                     <ListItemText primary={item.channelInfo.name} />
                   </ListItemButton>
                 </ListItem>
-            )})}
+            )
+          })}
         </List>
         }
+        {channelPwd &&
+          <SearchChanPwdModal
+          open={pwdModal}
+          onClose={() => setPwdModal(!pwdModal)}
+          onSave={handlePwdInput}
+          channelPwd={channelPwd}
+          channelId={channelId}
+        />}
     </Box>
   );
 }
