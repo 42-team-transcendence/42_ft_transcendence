@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './components/App';
 import { AuthProvider } from "./context/AuthProvider";
+import { OnlineStatusProvider } from './context/OnlineSatus';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const container = document.getElementById('root');
@@ -13,9 +14,11 @@ root.render(
 	// <React.StrictMode>
 		<BrowserRouter>
 		<AuthProvider>
+		<OnlineStatusProvider>	
 			<Routes>
 				<Route path="/*" element={<App />} />
 			</Routes>
+		</OnlineStatusProvider>	
 		</AuthProvider>
 		</BrowserRouter>
 	// </React.StrictMode>

@@ -1,4 +1,4 @@
-import { Controller, Post , Body, HttpCode, HttpStatus, UseGuards, Res, Req, Response, Get} from "@nestjs/common";
+import { Controller, Post ,Param, Body, HttpCode, HttpStatus, UseGuards, Res, Req, Response, Get} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthDto, SignInAuthDto } from "./dto";
@@ -76,13 +76,22 @@ export class AuthController {
 
     @Get('/login/42')
     login_42() {
-        return(this.authService.login_42())
+        return(this.authService.login_42 ())
     }
 
     @Get('/callback/42')
 	@UseGuards(IntraGuard)
 	async callback42(@GetUser() user, @Res() res: Response) {
 		return (this.authService.callback42(user, res))
+	}
+
+	@Get('/userByMail/:email') 
+	async getUserBymail(
+		@Param('email') email: string
+	) {
+		console.log ({email});
+		console.log("email = ",email);
+		return (this.authService.getUserBymail(email));
 	}
 
 /*********************************************************************************************************/
@@ -109,4 +118,12 @@ export class AuthController {
         console.log({"controller_user" : user});
         return (this.authService.refresh(user.sub, user.refreshToken, res));
     }
+
+/*************************************************************************************************/
+// @Get('/login/id')
+// login_42() {
+// 	return(this.authService.login_42 ())
+// }
+
 }
+

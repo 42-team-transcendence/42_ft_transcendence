@@ -11,12 +11,12 @@ import PwdModal from "./PasswordModal";
 import AuthContext, { AuthProvider } from '../../context/AuthProvider';
 import NickModal from "./NicknameModal";
 import DoubleAuth from "../auth2fa/Doubleauth";
+import { useOnlineStatus } from "../../context/OnlineSatus";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import '../../styles/profile/Profile.css';
 import Checkbox from '@mui/material/Checkbox';
-
 
 // =============================================================================
 // INTERFACES ==================================================================
@@ -32,7 +32,6 @@ interface User {
 	avatar: string
 }
 
-
 // =============================================================================
 // FUNCTION ====================================================================
 
@@ -40,8 +39,8 @@ function Profile() {
 
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);
-
-
+	const onlineUsers = useOnlineStatus();
+	//const isUserOnline = onlineUsers.includes(user.id); // 'user' doit être accessible dans ce composant
 	// =============================================================================
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
@@ -297,7 +296,7 @@ function Profile() {
 							<p className="rank"> Rank 1 | Lvl 800 </p>
 						</div>
 					</div>
-					
+
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">

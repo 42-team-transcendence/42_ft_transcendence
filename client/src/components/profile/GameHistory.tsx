@@ -4,6 +4,8 @@ import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead
 import PageWrapper from "../navbar/pageWrapper";
 //import '../../styles/GameHistory.css';
 import { styled } from "@mui/system";
+import tchoupi from '../../assets/tchoupi50x50.jpg'
+import Miniature from "../miniature/Miniature";
 
 interface User {
 	email: string;
@@ -124,7 +126,15 @@ useEffect(() => { //fetch game data
 							sx={{
 								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
-						<TableCell>{adversaire.nickname}</TableCell>
+						<TableCell>
+							{/* {adversaire.nickname} */}
+							<Miniature miniatureUser={{
+							nickname: adversaire.nickname,
+							id: adversaire.id,
+							minAvatar: {url: tchoupi, name:'Tchoupi'}
+						}}
+						></Miniature>
+							</TableCell>
 						<TableCell>{my_score} - {adv_score}</TableCell>
 						<TableCell>{formattedTimestamp}</TableCell>
 						<TableCell>

@@ -6,6 +6,7 @@ import axios from '../../api/axios';
 import Email from './Email';
 import Password from './Password';
 import { AxiosError } from 'axios';
+import io from 'socket.io-client';
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -17,6 +18,13 @@ import '../../styles/Register_Login.css';
  // =============================================================================
  // =============================================================================
 const LOGIN_URL = '/auth/signin'
+
+const socket = io('http://localhost:3333', {
+	path: "/status",
+	withCredentials: true,
+	autoConnect: true,
+	auth: { token: "TODO: gérer les tokens d'authentification ici" },
+});
 
 interface LoginProps {}
 
@@ -56,10 +64,6 @@ const Login: React.FC<LoginProps> = () => {
 	// 2FA =========================================================================
     const [show2FaPopup, set2FaPopup] = useState(false);
 
-
-
-
-
     /// =============================================================================
 	// 	=============================================================================
     const [errMsg, setErrMsg] = useState('');
@@ -90,7 +94,8 @@ const Login: React.FC<LoginProps> = () => {
             setAuth({email, pwd, accessToken});
             setEmail('');
             setPwd('');
-
+			// Envoyez un événement au serveur pour signaler la connexion réussie
+			//socket.emit('userLoggedIn', { username });
 
             navigate(from, { replace: true});
         } catch (err: AxiosError | any) {
