@@ -10,15 +10,15 @@ import { GetUser } from "../auth/decorator"
 export class DoubleAuthController {
     constructor(private readonly doubleAuthService: DoubleAuthService) {}
 
-  @Get('generate')
-  async generate2FA(@Res() res: Response) {
-    // Generate the secret and QR code using the DoubleAuthService
-    const secret = speakeasy.generateSecret();
-    const qrcode = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
+  // @Get('generate')
+  // async generate2FA(@Res() res: Response) {
+  //   // Generate the secret and QR code using the DoubleAuthService
+  //   const secret = speakeasy.generateSecret();
+  //   const qrcode = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
 
-    // Return the secret and QR code data in the response
-    return res.json({ secret: secret.base32, qrcode });
-  }
+  //   // Return the secret and QR code data in the response
+  //   return res.json({ secret: secret.base32, qrcode });
+  // }
 
   @Post('verify2fa')
   async verify2FA(

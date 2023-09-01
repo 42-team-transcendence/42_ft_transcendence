@@ -29,7 +29,8 @@ export class AuthService {
                 data: {
                     nickname: dto.nickname,
                     email: dto.email,
-                    hash }
+                    hash 
+                }
             });
             
             // Creation du accessToken et du refreshToken

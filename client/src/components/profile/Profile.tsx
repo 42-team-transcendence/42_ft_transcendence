@@ -220,6 +220,30 @@ function Profile() {
 		}
 	};
 	
+
+	const handleSendOTPClick = () => {
+		// Call validateOTP when the user clicks the "Send OTP" button
+		validateOTP()
+		  .then((result) => {
+			setIsValid(result);
+			if (!result) {
+			  // If OTP is invalid, reset the 2FA state to its original value
+			  setIs2fa(user?.auth2fa || false);
+			}
+		  })
+		  .catch((error) => {
+			console.error('Error verifying OTP:', error);
+			// Reset the 2FA state to its original value
+			setIs2fa(user?.auth2fa || false);
+		  });
+	  };
+	
+	  const handleCloseModal = () => {
+		// Reset the 2FA state to its original value when the modal is closed
+		setIs2fa(user?.auth2fa || false);
+		// Close the modal
+		// ... (other close modal logic) ...
+	  };
 	// =============================================================================
 	// RETURN ======================================================================
   	return (
