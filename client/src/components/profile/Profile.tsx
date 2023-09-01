@@ -46,11 +46,11 @@ function Profile() {
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
-
+	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '' });
     const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
 
 
-	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '' });
+	
     useEffect(() => {
 
         // Make an API request to fetch user details
