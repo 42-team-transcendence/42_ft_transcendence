@@ -103,6 +103,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
       ballXDirection: Math.random() < 0.5 ? -1 : 1,
       ballYDirection: Math.random() < 0.5 ? -1 : 1,
       intervalID: undefined,
+	  ifDBsaved: false,
     };
     gameInfo.ball.X = gameInfo.gameWidth / 2;
     gameInfo.ball.Y = gameInfo.gameHeight / 2;
@@ -134,7 +135,12 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
 				winnerId = player2Id;
 			else if(player1Score == player2Score || (player1Score == 0 && player2Score == 0))
 				winnerId = 0;
-			saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
+			//console.log(`ifDBsaved = ${gameInfo.ifDBsaved}`);
+			if(gameInfo.ifDBsaved == false)
+			{
+				saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
+				gameInfo.ifDBsaved = true;
+			}
 		}
         if (index !== -1) {
           gameInfo.players.splice(index, 1);
@@ -191,7 +197,9 @@ heartBeat(roomName: string, gameInfo: GameInfo, client: Socket) {
 		player1Id = info.players[0].Id;
 		player2Id = info.players[1].Id;
 		player1Score = gameInfo.players[0].score;
+		console.log(`player1 id ${player1Id}`);
 		player2Score = gameInfo.players[1].score;
+		console.log(`player2 id ${player2Id}`);
 		if(player1Score > player2Score)
 			winnerId = player1Id;
 		else if(player1Score < player2Score)
@@ -199,6 +207,7 @@ heartBeat(roomName: string, gameInfo: GameInfo, client: Socket) {
 		else if(player1Score == player2Score )
 			winnerId = 0;
 		saveScoresToDatabase(player1Id, player2Id, player1Score, player2Score, winnerId);
+		gameInfo.ifDBsaved = true;
         this.server.to(roomName).emit('game', gameData);
         clearInterval(gameInfo.intervalID); // Arrêtez l'intervalle
 		// this.disconnect(client);
@@ -228,7 +237,6 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
     @ConnectedSocket() client: any, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ): string {
 
-    console.log("!! HERE == " + data.roomName);
     let info = this.rooms.get(data.roomName);
     //Add new socket connection to players list
     let paddleInstance: Paddle;

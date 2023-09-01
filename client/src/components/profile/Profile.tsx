@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, ChangeEvent } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import speakeasy from 'speakeasy';
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -29,7 +28,8 @@ interface User {
 	email: string;
 	hash:string;
 	nickname: string;
-	auth2fa: boolean
+	auth2fa: boolean;
+	avatar: string
 }
 
 
@@ -37,12 +37,6 @@ interface User {
 // FUNCTION ====================================================================
 
 function Profile() {
-	// Sample game history data
-	const gameHistory = [
-		{ name: "User 1", score: 100, date: "2023-07-19", result: "Win" },
-		{ name: "User 2", score: 150, date: "2023-07-20", result: "Loss" },
-		{ name: "User 3", score: 120, date: "2023-07-21", result: "Win" },
-	];
 
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);
@@ -52,10 +46,13 @@ function Profile() {
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
-	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false });
+
     const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
 
-	useEffect(() => {
+
+	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '' });
+    useEffect(() => {
+
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
             .then(response => {
@@ -208,7 +205,50 @@ function Profile() {
 	  
 		handleClosePwdModal();
 	};
+
+
+
+	// =============================================================================
+	// AVATAR ======================================================================
+	const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+	const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+
+		if (file) {
+			console.log("file = ", file);
+		  	setSelectedFile(file);
+			const formData = new FormData();
+			formData.append('avatar', file);
+			try {
+				const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
+					headers: {'Content-Type': 'multipart/form-data'},
+					withCredentials: true,
+				});
+			  	console.log("reponse avatar, ", {response});
+				if (response.status === 200) {
+					window.location.reload();
+					setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
+					console.log('Avatar update successful');
+					console.log('Constructed image URL:', `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`);
+
+			  	} else {
+					console.error('Avatar update failed');
+			  	}
+			} catch (error) {
+				console.error('Error updating avatar:', error);
+			}
 	
+		};
+
+	}
+	
+	const imageUrl = `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`;
+
+	
+
+
+
 	// =============================================================================
 	// RETURN ======================================================================
 
@@ -217,11 +257,33 @@ function Profile() {
 			<div className="main-container">
 				<div className="container-wrap">
 					<div className="avatar">
-						<img 
+					<label htmlFor="avatarInput">
+						<img
+						 	width= "150px"
 							className="img-profile"
-							src="https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg"
-							alt="image du profile"
+							// src={"storage/uploads/"+ user.avatar}
+							// src={process.env.PUBLIC_URL + user.avatar}
+							// src={`http://${process.env.localhost}:3000/api/public/picture/` + user.avatar}
+							src={`http://localhost:3333/public/picture/${user.nickname}`}
+							// src={imageUrl} alt={`Profile of ${user.nickname}`}
+							// src="storage/uploads/368697414_247091924364906_7576220192864277534_n-a6d7.jpg"
+							// src={user.avatar}
+							// src='../../assets/tchoupi50x50.jpg'
+							// src="../../assets/alf50x50.jpg"
+							// alt="Profile Image"
 						/>
+						</label>
+						<input
+							type="file"
+							id="avatarInput"
+							style={{ display: 'none' }}
+							accept="image/*"
+							onChange={handleFileChange}
+						
+						/>
+						{/* <button onClick={handleUploadClick}>ici</button> */}
+				
+						
 						<div className="avater-info">
 							{user ? (
 								<>
@@ -279,6 +341,7 @@ function Profile() {
 						</div>
 					</div>
 					</div>
+
 				<GameHistory/>
 			</div>
 
@@ -308,19 +371,3 @@ function Profile() {
 
 export default Profile;
 
-
-
-
-
-// <Checkbox checked={isDoubleAuthEnabled} onChange={() => {
-// 	if (!user.auth2fa) {
-// 		 setIsDoubleAuthEnabled(!isDoubleAuthEnabled) 
-// 	} else {
-// 		disabled2fa();
-// 		setIsDoubleAuthEnabled(false);
-// 		// window.location.reload();
-// 	} } }/>
-// </div>
-// </div>
-
-// {isDoubleAuthEnabled && <DoubleAuth />}

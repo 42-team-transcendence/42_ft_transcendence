@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 import * as argon from 'argon2';
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
+import * as multer from 'multer';
 
 @Injectable()
 export class UserService {
@@ -165,4 +166,44 @@ export class UserService {
 		}
 	}
 
+
+	// async uploadAvatar(avatar: Express.Multer.File, userId: number) {
+	// 	try {
+	// 	  const data: Prisma.UserUpdateInput = {
+	// 		avatar: avatar.filename, // Use avatar.filename
+	// 	  };
+	  
+	// 	  await this.prisma.user.update({
+	// 		where: { id: userId },
+	// 		data: data,
+	// 	  });
+	  
+	// 	  console.log(`Avatar updated successfully for user with ID: ${userId}`);
+	// 	} catch (error) {
+	// 	  console.error('Error updating Avatar:', error);
+	// 	}
+	// }
+	  
+	async uploadAvatar(file: any,  userId: number) {
+		try {
+			await this.prisma.user.update({
+				where: {id: userId},
+				data: { avatar: file.path }
+			});
+			console.log("avatar url = ", file.path);
+			console.log(`Avatar updated successfully for user with ID: ${userId}`);
+			
+		} catch (error) {
+		  	console.error('Error updating Avatar:', error);
+		}
+	}
+
+	async findPP (username: string) {
+		const user = await this.prisma.user.findUnique({
+			where: { nickname: username},
+			select: { avatar: true}
+        });
+        return user?.avatar;
+    }
 }
+

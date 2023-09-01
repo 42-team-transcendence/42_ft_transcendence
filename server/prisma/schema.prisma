@@ -32,9 +32,8 @@ model User {
 
 	channelsOwned 			ChannelInfo[]		@relation("channelOwner")
 	channelsAdministrated	ChannelInfo[] 		@relation("channelAdministrator")
-	channelsKickedOf		ChannelInfo[]		@relation("channelKicked")
 	channelsBannedOf		ChannelInfo[]		@relation("channelBanned")
-	channelsMutedOf			ChannelInfo[]		@relation("channelMuted")
+	channelsMutedOf			ChannelMutedUsers[]		
 
 
 
@@ -43,6 +42,8 @@ model User {
 
 	games_player_1 Game[] @relation(name: "GamePlayer1")
   	games_player_2 Game[] @relation(name: "GamePlayer2")
+
+	avatar        	String     @default("/storage/default/user.jpg")
 
   @@map("users")
 }
@@ -94,11 +95,25 @@ model ChannelInfo {
 	ownerId			Int
 
 	administrators	User[]		@relation("channelAdministrator")
-	kickedUsers		User[]		@relation("channelKicked")
 	bannedUsers		User[]		@relation("channelBanned")
-	mutedUsers		User[]		@relation("channelMuted")
+	mutedUsers		ChannelMutedUsers[]
 
 	@@map("channelInfos")
+}
+
+model ChannelMutedUsers {
+	createdAt       DateTime  	@default(now())
+	updatedAt       DateTime  	@updatedAt
+	endsAt       	DateTime
+
+	user			User		@relation(fields: [userId], references: [id])
+	userId			Int
+
+	channel			ChannelInfo	@relation(fields: [channelId], references: [id])
+	channelId		Int
+
+	@@id([userId, channelId])
+	@@map("channelMutedUsers")
 }
 
 enum ChannelStatus {

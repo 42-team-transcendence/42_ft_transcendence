@@ -11,16 +11,37 @@ export class GameService {
     ) {}
 
 	// async createGame(gameDto: GameDto) {
-	async createGame(gameDto) {
-		console.log({gameDto});
-		const data = await this.prisma.game.create({ 
-			data: {
-				player_1_id: gameDto.winnerId,
-				player_2_id: gameDto.loserId,
-			}
+	// async createGame(gameDto) {
+	// 	console.log({gameDto});
+	// 	const data = await this.prisma.game.create({ 
+	// 		data: {
+	// 			player_1_id: gameDto.winnerId,
+	// 			player_2_id: gameDto.loserId,
+	// 		}
+	// 	});
+	// 	console.log(data)
+	// 	return data
+	// }
+	
+	async findAllMyGames(me) {
+		//find all the games that I played
+		const myGames = await this.prisma.game.findMany({
+			where: {
+				OR: [
+					{player_1_id: me.sub },
+					{player_2_id: me.sub },
+				],
+			},
+			include :{
+				player_1: true,
+				player_2: true,
+			},
 		});
-		console.log(data)
-		return data
+		//console.log({myGames});
+		return myGames;
 	}
 
+	async findAllGames(){
+		const games = await this.prisma.game.findMany();
+			return (games);}
 }

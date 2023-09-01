@@ -3,14 +3,15 @@ import { useNavigate } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import PageWrapper from "../../navbar/pageWrapper";
 
-import { statuses, Status } from "./types";
+import { statuses, Status } from "../types";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box, Button, FormHelperText, MenuItem, TextField} from '@mui/material';
-import "../../styles/chat/ChannelCreation.css"
+import "../../../styles/chat/ChanCreationParam.css"
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -57,20 +58,20 @@ export default function ChannelCreation() {
                     withCredentials: true
                 }
 			);
-			console.log(response.data);
             navigate('/chat', { replace: false});
         } catch (err: any) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response) {
                 setErrMsg('Channel creation failed');
-                console.log(err);
+                console.log(err.response);
             }
         }
 	}
 
     return (
-        <section className="channel-creation-form">
+        <PageWrapper>
+        <section className="chan-creation-param-container">
             <p className={errMsg? "errmsg" : "offscreen"}>
                 {errMsg}
             </p>
@@ -156,6 +157,7 @@ export default function ChannelCreation() {
 
 				</Box>
         </section>
+        </PageWrapper>
     )
 
 

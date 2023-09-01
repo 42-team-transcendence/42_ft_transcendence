@@ -1,0 +1,47 @@
+.conversation {
+	background-color: blue;
+	height: 100vh;
+	width: 100vh;
+}
+
+.chan-creation-param-container {
+	display: flex;
+	border:2px solid rgb(255, 0, 128);
+	display: flex;
+	justify-content: center;
+	background-color: white;
+	border: 2px solid black;
+	border-radius: 10px;
+	flex-direction: column;
+	padding: 20px;
+}
+
+.chan-param-subcontainer {
+	margin-bottom: 2rem;
+}
+
+.miniature-top {
+	margin-bottom: 30px;
+}
+
+.chan-param-line {
+	display: flex;
+	/* flex-direction: column; */
+	/* align-items: flex-start; */
+	/* margin-top: 40px; */
+
+}
+
+.a-modifier {
+	display: flex;
+	text-align: center;
+	justify-content: space-between;
+	/* gap: 50px; */
+}
+
+.modifier {
+	font-size:0.9rem;
+	color: #0018F4;
+	cursor: pointer;
+	text-decoration: underline;
+}

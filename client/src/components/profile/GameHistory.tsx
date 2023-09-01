@@ -1,15 +1,64 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import PageWrapper from "../navbar/pageWrapper";
-import '../../styles/GameHistory.css';
+//import '../../styles/GameHistory.css';
+import { styled } from "@mui/system";
+
+interface User {
+	email: string;
+	hash:string;
+	nickname: string;
+}
+
+const WinTableCell = styled(TableCell)(({ theme }) => ({
+	color: "green",
+	textDecoration: "none",
+  }));
+  
+  const LossTableCell = styled(TableCell)(({ theme }) => ({
+	color: "red",
+	textDecoration: "none",
+  }));
 
 function GameHistory() {
-  // Sample game history data
-  const gameHistory = [
-    { name: "User 1", score: 100, date: "2023-07-19", result: "Win" },
-    { name: "User 2", score: 150, date: "2023-07-20", result: "Loss" },
-    { name: "User 3", score: 120, date: "2023-07-21", result: "Win" },
-  ];
+
+const axiosPrivate = useAxiosPrivate();
+const [gameHistory, setGameHistory] = useState([]);
+const [currentUser, setCurrentUser] = useState<any>();
+
+useEffect(() => { //fetch game data
+	console.log("coucou useEffect")
+	const findAllMyGames = async () =>{
+		try {
+			const response = await axiosPrivate.get('/games/findAllMyGames', {
+				headers: { 'Content-Type': 'application/json'},
+                    withCredentials: true
+			})
+			setGameHistory(response.data);
+			console.log({findAllMyGames:response.data}); 
+		} catch(error: any) {
+			console.log(error.response);
+		}
+	}
+	findAllMyGames();
+  }, [])
+
+  useEffect(() => { //Fetch current user data
+	const getCurrentUser = async () => { //definition de la fonction
+		try {
+			const response = await axiosPrivate.get('/users/me', {
+				headers: { 'Content-Type': 'application/json'},
+				withCredentials: true
+			})
+			setCurrentUser(response.data);
+		} catch (error:any) {
+			console.log(error.response );
+		}
+	}
+	getCurrentUser(); //appel de la fonction
+}, [])
+
 
   return (
     <PageWrapper>
@@ -38,20 +87,61 @@ function GameHistory() {
 						<TableCell>Result</TableCell>
 					</TableRow>
                 </TableHead>
-                <TableBody>
-                  {gameHistory.map((game, index) => (
-                    <TableRow
-						key={index}
-						sx={{
-							"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
-							"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
-                      <TableCell>{game.name}</TableCell>
-                      <TableCell>{game.score}</TableCell>
-                      <TableCell>{game.date}</TableCell>
-                      <TableCell>{game.result}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+                {currentUser && <TableBody> {
+					gameHistory
+					.slice(Math.max(gameHistory.length - 5, 0))
+					.map((game:any, index) => {
+					let adversaire;
+					let my_score;
+					let adv_score;
+					const formattedTimestamp = game.createdAt
+					  ? new Intl.DateTimeFormat("en-GB", {
+						  day: "2-digit",
+						  month: "2-digit",
+						  year: "numeric",
+						  hour: "2-digit",
+						  minute: "2-digit",
+						}).format(new Date(game.createdAt))
+					  : "";
+					  console.log(`current user id = ${currentUser.id}`);
+					if (game.player_1_id === currentUser.id)
+						adversaire = game.player_2;
+					else
+						adversaire = game.player_1;
+					if(adversaire == game.player_2)
+					{
+						my_score = game.player_1_score;
+						adv_score = game.player_2_score;
+					}
+					else
+					{
+						my_score = game.player_2_score;
+						adv_score = game.player_1_score;
+					}
+					return (
+						<TableRow
+							key={index}
+							sx={{
+								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
+								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
+						<TableCell>{adversaire.nickname}</TableCell>
+						<TableCell>{my_score} - {adv_score}</TableCell>
+						<TableCell>{formattedTimestamp}</TableCell>
+						<TableCell>
+									{game.winnerId === 0 ? (
+										"DRAWN GAME"
+									) : game.winnerId === currentUser.id ?(
+										<WinTableCell>WIN</WinTableCell>
+									) : (
+										<LossTableCell>LOSE</LossTableCell>
+									)}
+								
+						</TableCell>
+						</TableRow>
+					)
+				  })}
+				  
+                </TableBody>}
               </Table>
             </TableContainer>
           </Box>

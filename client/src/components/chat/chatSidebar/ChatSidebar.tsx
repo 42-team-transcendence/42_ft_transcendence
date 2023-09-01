@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import ChatMiniature from "./ChatMiniature";
+import ChannelMiniature from "./ChannelMiniature";
+import CustomButton from "../../../styles/buttons/CustomButton";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import "../../styles/chat/ChatSidebar.css"
-import CustomButton from "../../styles/buttons/CustomButton";
+import "../../../styles/chat/ChatSidebar.css"
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -18,9 +19,13 @@ import CustomButton from "../../styles/buttons/CustomButton";
 export default function ChatSidebar({
   myChats,
   currentUser,
+  showChatSidebar,
+  setShowChatSidebar
 }: {
   myChats: any;
   currentUser: any;
+  showChatSidebar:any;
+  setShowChatSidebar:any;
 }) {
 	const navigate = useNavigate();
 
@@ -37,13 +42,13 @@ export default function ChatSidebar({
 		{myChats && myChats.map((chat: any, i: number) => {
 			// Ensure chat and participants are defined before accessing properties
 			if (chat && chat.participants && chat.participants.length > 0) {
-				if (!chat.channelInfo) {
+				if (!chat.channelInfo) { //CHAT
 					// Find first user id which is not mine
 					const recipient = chat?.participants?.find((e: any) => e.id !== currentUser.id);
 					if (recipient?.id) {
 						return (
 							<ChatMiniature
-								key={i}
+								key={"chat"+i}
 								notif={true}
 								userId={recipient.id}
 								nickname={recipient.nickname}
@@ -52,22 +57,26 @@ export default function ChatSidebar({
 									? chat.messages[chat.messages.length - 1].message
 									: ""
 								}
+								showChatSidebar={showChatSidebar}
+								setShowChatSidebar={setShowChatSidebar}
 							></ChatMiniature>
 					);}
-				} else {
-					//show all participants to channel
+				} else { //CHANNEL
 					return (
-						<ChatMiniature
-							key={i}
+						<ChannelMiniature
+							key={"channel"+i}
 							notif={true}
-							userId={currentUser.id}
-							nickname={chat.channelInfo.name}
+							channelId={chat.id}
+							participants={chat.participants}
+							channelName={chat.channelInfo.name}
 							lastMessage={
 								chat.messages.length > 0
 								? chat.messages[chat.messages.length - 1].message
 								: ""
 							}
-						></ChatMiniature>
+							showChatSidebar={showChatSidebar}
+							setShowChatSidebar={setShowChatSidebar}
+						></ChannelMiniature>
 					)
 				}
 			}
