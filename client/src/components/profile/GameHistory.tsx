@@ -2,13 +2,24 @@ import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import PageWrapper from "../navbar/pageWrapper";
-import '../../styles/GameHistory.css';
+//import '../../styles/GameHistory.css';
+import { styled } from "@mui/system";
 
 interface User {
 	email: string;
 	hash:string;
 	nickname: string;
 }
+
+const WinTableCell = styled(TableCell)(({ theme }) => ({
+	color: "green",
+	textDecoration: "none",
+  }));
+  
+  const LossTableCell = styled(TableCell)(({ theme }) => ({
+	color: "red",
+	textDecoration: "none",
+  }));
 
 function GameHistory() {
 
@@ -77,8 +88,12 @@ useEffect(() => { //fetch game data
 					</TableRow>
                 </TableHead>
                 {currentUser && <TableBody> {
-					gameHistory.map((game:any, index) => {
+					gameHistory
+					.slice(Math.max(gameHistory.length - 5, 0))
+					.map((game:any, index) => {
 					let adversaire;
+					let my_score;
+					let adv_score;
 					const formattedTimestamp = game.createdAt
 					  ? new Intl.DateTimeFormat("en-GB", {
 						  day: "2-digit",
@@ -88,10 +103,21 @@ useEffect(() => { //fetch game data
 						  minute: "2-digit",
 						}).format(new Date(game.createdAt))
 					  : "";
+					  console.log(`current user id = ${currentUser.id}`);
 					if (game.player_1_id === currentUser.id)
 						adversaire = game.player_2;
 					else
 						adversaire = game.player_1;
+					if(adversaire == game.player_2)
+					{
+						my_score = game.player_1_score;
+						adv_score = game.player_2_score;
+					}
+					else
+					{
+						my_score = game.player_2_score;
+						adv_score = game.player_1_score;
+					}
 					return (
 						<TableRow
 							key={index}
@@ -99,13 +125,18 @@ useEffect(() => { //fetch game data
 								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
 						<TableCell>{adversaire.nickname}</TableCell>
-						<TableCell>{game.player_1_score} - {game.player_2_score}</TableCell>
+						<TableCell>{my_score} - {adv_score}</TableCell>
 						<TableCell>{formattedTimestamp}</TableCell>
-						<TableCell>{game.winnerId === 0
-									? "Match null"
-									: game.winnerId === currentUser.id
-									? "Win"
-									: "Loss"}</TableCell>
+						<TableCell>
+									{game.winnerId === 0 ? (
+										"DRAWN GAME"
+									) : game.winnerId === currentUser.id ?(
+										<WinTableCell>WIN</WinTableCell>
+									) : (
+										<LossTableCell>LOSE</LossTableCell>
+									)}
+								
+						</TableCell>
 						</TableRow>
 					)
 				  })}

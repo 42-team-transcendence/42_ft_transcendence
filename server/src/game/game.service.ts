@@ -40,4 +40,8 @@ export class GameService {
 		//console.log({myGames});
 		return myGames;
 	}
+
+	async findAllGames(){
+		const games = await this.prisma.game.findMany();
+			return (games);}
 }

@@ -24,4 +24,9 @@ export class GameController {
 		//console.log({me});
 		return (this.gameService.findAllMyGames(me));
 	}
+
+	@Get('findAllGames')
+	async findAllGames(){
+		return (this.gameService.findAllGames());
+	}
 }

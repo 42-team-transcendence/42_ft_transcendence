@@ -7,6 +7,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ChatModule } from './chat/chat.module';
 import { GameModule } from './game/game.module';
 import { DoubleAuthModule } from './auth/doubleauth.module';
+import { PublicModule } from './public/public.module';
 
 
 @Module({
@@ -20,7 +21,8 @@ import { DoubleAuthModule } from './auth/doubleauth.module';
     PrismaModule,
     HttpModule,
     ChatModule,
-    GameModule
+    GameModule,
+	PublicModule
 
   ],
 })
