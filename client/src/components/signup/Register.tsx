@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { AxiosError } from 'axios';
-import axios from "../../api/axios";
+import axios, { axiosPrivate } from "../../api/axios";
 import Username from "./Username";
 import Email from "./Email";
 import Password from "./Password";
 import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
 import AuthPage from "../0Auth42/AuthPage";
+import io from 'socket.io-client';
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -18,6 +19,13 @@ import '../../styles/Register_Login.css';
 // =============================================================================
 // =============================================================================
 const REGISTER_URL = '/auth/signup';
+
+const socket = io('http://localhost:3333', {
+	path: "/status",
+	withCredentials: true,
+	autoConnect: true,
+	auth: { token: "TODO: gérer les tokens d'authentification ici" },
+});
 
 export default function Register() {
 
@@ -113,6 +121,22 @@ export default function Register() {
                 );
             const accessToken = response?.data?.accessToken;
             setAuth({email, pwd, accessToken});
+
+
+			console.log("email = ", email)
+			const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
+				headers: { 'Content-Type': 'application/json' },
+				withCredentials: true,
+			  });
+			  
+			console.log("Response 2", response2)
+			// Envoyez un événement au serveur pour signaler la connexion réussie
+			socket.emit('userLoggedIn', {userId: response2.data.id});
+			console.log('response2.data.id', response2.data.id);
+
+
+
+
             navigate(from, { replace: false});
             //TODO if needed : clear input fields avec les setStates
         } catch (err: AxiosError | any) {

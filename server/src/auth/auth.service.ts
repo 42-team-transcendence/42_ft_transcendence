@@ -54,6 +54,19 @@ export class AuthService {
         }
     }
 
+	async getUserBymail(userEmail: string){
+		console.log("search user by mail");
+		try{
+			const user = await this.prisma.user.findUnique({
+				where: {email: userEmail},
+			})
+			console.log("user by mail is: ", {user});
+			return (user);
+		} catch(error){
+			console.error(error)
+		}
+	}
+
 
     // =============================================================================
 	// SIGN IN =====================================================================

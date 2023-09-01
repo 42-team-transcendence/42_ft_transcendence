@@ -22,8 +22,7 @@ import { PublicModule } from './public/public.module';
     HttpModule,
     ChatModule,
     GameModule,
-	PublicModule
-
+	PublicModule,
   ],
 })
 export class AppModule {}

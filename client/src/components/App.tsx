@@ -17,8 +17,37 @@ import OtherUserProfile from './profile/OtherUserProfile';
 import ChannelCreation from './chat/channels/ChannelCreation';
 import ChannelParams from './chat/channels/ChannelParams';
 import Background from './Play/Background';
+import React, { useEffect } from 'react';
+import io from 'socket.io-client';
 
 function App() {
+
+	// Set up WebSocket connection
+	const socket = io('http://localhost:3333', {
+		path: "/status",
+		withCredentials: true,
+		autoConnect: true,
+		auth: { token: "TODO: gérer les tokens d'authentification ici" },
+	});
+
+	useEffect(() => {
+	  // Écoute le pong du serveur en réponse à notre ping
+	  socket.on('pong', () => {
+		console.log('Pong reçu du serveur');
+	  });
+  
+	  // Mise en œuvre du ping régulier (heartbeat)
+	  const pingInterval = setInterval(() => {
+		socket.emit('ping'); // Envoyez un ping au serveur
+	  }, 5000); // Envoyez un ping toutes les 5 secondes
+  
+	  // Gestion de la déconnexion du composant ou de la fermeture de l'application
+	  return () => {
+		clearInterval(pingInterval); // Arrête le ping lorsque le composant est démonté
+		socket.disconnect(); // Déconnecte du serveur lorsque le composant est démonté
+	  };
+	}, []);
+
 //Contient toutes les URLS / Routes de notre app front.
   return (
 	<main className="App">

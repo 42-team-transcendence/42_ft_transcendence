@@ -17,7 +17,6 @@ import { UseGuards } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 
 @WebSocketGateway(
-	// 4444, //Dès que j'essaie de changer le port j'ai une erreur réseau Connexion refused / CORS
 	{
 	  cors: {
 		origin: ["http://localhost:3000"],
@@ -29,27 +28,60 @@ import { JwtGuard } from 'src/auth/guard';
 		  sameSite: "lax"
 		}
 	  },
-	  path: "/user", //replace http://localhost:3333/socket.io/ with http://localhost:3333/game/
+	  path: "/status",
 	},
   )
-  export default class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  export default class UserGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() 
   	server: Server;
 
-	private onlineUsers = [];
+	private onlineUsers: Set<string> = new Set();
 
 	afterInit(server: Server) {
-	// Perform initialization tasks here
-	console.log('User websocket initialized');
+		console.log('!!!!!!!! -User websocket initialized- !!!!!!!');
 	}
   
-	//lifecycle method : automatically called by NestJS when a new client establishes a WebSocket connection with the server, due to OnGatewayConnection Interface
-	handleConnection(client: Socket, ) {
-		console.log(`Client connected: ${client.id}`)
+	handleConnection(client: Socket) {
+		const userId = client.id;
+		this.updateOnlineUsers();
+		// console.log(`User ${userId} connected.`);
+
+		let pingInterval: NodeJS.Timeout;
+			client.on('ping', () => {
+			client.emit('pong');
+		});
+		// Envoyez un ping au client toutes les 5 secondes
+			pingInterval = setInterval(() => {
+			client.emit('ping');
+		}, 5000);
+
+		client.on('disconnect', () => {
+		clearInterval(pingInterval);
+		this.onlineUsers.delete(userId);
+		this.updateOnlineUsers();
+		console.log(`Client déconnecté : ${userId}`);
+    	});
 	}
-  
-	//lifecycle method : automaticaly called on socket disconnection
+
 	handleDisconnect(client: Socket) {
-	  	console.log(`Client disconnected: ${client.id}`)
+		// const userId = client.id;
+		// this.onlineUsers.delete(userId);
+		// this.updateOnlineUsers();
+		console.log(`User ${client.id} disconnected.`);
 	}
-  }
+
+	@SubscribeMessage('userLoggedIn')
+  	handleUserLoggedIn(client: Socket, data: { userId: string }) {
+		const userId = data.userId;
+		//console.log(userId);
+		this.onlineUsers.add(userId);
+		this.updateOnlineUsers();
+		console.log(`User ${userId} logged in.`);
+	}
+
+	private updateOnlineUsers() {
+		const onlineUsersArray = Array.from(this.onlineUsers);
+		this.server.emit('onlineUsers', onlineUsersArray);
+		console.log('Utilisateurs en ligne mis à jour :', onlineUsersArray);
+	}
+}
