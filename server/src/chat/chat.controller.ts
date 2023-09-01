@@ -47,7 +47,7 @@ export class ChatController {
 			const participantIds = [...payload.recipients, creator.sub];
 			const participantIdsNoDuplicates = [...new Set(participantIds)]
 			if (participantIdsNoDuplicates.length < 2)
-			throw new ForbiddenException('Cannot findOrCreate Chat with 1 user',);
+				throw new ForbiddenException('Cannot findOrCreate Chat with 1 user',);
 			return (this.chatService.findOrCreateChat(participantIdsNoDuplicates, creator.sub));
 		} catch (error) {
 			throw error;

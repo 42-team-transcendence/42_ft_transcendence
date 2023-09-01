@@ -10,16 +10,18 @@ import Miniature from "../../miniature/Miniature";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {IconButton, List, ListItem, ListItemButton, ListSubheader,} from '@mui/material';
+import {IconButton, List, ListItem, ListItemButton, ListItemText, ListSubheader,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function ChannelParamsParticipants({chatId, admins, setAdmins}: {
+export default function ChannelParamsParticipants({chatId, admins, setAdmins, ownerId, currentUser}: {
 	chatId:number,
 	admins:any,
 	setAdmins:any,
+	ownerId:number,
+	currentUser:any
 }) {
 	const axiosPrivate = useAxiosPrivate();
-	
+
 	const handleDeleteAdmin = async (event:any, user:any) => {
 		if (admins.find((e:any) => e.id === user.id)) {
 			try {
@@ -29,10 +31,9 @@ export default function ChannelParamsParticipants({chatId, admins, setAdmins}: {
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-                console.log('saveNameInDb', response.data);
 				setAdmins(admins.filter((admin:any)=> admin.id != user.id));
             } catch (err: any) {
-                console.log(err);
+                console.log(err.response);
             }
 		}
     };
@@ -48,11 +49,15 @@ export default function ChannelParamsParticipants({chatId, admins, setAdmins}: {
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						<ListItemButton onClick={(event)=>handleDeleteAdmin(event, user)}>
-							<IconButton edge="end" aria-label="delete">
-								<DeleteIcon />
-							</IconButton>
-						</ListItemButton>
+						{(user.id != ownerId) ? (
+							<ListItemButton onClick={(event)=>handleDeleteAdmin(event, user)}>
+								<IconButton edge="end" aria-label="delete">
+									<DeleteIcon />
+								</IconButton>
+							</ListItemButton>) : (
+							<ListItemText primary="Owner" />
+							)
+						}
 					</ListItem>
 				)})}
 		</List>

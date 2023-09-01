@@ -15,7 +15,6 @@ import CustomButton from "../../styles/buttons/CustomButton";
 import Box from '@mui/material/Box';
 import '../../styles/Register_Login.css';
 
-
 // =============================================================================
 // =============================================================================
 const REGISTER_URL = '/auth/signup';

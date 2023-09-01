@@ -58,14 +58,13 @@ export default function ChannelCreation() {
                     withCredentials: true
                 }
 			);
-			console.log(response.data);
             navigate('/chat', { replace: false});
         } catch (err: any) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response) {
                 setErrMsg('Channel creation failed');
-                console.log(err);
+                console.log(err.response);
             }
         }
 	}

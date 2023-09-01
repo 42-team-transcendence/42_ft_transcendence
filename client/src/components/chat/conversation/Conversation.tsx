@@ -7,19 +7,20 @@ import { useNavigate } from "react-router-dom";
 // IMPORT COMPONENTS ===========================================================
 import MessageInput from "./MessageInput";
 import MessageInConv from "./MessageInConv";
-import Miniature from "../miniature/Miniature";
-import tchoupi from '../../assets/tchoupi50x50.jpg'
-import GroupMiniature from "../miniature/GroupMiniature";
+import Miniature from "../../miniature/Miniature";
+import tchoupi from '../../../assets/tchoupi50x50.jpg'
+import GroupMiniature from "../../miniature/GroupMiniature";
 
 // =============================================================================
 // IMPORT TYPES ===============================================================
-import type {Message} from "../../utils/types"
+import type {Message} from "../../../utils/types"
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box, Button} from "@mui/material";
 import { MessageLeft, MessageRight } from "./MessageStyle";
-import '../../styles/chat/Conversation.css'
+import '../../../styles/chat/Conversation.css'
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 //TODO : problème quand on utilise la search bar directement depuis la page du chat, et qu'on join un nouveau canal, et qu'on envoie un message : il ne s'affiche pas (probleme de socket ?)
@@ -62,16 +63,13 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 auth: {token: "//TODO : gérer les tokens d'authentification ici"},
                 query: {"userId": currentUser.id}
             });
-        console.log({newChatSocket});
         setChatSocket(newChatSocket)
     }, [setChatSocket])
 
     //On Connect : actions supplémentaires possibles à la connexion de la socket client
     useEffect(() => {
         function onConnect() {
-            console.log("socket onConnect useEffect")
             // setSocketIsConnected(true);
-
             const userData = {
                 userId : currentUser.id,
                 socketId : chatSocket?.id
@@ -89,7 +87,6 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             senderId: currentUser.id,
             chatId: chat.id
         }
-        console.log({payload})
         chatSocket?.emit("message", payload)
         //Pas besoin d'ajouter le message envoyé par soit-même puisquil est renvoyé par socket à toute la room
         // setMessages([...messages, {content: value, senderId: currentUser.id, chatId: chat.id}])
@@ -97,7 +94,6 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Réception et stockage des messages par le client
     const messageListener = (message:Message) => {
-      console.log("mesage received", message)
         setMessages([...messages, message])
     }
     useEffect(() => {
@@ -121,9 +117,19 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
           year: "numeric",
           hour: "2-digit",
           minute: "2-digit",
+          second: "2-digit",
         }).format(new Date(date))
       return "";
     }
+
+const isMute = (mutedUsers:any, currentUser:any) => {
+  //if element is found, currentUser is muted
+  return mutedUsers.find((e:any) => {
+    return (
+      e.userId === currentUser.id
+      && new Date(e.endsAt) > new Date())
+  })
+}
 
 	return (
 		<Box className="conversation"
@@ -146,7 +152,9 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 <>
                   {chat.participants.length > 0 && <GroupMiniature participants={chat.participants}></GroupMiniature>}
                   {chat.channelInfo &&
-                    <Button onClick={handleChannelTitleClick}>{chat.channelInfo.name}</Button>}
+                    <Button onClick={handleChannelTitleClick} endIcon={<SettingsIcon />}>
+                      {chat.channelInfo.name}
+                    </Button>}
                 </>
               )
             }
@@ -174,7 +182,12 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
             }
             </Box>
             <Box>
-              <MessageInput send={send}></MessageInput>
+            {!isChat && isMute(chat?.channelInfo.mutedUsers, currentUser) ? (
+                `YOU ARE MUTED UNTIL ${formattedTimestamp(chat?.channelInfo.mutedUsers.find(
+                  (e:any)=>e.userId === currentUser.id
+                ).endsAt)}`
+              ) : <MessageInput send={send}></MessageInput>
+            }
             </Box>
           </>
         ) : (

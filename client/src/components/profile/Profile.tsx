@@ -46,17 +46,44 @@ function Profile() {
 	// const [user, setUser] = useState<any>();
 
 	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '' });
+    const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
+
+
+	
     useEffect(() => {
+
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
             .then(response => {
                 setUser(response.data);
+				console.log("AUTH = " + response.data.auth2fa);
             })
             .catch(error => {
                 console.error('Error fetching user details:', error);
             });
+			
     }, []);
 	
+	const updateUser = () => {
+
+		axiosPrivate.get('/users/me')
+		.then(response => {
+			setUser(response.data);
+		})
+		.catch(error => {
+			console.error('Error fetching user details:', error);
+		});
+	}
+	const disabled2fa = async () => {
+        const response = await axiosPrivate.post(
+			'/users/update2fa',
+			JSON.stringify({ auth2fa: false }),
+			{
+			  headers: { "Content-Type": "application/json" },
+			  withCredentials: true,
+			}
+		)
+	  };
 
 	// =============================================================================
 	// EMAIL MODAL =================================================================
@@ -179,41 +206,6 @@ function Profile() {
 	};
 
 
-	// =============================================================================
-	// 2FA MODAL ===================================================================
-	const [is2fa, setIs2fa] = useState(user?.auth2fa || false);
-
-
-	const handle2fa = () => {
-		const new2faState = !is2fa; // Toggle the state
-		setIs2fa(new2faState);
-	  
-		// Save the new 2FA state to your backend
-		save2faState(new2faState); // Call a function to save the state
-	};
-
-	const save2faState = async (new2faState: boolean) => {
-		try {
-			const response = await axiosPrivate.post(
-				'/users/update2fa',
-				JSON.stringify({ auth2fa: new2faState }),
-				{
-					headers: { "Content-Type": "application/json" },
-					withCredentials: true,
-				}
-			);
-		
-			if (response.status === 200) {
-				console.log('2FA state update successful');
-				setUser((prevUser) => ({...prevUser, auth2fa: new2faState}))
-			} else {
-				console.error('2FA state update failed');
-			}
-		} catch (error) {
-		  	console.error('Error updating 2FA state:', error);
-		}
-	};
-
 
 	// =============================================================================
 	// AVATAR ======================================================================
@@ -249,46 +241,16 @@ function Profile() {
 		};
 
 	}
-	// };
-	  
-	// const handleUpload = async (formData: FormData) => {
-	// 	console.log({formData});
-	// 	try {
-	// 	  	const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
-	// 			headers: {'Content-Type': 'multipart/form-data'},
-	// 			withCredentials: true,
-	// 	  	});
-	// 		console.log("reponse avatar, ", {response});
-	// 		if (response.status === 200) {
-	// 			window.location.reload();
-	// 			setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
-	// 			console.log('Avatar update successful');
-	// 		} else {
-	// 			console.error('Avatar update failed');
-	// 		}
-	// 		} catch (error) {
-	// 			console.error('Error updating avatar:', error);
-	// 		}
-	//  	};
-	  
-	// 	const handleUploadClick = () => {
-			
-	// 		console.log("selected file = ", selectedFile)
-	// 		if (selectedFile) {;
-	// 			const formData = new FormData();
-	// 			formData.append('avatar', selectedFile);
-	// 			console.log('formData:', formData);
-	// 			handleUpload(formData);
-	// 		}
-	// 		else
-	// 		{
-	// 			console.log('no upload');
-	// 		}
-	// 	};
+	
 	const imageUrl = `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`;
+
+	
+
+
 
 	// =============================================================================
 	// RETURN ======================================================================
+
   	return (
 		<PageWrapper>
 			<div className="main-container">
@@ -360,17 +322,25 @@ function Profile() {
 					<div className="element-profile">
 					<div className="a-modifier">
 						<h2> Double factors </h2>
-						<Checkbox checked={user.auth2fa} onChange={handle2fa}/>
-						{user.auth2fa ?(
-						<>
-							<DoubleAuth/>
-						</>
-					 ) : (
-						<p>Desactivated...</p>
-					)}
+
+					{!user.auth2fa ? (
+						<Checkbox checked={user.auth2fa} onChange={() =>
+						 	setIsDoubleAuthEnabled(!isDoubleAuthEnabled) } />
+							
+							) : (
+						<div>
+							<button onClick={() => {disabled2fa() 
+												setIsDoubleAuthEnabled(false)
+												updateUser() }}>Disable 2FA</button>
+						</div>)
+
+					}
+							
+					{isDoubleAuthEnabled && <DoubleAuth /> }
+						</div>
 					</div>
-				</div>
-				</div>
+					</div>
+
 				<GameHistory/>
 			</div>
 
@@ -400,42 +370,3 @@ function Profile() {
 
 export default Profile;
 
-
-// const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-// const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-// 	const file = event.target.files?.[0];
-// 	console.log("ici");
-// 	if (file) {
-// 		const formData = new FormData();
-// 		formData.append('avatar', file);
-// 		console.log('formData:', formData);
-// 		handleUpload(formData);
-// 	}
-// 	else
-// 	{
-// 		console.log('no upload');
-// 	}
-
-// };
-  
-// const handleUpload = async (formData: FormData) => {
-// 	console.log({formData});
-// 	try {
-// 		  const response = await axiosPrivate.post('/users/uploadAvatar', formData, {
-// 			headers: {'Content-Type': 'multipart/form-data'},
-// 			withCredentials: true,
-// 		  });
-// 		console.log("reponse avatar, ", {response});
-// 		if (response.status === 200) {
-// 			window.location.reload();
-// 			setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
-// 			console.log('Avatar update successful');
-// 		} else {
-// 			console.error('Avatar update failed');
-// 		}
-// 		} catch (error) {
-// 			console.error('Error updating avatar:', error);
-// 		}
-// 	 };
-  
