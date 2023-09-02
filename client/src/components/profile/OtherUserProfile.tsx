@@ -40,7 +40,8 @@ function OtherUserProfile() {
 	const navigate = useNavigate();
 
 	const onlineUsers = useOnlineStatus();
-
+	console.log({onlineUsers});
+	
 	const [user, setUser] = useState<User>();
 	const [currentUser, setCurrentUser] = useState<any>();
 	const [currentUserChans, setCurrentUserChans] = useState<any>();

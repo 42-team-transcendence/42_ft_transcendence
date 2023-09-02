@@ -4,6 +4,7 @@ import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead
 import PageWrapper from "../navbar/pageWrapper";
 //import '../../styles/GameHistory.css';
 import { styled } from "@mui/system";
+import { useOnlineStatus } from "../../context/OnlineStatus";
 import tchoupi from '../../assets/tchoupi50x50.jpg'
 import Miniature from "../miniature/Miniature";
 
@@ -28,6 +29,9 @@ function GameHistory() {
 const axiosPrivate = useAxiosPrivate();
 const [gameHistory, setGameHistory] = useState([]);
 const [currentUser, setCurrentUser] = useState<any>();
+
+const onlineUsers = useOnlineStatus();
+console.log({onlineUsers});
 
 useEffect(() => { //fetch game data
 	console.log("coucou useEffect")
@@ -120,6 +124,8 @@ useEffect(() => { //fetch game data
 						my_score = game.player_2_score;
 						adv_score = game.player_1_score;
 					}
+					// Vérifier si l'adversaire est en ligne
+    				const isAdversaireOnline = onlineUsers.includes(adversaire.id);
 					return (
 						<TableRow
 							key={index}
@@ -128,6 +134,7 @@ useEffect(() => { //fetch game data
 								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
 						<TableCell>
 							{/* {adversaire.nickname} */}
+							<div className={`status-indicator ${isAdversaireOnline ? 'online' : 'offline'}`} />
 							<Miniature miniatureUser={{
 							nickname: adversaire.nickname,
 							id: adversaire.id,
