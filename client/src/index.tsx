@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './components/App';
 import { AuthProvider } from "./context/AuthProvider";
-import { OnlineStatusProvider } from './context/OnlineSatus';
+import { OnlineStatusProvider } from './context/OnlineStatus';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const container = document.getElementById('root');

@@ -89,8 +89,8 @@ export class AuthController {
 	async getUserBymail(
 		@Param('email') email: string
 	) {
-		console.log ({email});
-		console.log("email = ",email);
+		//console.log ({email});
+		//console.log("email = ",email);
 		return (this.authService.getUserBymail(email));
 	}
 

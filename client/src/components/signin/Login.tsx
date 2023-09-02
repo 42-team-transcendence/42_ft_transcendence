@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import useAuth from '../../hooks/useAuth';
-import axios from '../../api/axios';
+import axios, { axiosPrivate } from '../../api/axios';
 import Email from './Email';
 import Password from './Password';
 import { AxiosError } from 'axios';
@@ -94,8 +94,15 @@ const Login: React.FC<LoginProps> = () => {
             setAuth({email, pwd, accessToken});
             setEmail('');
             setPwd('');
+			const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
+				headers: { 'Content-Type': 'application/json' },
+				withCredentials: true,
+			  });
+			  
+			//console.log("Response 2", response2)
 			// Envoyez un événement au serveur pour signaler la connexion réussie
-			//socket.emit('userLoggedIn', { username });
+			socket.emit('userLoggedIn', {userId: response2.data.id});
+			//console.log('response2.data.id', response2.data.id);
 
             navigate(from, { replace: true});
         } catch (err: AxiosError | any) {

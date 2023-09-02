@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // IMPORT COMPONENTS ===========================================================
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import GameHistory from "./GameHistory";
-
+import { useOnlineStatus } from "../../context/OnlineStatus";
 import PageWrapper from "../navbar/pageWrapper";
 
 // =============================================================================
@@ -29,6 +29,7 @@ interface User {
 	nickname: string;
 	picture: string;
 	level: string;
+	isOnline: boolean;
 }
 
 // =============================================================================
@@ -37,6 +38,8 @@ interface User {
 function OtherUserProfile() {
 	const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();
+
+	const onlineUsers = useOnlineStatus();
 
 	const [user, setUser] = useState<User>();
 	const [currentUser, setCurrentUser] = useState<any>();
@@ -54,10 +57,12 @@ function OtherUserProfile() {
 				if (!response.data) {
 					navigate('/', {replace: false});
 				}
+				const isUserOnline = onlineUsers.includes(response.data.id);
 				setUser({
 					...response.data,
 					picture:"https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg",
-					level : "200"
+					level : "200",
+					isOnline: isUserOnline,
 
 				});
 			} catch (error:any) {
@@ -65,7 +70,7 @@ function OtherUserProfile() {
 			}
 		}
 		getUser();
-	}, [])
+	}, [onlineUsers])
 
 	useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => {
@@ -148,6 +153,9 @@ function OtherUserProfile() {
 
 						<div className="profile-info">
 							<h1 className="name">{user?.nickname}</h1>
+							<div className={`status-indicator ${user.isOnline ? 'online' : 'offline'}`}>
+        						{user.isOnline ? 'Online' : 'Offline'}
+							</div>				
 							<p>Rank 2 | Lvl {user?.level}</p>
 						</div>
 					</div>

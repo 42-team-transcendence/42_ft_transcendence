@@ -70,6 +70,23 @@
 	font-family: Lato;
 	font-size: 22px;
 }
+
+.status-indicator {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	margin-right: 5px;
+  }
+  
+  .online {
+	background-color: green; /* Couleur verte pour en ligne */
+  }
+  
+  .offline {
+	background-color: red; /* Couleur rouge pour hors ligne */
+  }
+  
  
  /*.cont{
 	display: flex;

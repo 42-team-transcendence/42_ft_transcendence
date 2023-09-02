@@ -30,23 +30,23 @@ function App() {
 		auth: { token: "TODO: gérer les tokens d'authentification ici" },
 	});
 
-	useEffect(() => {
-	  // Écoute le pong du serveur en réponse à notre ping
-	  socket.on('pong', () => {
-		console.log('Pong reçu du serveur');
-	  });
+	// useEffect(() => {
+	//   // Écoute le pong du serveur en réponse à notre ping
+	//   socket.on('pong', () => {
+	// 	console.log('Pong reçu du serveur');
+	//   });
   
-	  // Mise en œuvre du ping régulier (heartbeat)
-	  const pingInterval = setInterval(() => {
-		socket.emit('ping'); // Envoyez un ping au serveur
-	  }, 5000); // Envoyez un ping toutes les 5 secondes
+	//   // Mise en œuvre du ping régulier (heartbeat)
+	//   const pingInterval = setInterval(() => {
+	// 	socket.emit('ping'); // Envoyez un ping au serveur
+	//   }, 5000); // Envoyez un ping toutes les 5 secondes
   
-	  // Gestion de la déconnexion du composant ou de la fermeture de l'application
-	  return () => {
-		clearInterval(pingInterval); // Arrête le ping lorsque le composant est démonté
-		socket.disconnect(); // Déconnecte du serveur lorsque le composant est démonté
-	  };
-	}, []);
+	//   // Gestion de la déconnexion du composant ou de la fermeture de l'application
+	//   return () => {
+	// 	clearInterval(pingInterval); // Arrête le ping lorsque le composant est démonté
+	// 	socket.disconnect(); // Déconnecte du serveur lorsque le composant est démonté
+	//   };
+	// }, []);
 
 //Contient toutes les URLS / Routes de notre app front.
   return (
