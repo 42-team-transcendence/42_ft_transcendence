@@ -11,7 +11,7 @@ import PwdModal from "./PasswordModal";
 import AuthContext, { AuthProvider } from '../../context/AuthProvider';
 import NickModal from "./NicknameModal";
 import DoubleAuth from "../auth2fa/Doubleauth";
-import { useOnlineStatus } from "../../context/OnlineSatus";
+import { useOnlineStatus } from "../../context/OnlineStatus";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
@@ -40,18 +40,34 @@ function Profile() {
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);
 	const onlineUsers = useOnlineStatus();
-	//const isUserOnline = onlineUsers.includes(user.id); // 'user' doit être accessible dans ce composant
+	const [currentUserId, setCurrentUserId] = useState("");
 	// =============================================================================
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
 	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '' });
     const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
+	console.log({auth});
+	const handleUserId = async() =>{
+		const email = auth.email;
+		try{
+			const response = await axiosPrivate.get(`/auth/userByMail/${email}`, {
+				headers: { 'Content-Type': 'application/json' },
+				withCredentials: true,
+			  });
+			  setCurrentUserId(response.data.id);
+			  
+			}catch (error){
+				console.error(error)
+			}	
+	}
+	handleUserId();
+	console.log('user id', currentUserId);
+	console.log('online users' , onlineUsers);
+	const isUserOnline = onlineUsers.includes(currentUserId);
 
-
-	
     useEffect(() => {
-
+		
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
             .then(response => {
@@ -168,7 +184,6 @@ function Profile() {
 		handleCloseNickModal();
 	};
 	 
-
 	// =============================================================================
 	// PWD MODAL ===================================================================
 
@@ -205,8 +220,6 @@ function Profile() {
 		handleClosePwdModal();
 	};
 
-
-
 	// =============================================================================
 	// AVATAR ======================================================================
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -239,14 +252,9 @@ function Profile() {
 			}
 	
 		};
-
 	}
 	
 	const imageUrl = `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`;
-
-	
-
-
 
 	// =============================================================================
 	// RETURN ======================================================================
@@ -256,6 +264,9 @@ function Profile() {
 			<div className="main-container">
 				<div className="container-wrap">
 					<div className="avatar">
+					<div className={`status-indicator ${isUserOnline ? 'online' : 'offline'}`}>
+						{isUserOnline ? 'Online' : 'Offline'}
+					</div>
 					<label htmlFor="avatarInput">
 						<img
 						 	width= "150px"
@@ -296,7 +307,7 @@ function Profile() {
 							<p className="rank"> Rank 1 | Lvl 800 </p>
 						</div>
 					</div>
-
+					
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">

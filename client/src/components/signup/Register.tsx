@@ -122,7 +122,7 @@ export default function Register() {
             setAuth({email, pwd, accessToken});
 
 
-			console.log("email = ", email)
+			//console.log("email = ", email)
 			const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
 				headers: { 'Content-Type': 'application/json' },
 				withCredentials: true,
