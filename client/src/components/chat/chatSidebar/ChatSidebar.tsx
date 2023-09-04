@@ -53,7 +53,7 @@ export default function ChatSidebar({
 								userId={recipient.id}
 								nickname={recipient.nickname}
 								lastMessage={
-									chat.messages.length > 0
+									chat.messages.length > 0 && !currentUser.blocked.find((e:any)=>e.id === recipient.id)
 									? chat.messages[chat.messages.length - 1].message
 									: ""
 								}
@@ -70,8 +70,9 @@ export default function ChatSidebar({
 							participants={chat.participants}
 							channelName={chat.channelInfo.name}
 							lastMessage={
-								chat.messages.length > 0
-								? chat.messages[chat.messages.length - 1].message
+								chat.messages.length > 0 && !currentUser.blocked.find(
+									(e:any)=>e.id === chat.messages[chat.messages.length - 1].senderId
+								) ? chat.messages[chat.messages.length - 1].message
 								: ""
 							}
 							showChatSidebar={showChatSidebar}

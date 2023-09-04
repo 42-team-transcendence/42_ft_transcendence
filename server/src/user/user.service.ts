@@ -22,7 +22,10 @@ export class UserService {
 	async getMe(userId: number) {
 		const user = await this.prisma.user.findUnique({
 		  where: { id: userId },
-		  include: {blocked:true}
+		  include: {
+			blocked:true,
+			blockedBy:true
+		}
 		});
 		console.log('---------ME---------');
 		if (!user) {
@@ -32,7 +35,13 @@ export class UserService {
 	}
 
 	async getUser(userId:number) {
-		const user = await this.prisma.user.findFirst({where: {id: userId}});
+		const user = await this.prisma.user.findFirst({
+			where: {id: userId},
+			include: {
+				blocked:true,
+				blockedBy:true
+			}
+		});
 		return (user);
 	}
 

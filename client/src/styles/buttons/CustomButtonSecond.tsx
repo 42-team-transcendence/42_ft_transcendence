@@ -6,11 +6,12 @@ interface CustomButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	icon: ReactNode;
 }
 
-const CustomButtonSecond: React.FC<CustomButtonProps> = ({ text, icon, onClick }) => {
+const CustomButtonSecond: React.FC<CustomButtonProps> = ({ text, icon, onClick, disabled=false }) => {
   return (
     <Button
       variant="contained"
       size="large"
+      disabled={disabled}
       style={{
         backgroundColor: '#E586A8',
         border: '2px solid black',

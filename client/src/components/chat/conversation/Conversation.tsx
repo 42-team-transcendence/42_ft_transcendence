@@ -169,8 +169,9 @@ const isMute = (mutedUsers:any, currentUser:any) => {
                   );
                 } else {// Display messages sent by others on the left
                     const sender = chat?.participants.find((e: any) => e.id === msg.senderId);
+                    const senderBlocked = currentUser.blocked.find((e: any) => e.id === msg.senderId);
                     return (
-                      <MessageLeft
+                      !senderBlocked && <MessageLeft
                         key={index}
                         message={msg.content}
                         timestamp={formattedTimestamp(msg.createdAt)}
