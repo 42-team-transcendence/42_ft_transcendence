@@ -88,7 +88,7 @@ export const MessageLeft: React.FC<MessageProps & { recipients?: any; tchoupi?: 
 				{sender ? (
 					<>
 					
-						<BadgeAvatar minAvatar={{ url: tchoupi, name: "Tchoupi" }} />
+						{/* <BadgeAvatar minAvatar={{ url: tchoupi, name: "Tchoupi" }} /> */}
 					</>
 				) : (
 					<div>problem finding sender</div>
