@@ -19,6 +19,7 @@ import PublicIcon from '@mui/icons-material/Public';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 
 
@@ -30,6 +31,7 @@ interface User {
 	picture: string;
 	level: string;
 	isOnline: boolean;
+	blocked: User[];
 }
 
 // =============================================================================
@@ -45,6 +47,7 @@ function OtherUserProfile() {
 	const [user, setUser] = useState<User>();
 	const [currentUser, setCurrentUser] = useState<any>();
 	const [currentUserChans, setCurrentUserChans] = useState<any>();
+	const [userBlocked, setUserBlocked] = useState<boolean>(false);
 
 	const [anchorChatMenu, setAnchorChatMenu] = useState<null | HTMLElement>(null);
     const openChatMenu = Boolean(anchorChatMenu);
@@ -76,17 +79,20 @@ function OtherUserProfile() {
 	useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => {
 			try {
-          const response = await axiosPrivate.get('/users/me', {
-              headers: { 'Content-Type': 'application/json'},
-              withCredentials: true
-          })
-          setCurrentUser(response.data);
+				const response = await axiosPrivate.get('/users/me', {
+					headers: { 'Content-Type': 'application/json'},
+					withCredentials: true
+				})
+				console.log(response.data);
+				setCurrentUser(response.data);
+				if (response.data.blocked.find((e:any)=>e.id === user?.id))
+					setUserBlocked(true);
 			} catch (error:any) {
-				console.log(error.response );
+				console.log(error.response);
 			}
 		}
 		getCurrentUser();
-    }, [])
+    }, [user])
 
     useEffect(() => {//GET ALL CHATS & CHANNELS DATA from current User
 		const findAllMyPrivateChansOwned = async () => {
@@ -138,9 +144,26 @@ function OtherUserProfile() {
 		}
 	}
 
-  return (
+	const handleBlock = async () => {
+		console.log("userBlocked", !userBlocked);
+		try {
+			if (user) {
+				const response = await axiosPrivate.post(
+					`users/block/${user.id}`,
+					{block: !userBlocked}, {
+						headers: {'Content-Type': 'application/json'},withCredentials: true
+					}
+				);
+				setUserBlocked(!userBlocked);
+			}
+		} catch (err: any) {
+			console.log(err.response);
+		}
+	}
+
+	return (
 	<PageWrapper>
-		{user && 
+		{user && currentUser &&
 			<div className="container-wrap-other">
 				<div className="container-1">
 					<div className="avatar">
@@ -214,9 +237,9 @@ function OtherUserProfile() {
 								onClick={startPrivateMessage}/>
 
 							<CustomButtonSecond
-								icon={<BlockIcon />}
-								text="Block"
-								onClick={startPrivateMessage} />
+								icon={!userBlocked ? <BlockIcon />: <LockOpenIcon />}
+								text={!userBlocked ? "Block": "Unblock"}
+								onClick={handleBlock} />
 						</div>
 					</div>
 				</div>
