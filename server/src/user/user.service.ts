@@ -5,6 +5,7 @@ import * as argon from 'argon2';
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import * as multer from 'multer';
+import { disconnect } from "process";
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
 	async getMe(userId: number) {
 		const user = await this.prisma.user.findUnique({
 		  where: { id: userId },
+
 		  select: {
 			createdAt: true,
 			updatedAt: true,
@@ -41,7 +43,10 @@ export class UserService {
 			games_player_1: true,
 			games_player_2: true,
 		}
-	
+		  include: {
+			blocked:true,
+			blockedBy:true
+		}
 		});
 		console.log('---------ME---------');
 		if (!user) {
@@ -53,6 +58,7 @@ export class UserService {
 	async getUser(userId:number) {
 		const user = await this.prisma.user.findFirst({
 			where: {id: userId},
+
 			select: {
 				createdAt: true,
 				updatedAt: true,
@@ -72,6 +78,10 @@ export class UserService {
 				avatar: true,
 				games_player_1: true,
 				games_player_2: true,
+
+			include: {
+				blocked:true,
+				blockedBy:true
 			}
 		});
 		return (user);
@@ -248,5 +258,26 @@ export class UserService {
         });
         return user?.avatar;
     }
+
+	// =============================================================================
+	// UPDATES USER BLOCKED =====================================================================
+	async updateBlockedUsers(userId: number, currentUserId: number, block: boolean) {
+		try {
+			const updateBlockedUsers = await this.prisma.user.update({
+				where: { id: currentUserId },
+				data: {
+					blocked: {
+						connect: (block ? {id: userId}: undefined),
+						disconnect: (!block ? {id: userId}: undefined)
+					}
+				},
+		  	});
+			console.log({updateBlockedUsers});
+			return updateBlockedUsers;
+		} catch (error) {
+		  	console.error(error);
+			  throw new Error(error);
+		}
+	}
 }
 

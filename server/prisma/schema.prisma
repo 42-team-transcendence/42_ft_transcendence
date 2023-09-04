@@ -45,6 +45,9 @@ model User {
 
 	avatar        	String     @default("/storage/default/user.jpg")
 
+	blockedBy 		User[]  @relation("BlockedUsers")
+	blocked  		User[]  @relation("BlockedUsers")
+
   @@map("users")
 }
 
