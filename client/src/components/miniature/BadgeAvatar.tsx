@@ -1,21 +1,46 @@
+
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
-
-import { useState } from 'react';
-
+import { useOnlineStatus } from '../../context/OnlineStatus';
+import React, { useState, useEffect } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import type {MiniAvatarPicture} from '../../utils/types'
 
-export default function BadgeAvatar({minAvatar} :{minAvatar: MiniAvatarPicture}) {
-  const [isConnected, updateIsConnected] = useState<boolean>(true)
-  const [invisible, setInvisible] = useState(false); //faire disparaître le rond de connexion
 
-  // The "styled" function from @mui/material/styles is a utility provided by MUI
-  // that allows you to create custom styled components easily. 
-  // It is based on the concept of CSS-in-JS, where you define styles directly in your JS code.
-  // The styled function takes two arguments: a component and a style definition function (propriétés CSS)
-  const StyledBadge = styled(Badge)(() => (
-  {
+export default function BadgeAvatar({ minAvatar }: { minAvatar: MiniAvatarPicture }) {
+
+  const axiosPrivate = useAxiosPrivate();
+  const onlineUsers = useOnlineStatus();
+
+  // Define a state variable for isConnected
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Wrap the asynchronous code in an async function
+    const fetchUserId = async () => {
+      try {
+        const id = await axiosPrivate.get(`/auth/userByNick/${minAvatar.name}`, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        });
+        console.log(minAvatar.name);
+        console.log({id});
+
+        // Check if the fetched user ID is in the onlineUsers array
+        const connected = onlineUsers.includes(id.data.id);
+        console.log({connected});
+        setIsConnected(connected); // Update the isConnected state
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    // Call the async function to fetch the user ID
+    fetchUserId();
+  }, [minAvatar.name, axiosPrivate, onlineUsers]);
+
+  const StyledBadge = styled(Badge)(() => ({
     '& .MuiBadge-badge': {
       backgroundColor: isConnected ? 'green' : 'grey',
       color: isConnected ? 'green' : 'grey',
@@ -24,13 +49,13 @@ export default function BadgeAvatar({minAvatar} :{minAvatar: MiniAvatarPicture})
   }));
 
   return (
-      <StyledBadge
-        overlap="circular"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        variant="dot"
-        invisible={invisible}
-      >
-        <Avatar alt={minAvatar.name} src={minAvatar.url} />
-      </StyledBadge>
+    <StyledBadge
+      overlap="circular"
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      variant="dot"
+      invisible={!isConnected} // Set invisible to true if not connected
+    >
+      <Avatar alt={minAvatar.name} src={minAvatar.url} />
+    </StyledBadge>
   );
 }

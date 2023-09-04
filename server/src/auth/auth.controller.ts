@@ -94,6 +94,15 @@ export class AuthController {
 		return (this.authService.getUserBymail(email));
 	}
 
+    @Get('/userByNick/:nickname') 
+	async getUserByNick(
+		@Param('nickname') nickname: string
+	) {
+		console.log ({nickname});
+		//console.log("email = ",email);
+		return (this.authService.getUserByNick(nickname));
+	}
+
 /*********************************************************************************************************/
 
     @UseGuards(JwtGuard)

@@ -68,6 +68,20 @@ export class AuthService {
 		}
 	}
 
+    async getUserByNick(userNick: string){
+		try{
+            console.log("ICI");
+			const user = await this.prisma.user.findUnique({
+				where: {nickname: userNick},
+                select: {id: true}
+			})
+			console.log("user by nick is: ", {user});
+			return (user);
+		} catch(error){
+			console.error(error)
+		}
+	}
+
 
     // =============================================================================
 	// SIGN IN =====================================================================
