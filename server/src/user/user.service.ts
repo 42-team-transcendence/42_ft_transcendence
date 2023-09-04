@@ -125,10 +125,6 @@ export class UserService {
 		}
 	}
 	  
-	  
-
-
-
 	async updateUser(userId: number, updateData: { score?: number, email?: string }) {
 		try {
 			await this.prisma.user.update({
