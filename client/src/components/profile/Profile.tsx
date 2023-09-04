@@ -254,7 +254,6 @@ function Profile() {
 		};
 	}
 	
-	const imageUrl = `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`;
 
 	// =============================================================================
 	// RETURN ======================================================================
