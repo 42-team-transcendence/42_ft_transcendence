@@ -31,6 +31,7 @@ interface User {
 	picture: string;
 	level: string;
 	isOnline: boolean;
+	blockedBy: User[];
 	blocked: User[];
 }
 
@@ -69,6 +70,7 @@ function OtherUserProfile() {
 					isOnline: isUserOnline,
 
 				});
+				console.log(response.data);
 			} catch (error:any) {
 				console.log(error.response );
 			}
@@ -83,7 +85,6 @@ function OtherUserProfile() {
 					headers: { 'Content-Type': 'application/json'},
 					withCredentials: true
 				})
-				console.log(response.data);
 				setCurrentUser(response.data);
 				if (response.data.blocked.find((e:any)=>e.id === user?.id))
 					setUserBlocked(true);
@@ -189,7 +190,7 @@ function OtherUserProfile() {
 							<CustomButtonSecond
 								icon={<ChatBubbleIcon />}
 								text="Message"
-								
+								disabled={currentUser.blockedBy.find((e:User)=>e.id === user.id)?true:false}
 								id="send_msg_button"
 								aria-controls={openChatMenu ? 'send_msg_menu' : undefined}
 								aria-haspopup="true"
