@@ -21,32 +21,13 @@ export class UserService {
 
 	async getMe(userId: number) {
 		const user = await this.prisma.user.findUnique({
-		  where: { id: userId },
+			where: { id: userId },
 
-		  select: {
-			createdAt: true,
-			updatedAt: true,
-			nickname: true,
-			email: true,
-			secret: true,
-			auth2fa: true,
-			chatsCreated: true,
-			chats: true,
-			messages: true,
-			channelsOwned: true,
-			channelsAdministrated: true,
-			channelsBannedOf: true,
-			channelsMutedOf: true,
-			rank: true,
-			score: true,
-			avatar: true,
-			games_player_1: true,
-			games_player_2: true,
-		}
-		  include: {
-			blocked:true,
-			blockedBy:true
-		}
+			include: {
+			  blocked: true,
+			  blockedBy: true
+			}
+	
 		});
 		console.log('---------ME---------');
 		if (!user) {
@@ -58,27 +39,6 @@ export class UserService {
 	async getUser(userId:number) {
 		const user = await this.prisma.user.findFirst({
 			where: {id: userId},
-
-			select: {
-				createdAt: true,
-				updatedAt: true,
-				nickname: true,
-				email: true,
-				secret: true,
-				auth2fa: true,
-				chatsCreated: true,
-				chats: true,
-				messages: true,
-				channelsOwned: true,
-				channelsAdministrated: true,
-				channelsBannedOf: true,
-				channelsMutedOf: true,
-				rank: true,
-				score: true,
-				avatar: true,
-				games_player_1: true,
-				games_player_2: true,
-
 			include: {
 				blocked:true,
 				blockedBy:true
@@ -280,4 +240,6 @@ export class UserService {
 		}
 	}
 }
+
+
 
