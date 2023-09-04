@@ -177,4 +177,20 @@ export class UserController {
 	// 	console.log(`Uploaded Avatar = ${avatar.filename}`);
 	// 	await this.userService.uploadAvatar(avatar.path, user.sub);
 	// }
+
+	@Post('block/:id')
+	async blockUser(
+		@GetUser() me,
+		@Body() dto : {block: boolean},
+		@Param('id') id: string,
+	) {
+		console.log("blockUser controller")
+		const userId = parseInt(id);
+		if ((isNaN(userId)))
+			throw new ForbiddenException("incorrect id sent : not a number");
+		
+		console.log({me}, {userId});
+		return (this.userService.updateBlockedUsers(userId, me.sub, dto.block));		
+	}
+
 }
