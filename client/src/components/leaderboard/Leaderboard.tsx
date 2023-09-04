@@ -83,7 +83,6 @@ function Leaderboard() {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>
 					{/* {user.name} */}
-					<div className={`status-indicator ${user.isOnline ? 'online' : 'offline'}`} />
 					<Miniature miniatureUser={{
 					nickname: user.name,
 					id: user.id,
