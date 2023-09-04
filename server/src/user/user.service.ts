@@ -24,7 +24,9 @@ export class UserService {
 		  where: { id: userId },
 		  include: {
 			blocked:true,
-			blockedBy:true
+			blockedBy:true,
+			friend: true,
+			friendOf: true,
 		}
 		});
 		console.log('---------ME---------');
@@ -39,7 +41,9 @@ export class UserService {
 			where: {id: userId},
 			include: {
 				blocked:true,
-				blockedBy:true
+				blockedBy:true,
+				friend: true,
+				friendOf: true,
 			}
 		});
 		return (user);
@@ -228,6 +232,27 @@ export class UserService {
 		  	});
 			console.log({updateBlockedUsers});
 			return updateBlockedUsers;
+		} catch (error) {
+		  	console.error(error);
+			  throw new Error(error);
+		}
+	}
+
+	// =============================================================================
+	// UPDATES USER AS A FRIEND =====================================================================
+	async updateAddFriend(userId: number, currentUserId: number, friend: boolean) {
+		try {
+			const updateAddFriend = await this.prisma.user.update({
+				where: { id: currentUserId },
+				data: {
+					friend: {
+						connect: (friend ? {id: userId}: undefined),
+						disconnect: (!friend ? {id: userId}: undefined)
+					}
+				},
+		  	});
+			console.log({updateAddFriend});
+			return updateAddFriend;
 		} catch (error) {
 		  	console.error(error);
 			  throw new Error(error);

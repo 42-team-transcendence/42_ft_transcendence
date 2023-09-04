@@ -193,4 +193,18 @@ export class UserController {
 		return (this.userService.updateBlockedUsers(userId, me.sub, dto.block));		
 	}
 
+	@Post ('add-friend/:id')
+	async addFriend(
+		@GetUser() me,
+		@Body() dto: {friend: boolean},
+		@Param('id') id: string,
+	){
+		console.log("addFriend controller")
+		const userId = parseInt(id);
+		if (isNaN(userId)) {
+			throw new ForbiddenException("Incorrect id sent: not a number");
+		  }
+		console.log({me}, {userId});
+		return (this.userService.updateAddFriend(userId, me.sub, dto.friend)); 
+	}
 }
