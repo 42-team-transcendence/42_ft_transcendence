@@ -21,13 +21,14 @@ export class UserService {
 
 	async getMe(userId: number) {
 		const user = await this.prisma.user.findUnique({
-			where: { id: userId },
+      where: { id: userId },
+		  include: {
+			blocked:true,
+			blockedBy:true,
+			friend: true,
+			friendOf: true,
+		}
 
-			include: {
-			  blocked: true,
-			  blockedBy: true
-			}
-	
 		});
 		console.log('---------ME---------');
 		if (!user) {
@@ -41,7 +42,9 @@ export class UserService {
 			where: {id: userId},
 			include: {
 				blocked:true,
-				blockedBy:true
+				blockedBy:true,
+				friend: true,
+				friendOf: true,
 			}
 		});
 		return (user);
@@ -136,10 +139,6 @@ export class UserService {
 		}
 	}
 	  
-	  
-
-
-
 	async updateUser(userId: number, updateData: { score?: number, email?: string }) {
 		try {
 			await this.prisma.user.update({
@@ -234,6 +233,27 @@ export class UserService {
 		  	});
 			console.log({updateBlockedUsers});
 			return updateBlockedUsers;
+		} catch (error) {
+		  	console.error(error);
+			  throw new Error(error);
+		}
+	}
+
+	// =============================================================================
+	// UPDATES USER AS A FRIEND =====================================================================
+	async updateAddFriend(userId: number, currentUserId: number, friend: boolean) {
+		try {
+			const updateAddFriend = await this.prisma.user.update({
+				where: { id: currentUserId },
+				data: {
+					friend: {
+						connect: (friend ? {id: userId}: undefined),
+						disconnect: (!friend ? {id: userId}: undefined)
+					}
+				},
+		  	});
+			console.log({updateAddFriend});
+			return updateAddFriend;
 		} catch (error) {
 		  	console.error(error);
 			  throw new Error(error);
