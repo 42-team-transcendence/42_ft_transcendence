@@ -1,8 +1,10 @@
-import { Controller, ForbiddenException, Get, Post, UseGuards, Body, Param, } from "@nestjs/common";
+import { Controller, ForbiddenException, Get, Post, UseGuards, Body, Param, ParseIntPipe, } from "@nestjs/common";
 import { JwtGuard } from "../auth/guard";
 import { GetUser } from "../auth/decorator"
 import { ChannelService } from "./channel.service";
 import { ChatService } from "./chat.service";
+import { GetUserDto } from "src/auth/dto";
+import { CreateChannel } from "./dto";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('channels') // définit la route "/channels" de l'API
@@ -14,8 +16,8 @@ export class ChannelController {
 
 	@Post('create')
 	createChannel(
-		@GetUser() creator,
-        @Body() payload,
+		@GetUser() creator: GetUserDto,
+        @Body() payload: CreateChannel,
     ) {
 		console.log("create channel controller")
 		return (this.channelService.createChannel(payload, creator.sub));
@@ -29,14 +31,10 @@ export class ChannelController {
 
 	@Post('join/:id')
 	async joinChannel(
-		@GetUser() user,
-		@Param('id') id: string
+		@GetUser() user: GetUserDto,
+		@Param('id', ParseIntPipe) channelId: number,
     ) {
 		try {
-			const channelId = parseInt(id);
-			if ((isNaN(channelId)))
-				throw new ForbiddenException("incorrect id sent : not a number");
-			
 			const chat = await this.chatService.findChatById(channelId);
 			if (chat.channelInfo.bannedUsers.find((e:any)=>e.id === user.sub))
 				throw new ForbiddenException(`user is banned from channel ${chat.channelInfo.name}`);
@@ -48,28 +46,22 @@ export class ChannelController {
 
 	@Post('update/:id')
 	updateChannelInfos(
-		@GetUser() user,
-		@Param('id') id: string,
+		@GetUser() user: GetUserDto,
+		@Param('id', ParseIntPipe) channelId: number,
 		@Body() payload
     ) {
 		console.log("update channel controller")
-		const channelId = parseInt(id);
-		if ((isNaN(channelId)))
-			throw new ForbiddenException("incorrect id sent : not a number");
 		console.log(user, channelId, payload);
 		return (this.channelService.updateChannelInfos(channelId, user.sub, payload));
 	}
 
 	@Post('updateMutes/:id')
 	updateChannelMutedUsers(
-		@GetUser() user,
-		@Param('id') id: string,
+		@GetUser() user: GetUserDto,
+		@Param('id', ParseIntPipe) channelId: number,
 		@Body() payload
     ) {
 		console.log("updateMutes controller")
-		const channelId = parseInt(id);
-		if ((isNaN(channelId)))
-			throw new ForbiddenException("incorrect id sent : not a number");
 		console.log({user}, {channelId}, {payload});
 		
 		if (payload.oldMuted)
