@@ -259,6 +259,21 @@ export class UserService {
 			  throw new Error(error);
 		}
 	}
+
+	async getUserFriends(userId: number) {
+		const user = await this.prisma.user.findUnique({
+		  where: { id: userId },
+		  include: {
+			friend: true, // Inclure les amis de l'utilisateur
+		  },
+		});
+	
+		if (!user) {
+		  throw new Error('User not found');
+		}
+	
+		return user.friend; // Renvoyer la liste des amis de l'utilisateur
+	  }
 }
 
 
