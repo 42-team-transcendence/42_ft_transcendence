@@ -2,10 +2,9 @@ import { createContext, useState, useEffect } from "react";
 
 interface Auth {
   // Define the structure of the auth object
+  email:  string;
+  pwd:  string;
   accessToken: string;
-  //refreshToken: string;
-  email:string;
-  pwd:string;
 }
 
 interface AuthContextProps {
@@ -30,6 +29,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (storedAuth) {
       setAuth(JSON.parse(storedAuth) as Auth);
     }
+
   }, []);
 
   useEffect(() => {

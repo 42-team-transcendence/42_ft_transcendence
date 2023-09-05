@@ -29,7 +29,7 @@ import { AxiosResponse } from "axios"; // Import AxiosResponse type
 import useAuth from "./useAuth";
 
 function useRefreshToken(): () => Promise<string> {
-  const { auth, setAuth } = useAuth();
+  const { setAuth } = useAuth();
 
   const refresh = async (): Promise<string> => {
     try {
