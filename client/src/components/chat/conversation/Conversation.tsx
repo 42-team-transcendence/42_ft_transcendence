@@ -183,12 +183,13 @@ const isMute = (mutedUsers:any, currentUser:any) => {
             }
             </Box>
             <Box>
-            {!isChat && isMute(chat?.channelInfo.mutedUsers, currentUser) ? (
+            {!isChat && isMute(chat?.channelInfo.mutedUsers, currentUser) && (
                 `YOU ARE MUTED UNTIL ${formattedTimestamp(chat?.channelInfo.mutedUsers.find(
                   (e:any)=>e.userId === currentUser.id
                 ).endsAt)}`
-              ) : <MessageInput send={send}></MessageInput>
+              )
             }
+              <MessageInput send={send}></MessageInput>
             </Box>
           </>
         ) : (
