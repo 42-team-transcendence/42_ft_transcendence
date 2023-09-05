@@ -13,16 +13,3 @@ export class MessageDto {
     @IsNumber()
     chatId: number;
 }
-
-export class CreateChannel {
-    @IsString()
-    name: string;
-    
-    @IsEnum(ChannelStatus)
-    status: ChannelStatus;
-    
-    @ValidateIf(o => o.status === 'PROTECTED')
-    @IsString()
-    @IsNotEmpty()
-    password: string;
-}

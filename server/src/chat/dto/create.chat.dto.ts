@@ -7,7 +7,7 @@ export class FindOrCreateChatDto {
     recipients: number[];
 }
 
-export class CreateChannel {
+export class CreateChannelDto {
     @IsString()
     name: string;
     

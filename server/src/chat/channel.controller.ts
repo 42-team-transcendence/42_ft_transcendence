@@ -4,7 +4,7 @@ import { GetUser } from "../auth/decorator"
 import { ChannelService } from "./channel.service";
 import { ChatService } from "./chat.service";
 import { GetUserDto } from "src/auth/dto";
-import { CreateChannel } from "./dto";
+import { CreateChannelDto, UpdateChannelDto, UpdateChannelMutedDto } from "./dto";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('channels') // définit la route "/channels" de l'API
@@ -17,15 +17,13 @@ export class ChannelController {
 	@Post('create')
 	createChannel(
 		@GetUser() creator: GetUserDto,
-        @Body() payload: CreateChannel,
+        @Body() payload: CreateChannelDto,
     ) {
-		console.log("create channel controller")
 		return (this.channelService.createChannel(payload, creator.sub));
 	}
 
 	@Get('getByName/:input') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
 	getChannelsByName(@Param('input') input: string) {
-		console.log({input});
 		return (this.channelService.getChannelsByName(input));
 	}
 
@@ -45,27 +43,42 @@ export class ChannelController {
 	}
 
 	@Post('update/:id')
-	updateChannelInfos(
+	async updateChannelInfos(
 		@GetUser() user: GetUserDto,
 		@Param('id', ParseIntPipe) channelId: number,
-		@Body() payload
+		@Body() payload: UpdateChannelDto
     ) {
-		console.log("update channel controller")
-		console.log(user, channelId, payload);
-		return (this.channelService.updateChannelInfos(channelId, user.sub, payload));
+		try {
+			//check that currentUser is admin
+			const isAdmin = await this.channelService.checkIsAdmin(channelId, user.sub)
+			if (!isAdmin)
+				throw new ForbiddenException('User is not admin of channel',);
+			
+			return (this.channelService.updateChannelInfos(channelId, user.sub, payload));
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
 	}
 
 	@Post('updateMutes/:id')
-	updateChannelMutedUsers(
+	async updateChannelMutedUsers(
 		@GetUser() user: GetUserDto,
 		@Param('id', ParseIntPipe) channelId: number,
-		@Body() payload
+		@Body() payload: UpdateChannelMutedDto
     ) {
-		console.log("updateMutes controller")
-		console.log({user}, {channelId}, {payload});
-		
-		if (payload.oldMuted)
-			return this.channelService.deleteChannelMutedUser(payload.channelInfoId, payload.oldMuted)
-		return (this.channelService.upsertChannelMutedUsers(channelId, user.sub, payload));
+		try {
+			//check that currentUser is admin
+			const isAdmin = await this.channelService.checkIsAdmin(channelId, user.sub)
+			if (!isAdmin)
+				throw new ForbiddenException('User is not admin of channel',);
+			
+			if (payload.oldMuted)
+				return this.channelService.deleteChannelMutedUser(payload.channelInfoId, payload.oldMuted)
+			return (this.channelService.upsertChannelMutedUsers(channelId, user.sub, payload));
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
 	}
 }

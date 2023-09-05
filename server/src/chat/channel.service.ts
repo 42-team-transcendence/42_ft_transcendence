@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { disconnect } from "process";
 import { PrismaService } from "src/prisma/prisma.service";
+import { MessageDto } from "./dto/gateway.dto";
+import { ChatService } from "./chat.service";
 // import { CreateChatParams, } from "./chat";
 
 @Injectable()
@@ -8,6 +10,7 @@ export class ChannelService {
 // export class ChatService implements IChatService {
 		constructor(
         private prisma: PrismaService,
+		private chatService: ChatService
     ) {}
 
 	async createChannel(payload, creatorId) {
@@ -91,6 +94,45 @@ export class ChannelService {
 		} catch (error) {
             console.log(error);
             throw error;
+		}
+	}
+
+	async checkIsValidSender(msg: MessageDto) {
+		try {
+			//Récupération des infos du chat
+			const chat = await this.chatService.findChatById(msg.chatId);
+			if (!chat) 
+				return false; //chat non trouvé ==> erreur
+			if (!chat.participants.find((e:any)=>e.id === msg.senderId))
+				return false; //ne fait pas parti des participants ==> erreur
+			if (!chat.channelInfo)
+				return true; //Si c'est un chat, ok
+			if (chat.channelInfo.bannedUsers.find((e:any)=>e.id === msg.senderId))
+				return false //est ban ==> erreur
+			if (chat.channelInfo.mutedUsers.find((e:any) => {
+				return (
+				  e.userId === msg.senderId && new Date(e.endsAt) > new Date())
+			  }))
+				return false //est mute ==> erreur
+			return true;
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+  	}
+
+  	async checkIsAdmin(chatId:number, userId: number) {
+		try {
+			//Récupération des infos du chat
+			const chat = await this.chatService.findChatById(chatId);
+			if (!chat) 
+				return false; //chat non trouvé ==> erreur
+			if (!chat.channelInfo.administrators.find((e:any)=>e.id === userId))
+				return false; //ne fait pas parti des admins ==> erreur
+			return true;
+		} catch (error) {
+			console.log(error);
+			throw error;
 		}
 	}
 

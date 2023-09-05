@@ -38,24 +38,6 @@ export class ChatController {
 
 	@Get('findAllMyChats')
 	findAllMyChats(@GetUser() me: GetUserDto) {
-		return (this.chatService.findAllMyChats(me));
+		return (this.chatService.findAllMyChats(me.sub));
 	}
 }
-
-	// @Post('create')
-	// createChat(
-	// 	@GetUser() creator,
-    //     @Body() payload,
-    // ) {
-	// 	const participants = [...payload.recipients, creator.sub];
-	// 	return (this.chatService.createChat(participants, creator.sub));
-	// }
-
-	// @Post('findByParticipants')
-	// findChatByParticipants(
-	// 	@GetUser() creator,
-    //     @Body() payload,
-    // ) {
-	// 	const participantIds = [...payload.recipients, creator.sub];
-	// 	return (this.chatService.findChatByParticipants(participantIds));
-	// }

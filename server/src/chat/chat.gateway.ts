@@ -10,6 +10,7 @@ import {
     OnGatewayDisconnect,
     OnGatewayConnection,
     BaseWsExceptionFilter,
+    WsException,
   } from '@nestjs/websockets';
 //@nestjs/platform-socket.io is the specific package for socket.io integration
 import { IoAdapter } from '@nestjs/platform-socket.io';
@@ -21,6 +22,8 @@ import { GetUserDto } from 'src/auth/dto';
 import { MessageDto } from './dto/gateway.dto';
 import { WSValidationPipe } from './pipe/wsValidationPipe';
 import { BadRequestExceptionsFilter } from './pipe/wsExceptionFilter';
+import { ChannelService } from './channel.service';
+import { ChatService } from './chat.service';
 
 //The WebSocket gateway is responsible for handling WebSocket connections and events in NestJS.
 // the OnGatewayInit interface is a part of the WebSockets module.
@@ -47,6 +50,8 @@ import { BadRequestExceptionsFilter } from './pipe/wsExceptionFilter';
 export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
+    private channelService: ChannelService,
+    private chatService: ChatService,
 ) {}
 
   // Déclare une instance du Server de socket.io
@@ -93,7 +98,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     console.log('Received userData:', data);
 
     //Get all chats of user and add user to corresponding socket rooms
-    const userChats = await this.getUserChats(data.userId);
+    const userChats = await this.chatService.findAllMyChats(data.userId);
     client.join(userChats.map(chat => "room_" + chat.id));
     console.log({clientRooms:client.rooms});
 
@@ -102,31 +107,19 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     console.log({connectedClients: this.connectedClients});
   }
 
-  async getUserChats(userId: number) {
-		try {
-      const userChats = await this.prisma.chat.findMany({
-        where: {
-          participants : {
-            some : {id : {in: [userId]}}
-          },
-        },
-      })
-      return userChats;
-		} catch (error) {
-        console.log(error);
-        throw error;
-		}
-  }
-
-
   @SubscribeMessage('message')
   async handleChatMessage(
     @MessageBody() data: MessageDto, //It instructs NestJS to inject the message body directly into the data parameter.
     @ConnectedSocket() client: Socket, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ) {
     try {
+      //check that the sender is valid (not muted, not banned, is in participants)
+      const isValidSender = await this.channelService.checkIsValidSender(data);
+      if (!isValidSender)
+        throw new WsException('User is not allowed to post here');
+
       //store message sent in DB
-      const createdMsg = await this.storeMessage(data);
+      const createdMsg = await this.chatService.storeMessage(data);
 
       //Envoyer le message à la room correspondante au chatId
       this.sendMessageToRoom(data.content, "room_" + createdMsg.chatId, data.senderId, createdMsg.createdAt);
@@ -134,23 +127,6 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
         console.log(error);
         throw error;
     }
-  }
-
-  async storeMessage(msg) {
-		try {
-			//création du msg dans la DB
-			const createdMsg = await this.prisma.message.create({
-				data: {
-					message: msg.content,
-					chat: {connect: {id: msg.chatId}},
-					sender: {connect: {id: msg.senderId}},
-				}
-      })
-      return createdMsg;
-		} catch (error) {
-        console.log(error);
-        throw error;
-		}
   }
 
   // Emit a message to a room

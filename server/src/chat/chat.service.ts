@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 // import { CreateChatParams, } from "./chat";
 import { User } from "@prisma/client";
+import { MessageDto } from "./dto/gateway.dto";
 
 @Injectable()
 export class ChatService {
@@ -89,12 +90,12 @@ export class ChatService {
 		}
 	}
 
-	async findAllMyChats(me) {
+	async findAllMyChats(userId: number) {
 		//find all the chats where I am
 		const myChats = await this.prisma.chat.findMany({
 			where: {
 				participants : {
-					some : {id : {in: [me.sub]}}
+					some : {id : {in: [userId]}}
 				},
 			},
 			include: {
@@ -111,4 +112,21 @@ export class ChatService {
 		})
 		return myChats;
 	}
+
+	async storeMessage(msg:MessageDto) {
+		try {
+			//création du msg dans la DB
+			const createdMsg = await this.prisma.message.create({
+				data: {
+					message: msg.content,
+					chat: {connect: {id: msg.chatId}},
+					sender: {connect: {id: msg.senderId}},
+				}
+			})
+			return createdMsg;
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+  }
 }
