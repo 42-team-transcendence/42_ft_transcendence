@@ -24,19 +24,12 @@ export interface Friend {
 	name: string;
 	icon: React.ReactNode; 
   }
-  
-//   export const friends: Friend[] = [
-// 	{ name: 'John', icon: <PersonIcon /> },
-// 	{ name: 'Jane', icon: <PersonIcon /> },
-// 	{ name: 'Bob', icon: <PersonIcon /> },
-// 	{ name: 'Alice', icon: <PersonIcon /> },
-//   ];
 
 const FriendList: React.FC = () => {
 	const [friends, setFriends] = useState<Friend[]>([]);
 
   useEffect(() => {
-    Axios.get("/users/me").then((response) => {
+    Axios.get("/users/friends").then((response) => {
       setFriends(response.data);
     });
   }, []);
