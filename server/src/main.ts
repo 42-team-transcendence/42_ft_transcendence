@@ -6,6 +6,7 @@ import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from "@nestjs/config";
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SanitizePipe } from './sanitize.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,7 +30,9 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  // Apply the SanitizePipe and the validationPipe globally
   app.useGlobalPipes(
+    new SanitizePipe(),
     new ValidationPipe({
       whitelist: true,
     }),
