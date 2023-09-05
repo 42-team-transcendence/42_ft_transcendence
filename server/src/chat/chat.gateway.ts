@@ -9,13 +9,18 @@ import {
     WsResponse,
     OnGatewayDisconnect,
     OnGatewayConnection,
+    BaseWsExceptionFilter,
   } from '@nestjs/websockets';
 //@nestjs/platform-socket.io is the specific package for socket.io integration
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { Server, Socket, ServerOptions } from 'socket.io';
-import { UseGuards } from '@nestjs/common';
+import { UseFilters, UseGuards, UsePipes, ValidationPipe, WsExceptionFilter } from '@nestjs/common';
 import { JwtGuard } from 'src/auth/guard';
 import { PrismaService } from "src/prisma/prisma.service";
+import { GetUserDto } from 'src/auth/dto';
+import { MessageDto } from './dto/gateway.dto';
+import { WSValidationPipe } from './pipe/wsValidationPipe';
+import { BadRequestExceptionsFilter } from './pipe/wsExceptionFilter';
 
 //The WebSocket gateway is responsible for handling WebSocket connections and events in NestJS.
 // the OnGatewayInit interface is a part of the WebSockets module.
@@ -37,6 +42,8 @@ import { PrismaService } from "src/prisma/prisma.service";
     path: "/chat", //replace http://localhost:3333/socket.io/ with http://localhost:3333/chat/
   },
 )
+@UseFilters(BadRequestExceptionsFilter) //TO DO: THIS IS NOT WORKING, no error sent to client
+@UsePipes(new ValidationPipe())
 export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
@@ -114,7 +121,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
 
   @SubscribeMessage('message')
   async handleChatMessage(
-    @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
+    @MessageBody() data: MessageDto, //It instructs NestJS to inject the message body directly into the data parameter.
     @ConnectedSocket() client: Socket, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ) {
     try {

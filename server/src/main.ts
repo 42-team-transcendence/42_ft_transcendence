@@ -6,19 +6,10 @@ import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from "@nestjs/config";
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { SanitizePipe } from './sanitize.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
-  // const httpService = app.get(HttpService);
-  // // const moduleRef = app.get(ModuleRef);
-
-  // const axiosInstance = httpService.axiosRef;
-  // axiosInstance.defaults.headers['Access-Control-Allow-Origin'] = '*';
-  // axiosInstance.defaults.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,PATCH,OPTIONS';
-  // axiosInstance.defaults.headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
-
-  // app.enableCors();
 
   const options = new DocumentBuilder()
     .setTitle('Transcendence 42 project')
@@ -39,7 +30,9 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
+  // Apply the SanitizePipe and the validationPipe globally
   app.useGlobalPipes(
+    new SanitizePipe(),
     new ValidationPipe({
       whitelist: true,
     }),
