@@ -158,7 +158,6 @@ export class UserService {
 		}
 	}
 
-
 	async update2fa(auth2fa: boolean,  userId: number) {
 		try {
 			if (auth2fa === false)
@@ -177,7 +176,6 @@ export class UserService {
 		  	console.error('Error updating 2FA:', error);
 		}
 	}
-
 
 	// async uploadAvatar(avatar: Express.Multer.File, userId: number) {
 	// 	try {
@@ -259,21 +257,6 @@ export class UserService {
 			  throw new Error(error);
 		}
 	}
-
-	async getUserFriends(userId: number) {
-		const user = await this.prisma.user.findUnique({
-		  where: { id: userId },
-		  include: {
-			friend: true, // Inclure les amis de l'utilisateur
-		  },
-		});
-	
-		if (!user) {
-		  throw new Error('User not found');
-		}
-		console.log("user friends", user.friend);
-		return user.friend; // Renvoyer la liste des amis de l'utilisateur
-	  }
 }
 
 

@@ -20,6 +20,7 @@ import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { PersonAdd } from "@mui/icons-material";
 
 
 
@@ -89,6 +90,8 @@ function OtherUserProfile() {
 				setCurrentUser(response.data);
 				if (response.data.blocked.find((e:any)=>e.id === user?.id))
 					setUserBlocked(true);
+				if(response.data.friend.find((e:any)=>e.id === user?.id))
+					setUserAsFriend(true);
 			} catch (error:any) {
 				console.log(error.response);
 			}
@@ -163,7 +166,7 @@ function OtherUserProfile() {
 		}
 	}
 
-	const handleUnfriend = async () => {
+	const handleAddFriend = async () => {
 		console.log("userBefriended", !userBefriended);
 		try {
 		  if(user) {
@@ -251,9 +254,9 @@ function OtherUserProfile() {
 
 						<div className="row-other-user">
 							<CustomButtonSecond
-								icon={<PersonRemoveIcon />}
-								text={!userBefriended? "Friend" : "Unfriend"}
-								onClick={handleUnfriend}/>
+								icon={!userBefriended ? <PersonRemoveIcon />: <PersonAdd/>}
+								text={!userBefriended ? "Friend" : "Unfriend"}
+								onClick={handleAddFriend}/>
 
 							<CustomButtonSecond
 								icon={!userBlocked ? <BlockIcon />: <LockOpenIcon />}
