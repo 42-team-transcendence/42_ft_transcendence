@@ -208,8 +208,8 @@ export class UserController {
 		return (this.userService.updateAddFriend(userId, me.sub, dto.friend)); 
 	}
 
-	@Get('friend')
+	@Get('friends')
 	async getMyFriends(@GetUser() user: any) {
-		return await this.userService.getUserFriends(user.id);
+		return await this.userService.getUserFriends(user.sub);
 	}
 }

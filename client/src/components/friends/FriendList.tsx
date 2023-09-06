@@ -18,20 +18,39 @@ import FriendItem from '../friends/FriendItem';
 import { Container, Typography, List } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import '../../styles/Friends.css';
-import Axios from "axios";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 export interface Friend {
 	name: string;
 	icon: React.ReactNode; 
   }
 
+  interface User {
+	friend: Friend[];
+	// Add other properties as needed
+  }
+
 const FriendList: React.FC = () => {
+	const axiosPrivate = useAxiosPrivate();
+	const [currentUser, setCurrentUser] = useState<any>();
 	const [friends, setFriends] = useState<Friend[]>([]);
 
   useEffect(() => {
-    Axios.get("/users/friends").then((response) => {
-      setFriends(response.data);
-    });
+	const getFriends = async () => {
+		try {
+			const response = await axiosPrivate.get('/users/me', {
+				headers: { 'Content-Type': 'application/json'},
+				withCredentials: true
+		})
+		setCurrentUser(response.data);
+		console.log({response});
+		setFriends(response.data.friend);
+		console.log("friends", friends);
+	}catch(error: any){
+			console.log(error.response);
+		}
+	}
+	getFriends();
   }, []);
 	
   return (

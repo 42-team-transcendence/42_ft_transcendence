@@ -271,7 +271,7 @@ export class UserService {
 		if (!user) {
 		  throw new Error('User not found');
 		}
-	
+		console.log("user friends", user.friend);
 		return user.friend; // Renvoyer la liste des amis de l'utilisateur
 	  }
 }
