@@ -33,7 +33,7 @@ export interface Friend {
 const FriendList: React.FC = () => {
 	const axiosPrivate = useAxiosPrivate();
 	const [currentUser, setCurrentUser] = useState<any>();
-	const [friends, setFriends] = useState<Friend[]>([]);
+	const [friends, setFriends] = useState<any[]>();
 
   useEffect(() => {
 	const getFriends = async () => {
@@ -44,8 +44,9 @@ const FriendList: React.FC = () => {
 		})
 		setCurrentUser(response.data);
 		console.log({response});
+		console.log(response.data);
+		console.log("friends", response.data.friend);
 		setFriends(response.data.friend);
-		console.log("friends", friends);
 	}catch(error: any){
 			console.log(error.response);
 		}
@@ -58,11 +59,15 @@ const FriendList: React.FC = () => {
       <Container>
 		<h2>Friend List</h2>
 		<div className="container">
+			{friends && 
 			<List>
-			{friends.map((friend, index) => (
-				<FriendItem key={index} friend={friend} />
+			{friends?.map((friend, index) => (
+				// <FriendItem key={index} friend={friend} />
+				<friend.nickname>
+					
+				</friend.nickname>
 			))}
-			</List>
+			</List>}
 		</div>
       </Container>
     </PageWrapper>
