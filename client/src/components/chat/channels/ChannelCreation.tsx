@@ -58,7 +58,7 @@ export default function ChannelCreation() {
                     withCredentials: true
                 }
 			);
-            navigate('/chat', { replace: false});
+            navigate('/chat', {state: {channelId: response.data.id}});
         } catch (err: any) {
             if (!err?.response) {
                 setErrMsg('No Server Response');

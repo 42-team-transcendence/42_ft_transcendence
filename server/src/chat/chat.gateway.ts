@@ -74,18 +74,16 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
   handleConnection(
     client: Socket,
   ) {
-      console.log("handleConnection")
+      // console.log("handleConnection")
       // console.log({client_handshake : client.handshake});
   }
 
   //lifecycle method : automaticaly called on socket disconnection
   handleDisconnect(client: Socket) {
     const userId = client.handshake.query.userId; // Assuming you pass userId as a query parameter while connecting
-    console.log(`userId ${userId} socket disconnected`);
 
     //Remove socket connection from connectedClients list
     this.connectedClients = this.connectedClients.filter((e:any) => e.userId != userId);
-    console.log({remainingConnectedClients: this.connectedClients});
   }
 
   //The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate
@@ -95,16 +93,15 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
     @ConnectedSocket() client: Socket, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ) {
-    console.log('Received userData:', data);
 
     //Get all chats of user and add user to corresponding socket rooms
     const userChats = await this.chatService.findAllMyChats(data.userId);
     client.join(userChats.map(chat => "room_" + chat.id));
-    console.log({clientRooms:client.rooms});
 
     //Add new socket connection to connectedClients list
+    if (this.connectedClients.find((e:any) => e.userId === data.userId))
+      this.connectedClients = this.connectedClients.filter((e:any) => e.userId !== data.userId);
     this.connectedClients.push({userId : data.userId, socketId : data.socketId});
-    console.log({connectedClients: this.connectedClients});
   }
 
   @SubscribeMessage('message')
@@ -121,7 +118,9 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
       //store message sent in DB
       const createdMsg = await this.chatService.storeMessage(data);
 
-      //Envoyer le message à la room correspondante au chatId
+      //on s'assure que le client est bien dans la room correspondante au chatId
+      client.join("room_" + createdMsg.chatId);
+      //Envoyer le message à la room
       this.sendMessageToRoom(data.content, "room_" + createdMsg.chatId, data.senderId, createdMsg.createdAt);
     } catch (error) {
         console.log(error);

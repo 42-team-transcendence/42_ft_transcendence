@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import io, {Socket} from "socket.io-client"
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 // =============================================================================
@@ -61,10 +61,14 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 withCredentials: true,
                 autoConnect: true,
                 auth: {token: "//TODO : gérer les tokens d'authentification ici"},
-                query: {"userId": currentUser.id}
+                query: {"userId": currentUser.id},
             });
         setChatSocket(newChatSocket)
-    }, [setChatSocket])
+        
+        return (() => {
+            chatSocket?.disconnect();
+        })
+    }, [])
 
     //On Connect : actions supplémentaires possibles à la connexion de la socket client
     useEffect(() => {

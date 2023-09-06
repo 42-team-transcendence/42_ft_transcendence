@@ -38,7 +38,6 @@ export class ChannelService {
 					}
 				},
 			})
-			console.log({channel});
 			return channel;
 		} catch (error) {
             console.log(error);
@@ -67,7 +66,6 @@ export class ChannelService {
 					}
 				},
 			})
-			console.log({channels});
 			return channels;
 		} catch (error) {
             console.log(error);
@@ -89,7 +87,6 @@ export class ChannelService {
 					channelInfo : true
 				},
 			})
-			console.log({updatedChan});
 			return updatedChan;
 		} catch (error) {
             console.log(error);
@@ -150,7 +147,6 @@ export class ChannelService {
 					}
 				}
 			})
-			console.log({updateMutedUsers});
 			return updateMutedUsers;
 		} catch (error) {
             console.log(error);
@@ -188,7 +184,6 @@ export class ChannelService {
 					bannedUsers: true
 				}
 			})
-			console.log({updateMutedUsers});
 			return updateMutedUsers;
 		} catch (error) {
             console.log(error);
@@ -229,7 +224,6 @@ export class ChannelService {
 					bannedUsers: true
 				}
 			})
-			console.log({updatedChan});
 			return updatedChan;
 		} catch (error) {
             console.log(error);
