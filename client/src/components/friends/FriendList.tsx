@@ -42,10 +42,10 @@ const FriendList: React.FC = () => {
 				headers: { 'Content-Type': 'application/json'},
 				withCredentials: true
 		})
-		setCurrentUser(response.data);
-		console.log({response});
 		console.log(response.data);
 		console.log("friends", response.data.friend);
+
+		setCurrentUser(response.data);
 		setFriends(response.data.friend);
 	}catch(error: any){
 			console.log(error.response);
@@ -59,15 +59,13 @@ const FriendList: React.FC = () => {
       <Container>
 		<h2>Friend List</h2>
 		<div className="container">
-			{friends && 
-			<List>
-			{friends?.map((friend, index) => (
-				// <FriendItem key={index} friend={friend} />
-				<friend.nickname>
-					
-				</friend.nickname>
-			))}
-			</List>}
+			{ friends &&
+				<List> {
+					friends.map((friend, index) => (
+						<FriendItem key={index} friend={friend} />
+					))}
+				</List>
+			}
 		</div>
       </Container>
     </PageWrapper>
