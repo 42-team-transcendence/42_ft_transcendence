@@ -53,7 +53,7 @@ export default function BadgeAvatar({ minAvatar }: { minAvatar: MiniAvatarPictur
       overlap="circular"
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       variant="dot"
-      invisible={isConnected} // Set invisible to true if not connected
+      invisible={!isConnected} // Set invisible to true if not connected
     >
       <Avatar alt={minAvatar.name} src={minAvatar.url} />
     </StyledBadge>
