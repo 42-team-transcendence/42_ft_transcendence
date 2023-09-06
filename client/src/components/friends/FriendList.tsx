@@ -63,17 +63,18 @@ const FriendList: React.FC = () => {
 		{/* </Typography> */}
 		<div className="container">
 			{ friends &&
-				<List> {
+				<ul> {
 					friends.map((friend, index) => (
-						// <FriendItem key={index} friend={friend} />
-						<Miniature miniatureUser={{
-							nickname: friend.nickname,
-							id: friend.id,
-							minAvatar: {url: tchoupi, name:'Tchoupi'}
-						}}
-						></Miniature>
+						<li key={index}>
+							<Miniature miniatureUser={{
+								nickname: friend.nickname,
+								id: friend.id,
+								minAvatar: {url: tchoupi, name:'Tchoupi'}
+							}}
+							></Miniature>
+						</li>
 					))}
-				</List>
+				</ul>
 			}
 		</div>
       </Container>

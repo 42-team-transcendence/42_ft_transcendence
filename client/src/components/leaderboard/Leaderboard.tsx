@@ -82,7 +82,6 @@ function Leaderboard() {
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>
-					{/* {user.name} */}
 					<Miniature miniatureUser={{
 					nickname: user.name,
 					id: user.id,
