@@ -276,60 +276,63 @@ function Profile() {
 		<PageWrapper>
 			<div className="main-container">
 				<div className="container-wrap">
+
+					{/* Render AVATAR */}
+
 					<div className="avatar">
-					<StyledBadge
-						overlap="circular"
-						anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-						variant="dot"
-						invisible={!isUserOnline}
-					>
-						<label htmlFor="avatarInput">
-							{/* <img
-								width= "150px"
-								className="img-profile"
-								src={`http://localhost:3333/public/picture/${user.nickname}`}
-							/> */}
-							<Avatar sx={{ width: 150, height: 150, border: "2px solid black"   }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
-						</label>
-						<input
-							type="file"
-							id="avatarInput"
-							style={{ display: 'none' }}
-							accept="image/*"
-							onChange={handleFileChange}
-							
-						/>
-					</StyledBadge>
+						<StyledBadge
+							overlap="circular"
+							anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+							variant="dot"
+							invisible={!isUserOnline}
+						>
+							<label htmlFor="avatarInput">
+								{/* <img
+									width= "150px"
+									className="img-profile"
+									src={`http://localhost:3333/public/picture/${user.nickname}`}
+								/> */}
+								<Avatar sx={{ width: 150, height: 150, border: "2px solid black"   }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
+							</label>
+							<input
+								type="file"
+								id="avatarInput"
+								style={{ display: 'none' }}
+								accept="image/*"
+								onChange={handleFileChange}
+							/>
+						</StyledBadge>
 						
-						<div className="avater-info">
-							{user ? (
-								<>
-									<h1 className="name">{user.nickname}</h1>
-									<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
-								</>
-							) : (
-								<p>Loading user data...</p>
-							)}
-					
-							<p className="rank"> Rank 1 | Lvl 800 </p>
-						</div>
+							<div className="avater-info">
+								{user ? (
+									<>
+										<h1 className="name">{user.nickname}</h1>
+										<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
+									</>
+								) : (
+									<p>Loading user data...</p>
+								)}
 						
+								<p className="rank"> Rank 1 | Lvl 800 </p>
+							</div>	
 					</div>
 					
+					{/* Render EMAIL */}
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">
-						{user ? (
-                    	<>
-                      	  	<p>{user.email}</p>
-                        	<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
-                    	</>
-                ) : (
-                    <p>Loading user data...</p>
-                )}
+							{user ? (
+							<>
+								<p>{user.email}</p>
+								<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
+							</>
+							) : (
+								<p>Loading user data...</p>
+							)}
 						</div>
 					</div>
 
+					{/* Render PASSWORD */}
 					<div className="element-profile">
 						<h2>Password</h2>
 						<div className="a-modifier">
@@ -337,29 +340,26 @@ function Profile() {
 							<span className="modifier"onClick={handleOpenPwdModal}>modifier</span>
 						</div>
 					</div>
-
+				
+					{/* Render 2FA */}
 					<div className="element-profile">
-					<div className="a-modifier">
-						<h2> Double factors </h2>
-
-					{!user.auth2fa ? (
-						<Checkbox checked={user.auth2fa} onChange={() =>
-						 	setIsDoubleAuthEnabled(!isDoubleAuthEnabled) } />
-							
+						<div className="a-modifier">
+							<h2> Double factors </h2>
+							{!user.auth2fa ? (
+								<Checkbox checked={user.auth2fa} onChange={() =>
+									setIsDoubleAuthEnabled(!isDoubleAuthEnabled) } 
+								/>
 							) : (
-						<div>
-							<button onClick={() => {disabled2fa() 
-												setIsDoubleAuthEnabled(false)
-												updateUser() }}>Disable 2FA</button>
-						</div>)
-
-					}
-							
-					{isDoubleAuthEnabled && <DoubleAuth /> }
+								<div>
+									<button onClick={() => {disabled2fa() 
+														setIsDoubleAuthEnabled(false)
+														updateUser() }}>Disable 2FA</button>
+								</div>
+							)}
+							{isDoubleAuthEnabled && <DoubleAuth /> }
 						</div>
 					</div>
-					</div>
-
+				</div>
 				<GameHistory/>
 			</div>
 
