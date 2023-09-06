@@ -12,7 +12,7 @@ import io from 'socket.io-client';
 import CustomButton from "../../styles/buttons/CustomButton";
 import Box from '@mui/material/Box';
 import '../../styles/Register_Login.css';
-
+import TwoFaLogin from './twoFaLogin';
 
 
  // =============================================================================
@@ -72,6 +72,34 @@ const Login: React.FC<LoginProps> = () => {
         setErrMsg('');
     }, [email, pwd])
 
+    const [display2fa, setDisplay2fa] = useState(false);
+
+    const valid2Fa = async () => {
+
+        const response = await axios.post('/auth/signin2FA', 
+            JSON.stringify({email, 'password': pwd}),
+            {
+                headers: { 'Content-Type': 'application/json'},
+                withCredentials: true
+            }
+        );
+
+        const accessToken = response?.data?.accessToken;
+        //TODO est ce important de set l'email et le pwd dans auth ? 
+        setAuth({email, pwd, accessToken});
+        setEmail('');
+        setPwd('');
+
+        const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
+        });
+        
+        socket.emit('userLoggedIn', {userId: response2.data.id});
+
+        navigate(from, { replace: true});
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -83,28 +111,30 @@ const Login: React.FC<LoginProps> = () => {
                     withCredentials: true
                 }
             );
+            
+            if(response.data.auth2fa) {
 
-            // 2FA 
-            // const auth2fa = await axios.get("/users/auth2fa");
-            // console.log({auth2fa});
+                setDisplay2fa(true);
+                console.log({"test": response?.data})
+            }
 
-            // console.log({"test": response?.data})
-            const accessToken = response?.data?.accessToken;
-            //TODO est ce important de set l'email et le pwd dans auth ? 
-            setAuth({email, pwd, accessToken});
-            setEmail('');
-            setPwd('');
-			const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
-				headers: { 'Content-Type': 'application/json' },
-				withCredentials: true,
-			  });
-			  
-			//console.log("Response 2", response2)
-			// Envoyez un événement au serveur pour signaler la connexion réussie
-			socket.emit('userLoggedIn', {userId: response2.data.id});
-			//console.log('response2.data.id', response2.data.id);
+            else if (response.data.accessToken) {
 
-            navigate(from, { replace: true});
+                const accessToken = response?.data?.accessToken;
+                //TODO est ce important de set l'email et le pwd dans auth ? 
+                setAuth({email, pwd, accessToken});
+                setEmail('');
+                setPwd('');
+
+                const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true,
+                });
+                
+                socket.emit('userLoggedIn', {userId: response2.data.id});
+
+                navigate(from, { replace: true});
+            }
         } catch (err: AxiosError | any) {
             if (!err?.response) {
                 setErrMsg('No Server Response');
@@ -114,6 +144,7 @@ const Login: React.FC<LoginProps> = () => {
             }
         }
     }
+
     return (
         <section className="Register">
             <h1 className="title">PONG</h1>
@@ -136,6 +167,7 @@ const Login: React.FC<LoginProps> = () => {
 						Sign in
 					</CustomButton>
 				</Box>
+                {display2fa && <TwoFaLogin email={email} valid2Fa={valid2Fa} />}
             <p>
                 Need an Account ?<br />
         

@@ -72,6 +72,15 @@ export class AuthController {
 
     }
 
+    @Post('signin2FA')
+    @HttpCode(HttpStatus.OK)
+    signin2FA(
+        @Body() dto: SignInAuthDto,
+        @Res() res: Response
+    ) {
+        return (this.authService.signin2FA(dto, res));
+    }
+
 /*********************************************************************************************************/
 
     @Get('/login/42')
