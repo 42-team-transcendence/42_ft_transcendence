@@ -15,7 +15,6 @@ export class UserController {
 		private userService: UserService
 	) {}
 
-	
 	// =============================================================================
 	// GETTERS =====================================================================
 	
@@ -66,8 +65,6 @@ export class UserController {
 		const auth2fa = await this.userService.getAuth2fa(dto.email)
 		return {auth2fa: auth2fa};
 	}
-
-	
 
 	// =============================================================================
 	// UPDATES =====================================================================
@@ -206,10 +203,5 @@ export class UserController {
 		  }
 		console.log({me}, {userId});
 		return (this.userService.updateAddFriend(userId, me.sub, dto.friend)); 
-	}
-
-	@Get('friends')
-	async getMyFriends(@GetUser() user: any) {
-		return await this.userService.getUserFriends(user.sub);
 	}
 }
