@@ -17,7 +17,10 @@ import { useOnlineStatus } from "../../context/OnlineStatus";
 // IMPORT STYLES ===============================================================
 import '../../styles/profile/Profile.css';
 import Checkbox from '@mui/material/Checkbox';
-
+import Badge from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
+import Avatar from '@mui/material/Avatar';
+import { Balance } from "@mui/icons-material";
 // =============================================================================
 // INTERFACES ==================================================================
 interface PwdData {
@@ -65,6 +68,7 @@ function Profile() {
 	console.log('user id', currentUserId);
 	console.log('online users' , onlineUsers);
 	const isUserOnline = onlineUsers.includes(currentUserId);
+	console.log({isUserOnline});
 
     useEffect(() => {
 		
@@ -253,6 +257,16 @@ function Profile() {
 	
 		};
 	}
+	const StyledBadge = styled(Badge)(() => ({
+		'& .MuiBadge-badge': {
+		  backgroundColor: isUserOnline ? 'green' : 'grey',
+		  color: isUserOnline ? 'green' : 'grey',
+		  boxShadow: "0 0 0 2px white",
+		  width: "20px",
+		  height: "20px",
+		  borderRadius: 10
+		},
+	}));
 	
 
 	// =============================================================================
@@ -262,65 +276,63 @@ function Profile() {
 		<PageWrapper>
 			<div className="main-container">
 				<div className="container-wrap">
+
+					{/* Render AVATAR */}
+
 					<div className="avatar">
-					<div className={`status-indicator ${isUserOnline ? 'online' : 'offline'}`}>
-						{isUserOnline ? 'Online' : 'Offline'}
-					</div>
-					<label htmlFor="avatarInput">
-						<img
-						 	width= "150px"
-							className="img-profile"
-							// src={"storage/uploads/"+ user.avatar}
-							// src={process.env.PUBLIC_URL + user.avatar}
-							// src={`http://${process.env.localhost}:3000/api/public/picture/` + user.avatar}
-							src={`http://localhost:3333/public/picture/${user.nickname}`}
-							// src={imageUrl} alt={`Profile of ${user.nickname}`}
-							// src="storage/uploads/368697414_247091924364906_7576220192864277534_n-a6d7.jpg"
-							// src={user.avatar}
-							// src='../../assets/tchoupi50x50.jpg'
-							// src="../../assets/alf50x50.jpg"
-							// alt="Profile Image"
-						/>
-						</label>
-						<input
-							type="file"
-							id="avatarInput"
-							style={{ display: 'none' }}
-							accept="image/*"
-							onChange={handleFileChange}
+						<StyledBadge
+							overlap="circular"
+							anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+							variant="dot"
+							invisible={!isUserOnline}
+						>
+							<label htmlFor="avatarInput">
+								{/* <img
+									width= "150px"
+									className="img-profile"
+									src={`http://localhost:3333/public/picture/${user.nickname}`}
+								/> */}
+								<Avatar sx={{ width: 150, height: 150, border: "2px solid black"   }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
+							</label>
+							<input
+								type="file"
+								id="avatarInput"
+								style={{ display: 'none' }}
+								accept="image/*"
+								onChange={handleFileChange}
+							/>
+						</StyledBadge>
 						
-						/>
-						{/* <button onClick={handleUploadClick}>ici</button> */}
-				
+							<div className="avater-info">
+								{user ? (
+									<>
+										<h1 className="name">{user.nickname}</h1>
+										<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
+									</>
+								) : (
+									<p>Loading user data...</p>
+								)}
 						
-						<div className="avater-info">
-							{user ? (
-								<>
-									<h1 className="name">{user.nickname}</h1>
-									<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
-								</>
-							) : (
-								<p>Loading user data...</p>
-							)}
-					
-							<p className="rank"> Rank 1 | Lvl 800 </p>
-						</div>
+								<p className="rank"> Rank 1 | Lvl 800 </p>
+							</div>	
 					</div>
 					
+					{/* Render EMAIL */}
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">
-						{user ? (
-                    	<>
-                      	  	<p>{user.email}</p>
-                        	<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
-                    	</>
-                ) : (
-                    <p>Loading user data...</p>
-                )}
+							{user ? (
+							<>
+								<p>{user.email}</p>
+								<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
+							</>
+							) : (
+								<p>Loading user data...</p>
+							)}
 						</div>
 					</div>
 
+					{/* Render PASSWORD */}
 					<div className="element-profile">
 						<h2>Password</h2>
 						<div className="a-modifier">
@@ -328,29 +340,26 @@ function Profile() {
 							<span className="modifier"onClick={handleOpenPwdModal}>modifier</span>
 						</div>
 					</div>
-
+				
+					{/* Render 2FA */}
 					<div className="element-profile">
-					<div className="a-modifier">
-						<h2> Double factors </h2>
-
-					{!user.auth2fa ? (
-						<Checkbox checked={user.auth2fa} onChange={() =>
-						 	setIsDoubleAuthEnabled(!isDoubleAuthEnabled) } />
-							
+						<div className="a-modifier">
+							<h2> Double factors </h2>
+							{!user.auth2fa ? (
+								<Checkbox checked={user.auth2fa} onChange={() =>
+									setIsDoubleAuthEnabled(!isDoubleAuthEnabled) } 
+								/>
 							) : (
-						<div>
-							<button onClick={() => {disabled2fa() 
-												setIsDoubleAuthEnabled(false)
-												updateUser() }}>Disable 2FA</button>
-						</div>)
-
-					}
-							
-					{isDoubleAuthEnabled && <DoubleAuth /> }
+								<div>
+									<button onClick={() => {disabled2fa() 
+														setIsDoubleAuthEnabled(false)
+														updateUser() }}>Disable 2FA</button>
+								</div>
+							)}
+							{isDoubleAuthEnabled && <DoubleAuth /> }
 						</div>
 					</div>
-					</div>
-
+				</div>
 				<GameHistory/>
 			</div>
 
