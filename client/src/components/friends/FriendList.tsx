@@ -20,7 +20,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import '../../styles/Friends.css';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Miniature from "../miniature/Miniature";
-import tchoupi from '../../assets/tchoupi50x50.jpg'
 
 export interface Friend {
 	name: string;
@@ -69,7 +68,7 @@ const FriendList: React.FC = () => {
 							<Miniature miniatureUser={{
 								nickname: friend.nickname,
 								id: friend.id,
-								minAvatar: {url: tchoupi, name:'Tchoupi'}
+								minAvatar: {url: `http://localhost:3333/public/picture/${friend.nickname}`, name: friend.nickname}
 							}}
 							></Miniature>
 						</li>

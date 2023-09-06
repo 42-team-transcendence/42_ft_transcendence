@@ -69,6 +69,7 @@ function Leaderboard() {
     <PageWrapper>
       <Box>
         <h1>Leaderboard</h1>
+		<div>
         <Table component={Paper}>
           <TableHead>
             <TableRow>
@@ -94,6 +95,7 @@ function Leaderboard() {
             ))}
           </TableBody>
         </Table>
+		</div>
         <Logout />
       </Box>
     </PageWrapper>
@@ -101,11 +103,3 @@ function Leaderboard() {
 }
 
 export default Leaderboard;
-
-
-{/* <Miniature miniatureUser={{
-	nickname: nickname,
-	id: userId,
-	minAvatar: {url: tchoupi, name:'Tchoupi'}
-}}
-></Miniature> */}
