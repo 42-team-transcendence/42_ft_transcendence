@@ -155,6 +155,7 @@ export class AuthService {
 				nickname: user.profile.name,
 			},
 		});
+
         // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(new_user.id, user.profile.email);
         // Stockage du refreshToken dans la DB
@@ -166,7 +167,7 @@ export class AuthService {
             sameSite: 'lax',
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
         });
-		res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken);
+		res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + new_user.id);
 	}
 
 

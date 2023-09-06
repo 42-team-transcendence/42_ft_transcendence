@@ -86,7 +86,7 @@ function Profile() {
 	
 	const updateUser = () => {
 
-		axiosPrivate.get('/users/me')
+		axiosPrivate.get('/')
 		.then(response => {
 			setUser(response.data);
 		})

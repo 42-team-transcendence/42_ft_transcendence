@@ -13,8 +13,7 @@ const socket = io('http://localhost:3333', {
 
 const AuthPage:React.FC = () => {
 
-	const {auth, setAuth} = useAuth();
-	const axiosPrivate = useAxiosPrivate();
+	const { auth } = useAuth();
 
     const handleClick = async() => {
 		const email = auth.email;
@@ -25,17 +24,10 @@ const AuthPage:React.FC = () => {
                 window.location.href = res.data.url;
 				
             });
-			const response = await axiosPrivate.get(`/auth/userByMail/${email}`, {
-				headers: { 'Content-Type': 'application/json' },
-				withCredentials: true,
-			  });
-			console.log("Response logout dasn 42", response)
-			socket.emit('userLoggedIn', {userId: response.data.id});
         }
         catch{
 			window.alert("can't login with 42");
         }
-
     }
 
     return (

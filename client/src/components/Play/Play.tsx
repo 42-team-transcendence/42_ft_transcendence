@@ -60,7 +60,7 @@ const axiosPrivate = useAxiosPrivate();
 			}
 		}
 		getCurrentUser(); //appel de la fonction
-    }, [axiosPrivate])
+    }, [])
 
 	    //Création de la socket client
 	useEffect(() => {
