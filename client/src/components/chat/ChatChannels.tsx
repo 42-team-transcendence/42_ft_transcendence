@@ -69,7 +69,7 @@ export default function ChatChannels() {
             }
         }
         findOrCreateChat(); //appel de la fonction
-    }, [recipientId, currentUser, channelId])
+    }, [recipientId, currentUser, channelId, location.state])
 
 	//GET ALL CHATS & CHANNELS DATA
     useEffect(() => {
