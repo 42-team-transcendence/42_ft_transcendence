@@ -103,7 +103,43 @@ export class AuthService {
         if (!pwdMatch) {
             throw new ForbiddenException("Credentials incorrect");
         }
+         if (!user.auth2fa) {
+            // Creation du accessToken et du refreshToken
+            const tokens = await this.getToken(user.id, user.email);
+            // Stockage du refreshToken dans la DB
+            await this.updateRtHash(user.id, tokens.refreshToken);
 
+            res.cookie('refreshToken', tokens.refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax',
+                expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+            });
+            return res.json({accessToken : tokens.accessToken});
+        }
+        else {
+            return res.json({auth2fa : user.auth2fa});
+        }
+    }
+
+    async signin2FA(dto : SignInAuthDto, res) {
+        //find user by email
+        const user = await this.prisma.user.findUnique({
+            where: {
+                email : dto.email,
+            }
+        })
+        
+        //if user does not exist throw exception
+        if (!user) {
+            throw new ForbiddenException("Credentials incorrect");
+        }
+
+        //check password. if it does not match, throw error
+        const pwdMatch = await argon.verify(user.hash, dto.password);
+        if (!pwdMatch) {
+            throw new ForbiddenException("Credentials incorrect");
+        }
         // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(user.id, user.email);
         // Stockage du refreshToken dans la DB
