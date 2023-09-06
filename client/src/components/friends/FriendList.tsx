@@ -19,16 +19,17 @@ import { Container, Typography, List } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import '../../styles/Friends.css';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Miniature from "../miniature/Miniature";
+import tchoupi from '../../assets/tchoupi50x50.jpg'
 
 export interface Friend {
 	name: string;
 	icon: React.ReactNode; 
   }
 
-  interface User {
-	friend: Friend[];
-	// Add other properties as needed
-  }
+//   interface User {
+// 	friend: Friend[];
+//   }
 
 const FriendList: React.FC = () => {
 	const axiosPrivate = useAxiosPrivate();
@@ -57,12 +58,20 @@ const FriendList: React.FC = () => {
   return (
     <PageWrapper>
       <Container>
+	  {/* <Typography variant="h2" className="friend-list-title"> */}
 		<h2>Friend List</h2>
+		{/* </Typography> */}
 		<div className="container">
 			{ friends &&
 				<List> {
 					friends.map((friend, index) => (
-						<FriendItem key={index} friend={friend} />
+						// <FriendItem key={index} friend={friend} />
+						<Miniature miniatureUser={{
+							nickname: friend.nickname,
+							id: friend.id,
+							minAvatar: {url: tchoupi, name:'Tchoupi'}
+						}}
+						></Miniature>
 					))}
 				</List>
 			}
