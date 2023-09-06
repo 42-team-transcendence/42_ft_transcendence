@@ -35,8 +35,6 @@ model User {
 	channelsBannedOf		ChannelInfo[]		@relation("channelBanned")
 	channelsMutedOf			ChannelMutedUsers[]		
 
-
-
 	rank			Int @default(0)
 	score			Int @default(0)
 

@@ -6,15 +6,15 @@ interface FriendItemProps {
   friend: Friend;
 }
 
-const FriendItem: React.FC<FriendItemProps> = ({ friend }) => {
-  const { name, icon } = friend;
+const FriendItem: React.FC<any> = ({ friend }) => {
+  const { nickname, icon } = friend;
 
   return (
     <ListItem>
       <ListItemIcon>
         {icon}
       </ListItemIcon>
-      <ListItemText primary={name} />
+      <ListItemText primary={nickname} />
     </ListItem>
   );
 };

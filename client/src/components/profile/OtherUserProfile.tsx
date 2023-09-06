@@ -49,6 +49,7 @@ function OtherUserProfile() {
 	const [currentUser, setCurrentUser] = useState<any>();
 	const [currentUserChans, setCurrentUserChans] = useState<any>();
 	const [userBlocked, setUserBlocked] = useState<boolean>(false);
+	const [userBefriended, setUserAsFriend] = useState<boolean>(false);
 
 	const [anchorChatMenu, setAnchorChatMenu] = useState<null | HTMLElement>(null);
     const openChatMenu = Boolean(anchorChatMenu);
@@ -162,6 +163,23 @@ function OtherUserProfile() {
 		}
 	}
 
+	const handleUnfriend = async () => {
+		console.log("userBefriended", !userBefriended);
+		try {
+		  if(user) {
+			const response = await axiosPrivate.post(
+				`users/add-friend/${user.id}`,
+				{friend: !userBefriended},{
+					headers: {'Content-Type': 'application/json'},withCredentials: true
+				}
+			);
+			setUserAsFriend(!userBefriended);
+		  }
+		} catch (error) {
+		  console.error('Error unfriending:', error);
+		}
+	  };
+	  
 	return (
 	<PageWrapper>
 		{user && currentUser &&
@@ -234,8 +252,8 @@ function OtherUserProfile() {
 						<div className="row-other-user">
 							<CustomButtonSecond
 								icon={<PersonRemoveIcon />}
-								text="Unfriend"
-								onClick={startPrivateMessage}/>
+								text={!userBefriended? "Friend" : "Unfriend"}
+								onClick={handleUnfriend}/>
 
 							<CustomButtonSecond
 								icon={!userBlocked ? <BlockIcon />: <LockOpenIcon />}

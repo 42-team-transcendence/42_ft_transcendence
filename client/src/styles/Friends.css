@@ -18,3 +18,10 @@ h2 {
 	justify-content: space-between; /* Justify the content inside the FriendItem component */
 	margin-bottom: 10px; /* Add spacing between friend items */
   }
+
+.friend-list-title {
+	font-family: 'Alfa Slab One', sans-serif;
+	background-color: white;
+	padding: 10px;
+  }
+  
