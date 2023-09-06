@@ -25,6 +25,12 @@ export class GameController {
 		return (this.gameService.findAllMyGames(me));
 	}
 
+	// @Get('findGamesByUserId/:userId')
+	// async findGamesByUserId(@Param('userId') userId: string) {
+	// 	return this.gameService.findGamesByUserId(Number(userId));
+	// }
+
+
 	@Get('findAllGames')
 	async findAllGames(){
 		return (this.gameService.findAllGames());
