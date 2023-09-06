@@ -114,7 +114,7 @@ useEffect(() => { //fetch game data
 						adversaire = game.player_2;
 					else
 						adversaire = game.player_1;
-					if(adversaire == game.player_2)
+					if(adversaire === game.player_2)
 					{
 						my_score = game.player_1_score;
 						adv_score = game.player_2_score;
