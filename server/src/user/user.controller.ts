@@ -154,7 +154,6 @@ export class UserController {
 		FileInterceptor('avatar', MulterConfig)
 	)
 	async uploadAvatar(
-		// @Body() body: {avatar: string},
 		@UploadedFile() file: any,
 		@GetUser() user
 	) {
