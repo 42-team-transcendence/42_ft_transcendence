@@ -159,7 +159,6 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 						</TableRow>
 					)
 				  })}
-				  
                 </TableBody>}
               </Table>
             </TableContainer>

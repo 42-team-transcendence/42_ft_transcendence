@@ -53,7 +53,6 @@ export default function Miniature({miniatureUser}: {miniatureUser: MiniatureUser
         <Button color="secondary" onClick={() => goToUserProfile(miniatureUser)}>
 		   <div className="miniature-infos">
                 <BadgeAvatar minAvatar={miniatureUser.minAvatar}/>
-
                 <div className="miniature-name">{miniatureUser.nickname}</div>
 			</div>
         </Button>
