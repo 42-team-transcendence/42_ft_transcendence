@@ -1,62 +1,63 @@
-// const FriendList:React.FC = () => {
-// 	return (
-// 		<PageWrapper>
-// 			<div>
-// 				<h2>Friend List</h2>
-// 				{friends.map((friend, index) => (
-//         <FriendItem key={index} friend={friend} />
-//       ))}
-// 			</div>
-// 		</PageWrapper>
-// 	)
-//   }
-
-
 import React, {useEffect, useState} from "react";
 import PageWrapper from "../navbar/pageWrapper";
 
-import { Container, Typography, List } from '@mui/material';
-import PersonIcon from '@mui/icons-material/Person';
-import '../../styles/Friends.css';
+// =============================================================================
+// IMPORT COMPONENTS ===========================================================
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Miniature from "../miniature/Miniature";
 
+// =============================================================================
+// IMPORT STYLES ===============================================================
+import '../../styles/GameHistory.css';
+import '../../styles/Friends.css';
+import { Box } from "@mui/material";
+
+
+// =============================================================================
+// INTERFACES ==================================================================
 export interface Friend {
 	name: string;
 	icon: React.ReactNode; 
-  }
+}
 
+// =============================================================================
+// FUNCTION ====================================================================
 const FriendList: React.FC = () => {
 	const axiosPrivate = useAxiosPrivate();
 	const [currentUser, setCurrentUser] = useState<any>();
 	const [friends, setFriends] = useState<any[]>();
 
-  useEffect(() => {
-	const getFriends = async () => {
-		try {
-			const response = await axiosPrivate.get('/users/me', {
-				headers: { 'Content-Type': 'application/json'},
-				withCredentials: true
-		})
-		console.log(response.data);
-		console.log("friends", response.data.friend);
+	useEffect(() => {
+		const getFriends = async () => {
+			try {
+				const response = await axiosPrivate.get('/users/me', {
+					headers: { 'Content-Type': 'application/json'},
+					withCredentials: true
+			})
+			console.log(response.data);
+			console.log("friends", response.data.friend);
 
-		setCurrentUser(response.data);
-		setFriends(response.data.friend);
-	}catch(error: any){
-			console.log(error.response);
+			setCurrentUser(response.data);
+			setFriends(response.data.friend);
+		}catch(error: any){
+				console.log(error.response);
+			}
 		}
-	}
-	getFriends();
-  }, []);
+		getFriends();
+  	}, []);
 	
   return (
     <PageWrapper>
-      <Container>
-	  {/* <Typography variant="h2" className="friend-list-title"> */}
-		<h2>Friend List</h2>
-		{/* </Typography> */}
-		<div className="container">
+      	<Box
+		sx={{
+			display: "flex",
+			flexDirection:"column",
+			backgroundColor: "white",
+			borderRadius: "20px",
+			padding: "5vh",
+			border: "2px solid black",
+		}}>
+			<h1 className="typo-game"> Friend List</h1>
 			{ friends &&
 				<ul> {
 					friends.map((friend, index) => (
@@ -71,8 +72,7 @@ const FriendList: React.FC = () => {
 					))}
 				</ul>
 			}
-		</div>
-      </Container>
+		</Box>
     </PageWrapper>
   );
 };
