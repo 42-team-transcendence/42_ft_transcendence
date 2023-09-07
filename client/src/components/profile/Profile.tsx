@@ -32,7 +32,9 @@ interface User {
 	hash:string;
 	nickname: string;
 	auth2fa: boolean;
-	avatar: string
+	avatar: string;
+	score: number;
+	rank: number;
 }
 
 // =============================================================================
@@ -44,11 +46,12 @@ function Profile() {
 	const { auth, setAuth } = useContext(AuthContext);
 	const onlineUsers = useOnlineStatus();
 	const [currentUserId, setCurrentUserId] = useState("");
+
 	// =============================================================================
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
-	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '' });
+	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '', score: 0, rank: 0, });
     const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
 	console.log({auth});
 	const handleUserId = async() =>{
@@ -84,7 +87,7 @@ function Profile() {
 			
     }, []);
 	
-	const updateUser = () => {
+	const updateUser = async () => {
 
 		axiosPrivate.get('/')
 		.then(response => {
@@ -94,6 +97,7 @@ function Profile() {
 			console.error('Error fetching user details:', error);
 		});
 	}
+
 	const disabled2fa = async () => {
         const response = await axiosPrivate.post(
 			'/users/update2fa',
@@ -292,7 +296,7 @@ function Profile() {
 									className="img-profile"
 									src={`http://localhost:3333/public/picture/${user.nickname}`}
 								/> */}
-								<Avatar sx={{ width: 150, height: 150, border: "2px solid black"   }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
+								<Avatar sx={{ width: 150, height: 150, border: "2px solid black"  }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
 							</label>
 							<input
 								type="file"
@@ -313,7 +317,7 @@ function Profile() {
 									<p>Loading user data...</p>
 								)}
 						
-								<p className="rank"> Rank 1 | Lvl 800 </p>
+							<p className="rank">Rank {user.rank} | Lvl {user.score}</p>
 							</div>	
 					</div>
 					

@@ -1,6 +1,8 @@
 .container-wrap-other {
 	display: flex;
+	justify-content: center;
 	flex-wrap: wrap;
+	border: 2px solid red;
 	gap: 70px
 }
 

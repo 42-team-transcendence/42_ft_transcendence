@@ -21,6 +21,9 @@ import BlockIcon from '@mui/icons-material/Block';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { PersonAdd } from "@mui/icons-material";
+import Badge from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
+import Avatar from '@mui/material/Avatar';
 
 
 
@@ -30,10 +33,11 @@ interface User {
 	id: number;
 	nickname: string;
 	picture: string;
-	level: string;
 	isOnline: boolean;
 	blockedBy: User[];
 	blocked: User[];
+	score: number;
+	rank: number;
 }
 
 // =============================================================================
@@ -68,7 +72,6 @@ function OtherUserProfile() {
 				setUser({
 					...response.data,
 					picture:"https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg",
-					level : "200",
 					isOnline: isUserOnline,
 
 				});
@@ -182,6 +185,23 @@ function OtherUserProfile() {
 		  console.error('Error unfriending:', error);
 		}
 	  };
+
+
+
+	// =============================================================================
+	// BADGES ======================================================================
+
+	const StyledBadge = styled(Badge)(() => ({
+		'& .MuiBadge-badge': {
+		  backgroundColor: user?.isOnline ? 'green' : 'grey',
+		  color: user?.isOnline ? 'green' : 'grey',
+		  boxShadow: "0 0 0 2px white",
+		  width: "20px",
+		  height: "20px",
+		  borderRadius: 10
+		},
+	}));
+	
 	  
 	return (
 	<PageWrapper>
@@ -190,19 +210,20 @@ function OtherUserProfile() {
 				<div className="container-1">
 					<div className="avatar">
 						<div className="profile-picture-container">
-							<img
-							src={user?.picture}
-							alt="Profile"
-							className="profile-picture"
-							/>
+							<StyledBadge
+								overlap="circular"
+								anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+								variant="dot"
+								invisible={!user.isOnline}
+							>
+								<Avatar sx={{ width: 150, height: 150, border: "2px solid black"  }} variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
+							</StyledBadge>
 						</div>
 
 						<div className="profile-info">
 							<h1 className="name">{user?.nickname}</h1>
-							<div className={`status-indicator ${user.isOnline ? 'online' : 'offline'}`}>
-        						{user.isOnline ? 'Online' : 'Offline'}
-							</div>				
-							<p>Rank 2 | Lvl {user?.level}</p>
+					
+							<p className="rank">Rank {user.rank} | Lvl {user.score}</p>
 						</div>
 					</div>
 

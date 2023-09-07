@@ -22,6 +22,7 @@ const Navbar: React.FC<NavbarProps> = ({ showLinks, handleShowLinks }) => {
 	return (
 			<nav className={`navbar ${showLinks ? "show_nav" : "hide_nav"}`}>
 				<Link to="/" className='navbar_logo'> PONG </Link>
+				
 				<SearchAppBar />
 				<div className='navbar_links'>
 					<Link to="/" className="navbar_link">Home</Link>

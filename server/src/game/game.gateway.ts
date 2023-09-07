@@ -26,8 +26,37 @@ let player1Score: number;
 let player2Score: number;
 let winnerId: number;
 
+async function updateRank() {
+  try {
+    const users = await prisma.user.findMany();
+    users.sort((a: any, b: any) => b.score - a.score);
+
+    for (let index = 0; index < users.length; index++) {
+      const user = users[index];
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { rank: index + 1 },
+      });
+    }
+  } catch (error) {
+    console.error('Error updating ranks:', error);
+  }
+}
+
+async function updateScore(userId: number) {
+  try {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: { score: { increment: 100 } },
+    });
+    updateRank();
+  } catch (error) {
+    console.error('Error updating user:', error);
+  }
+}
+
 async function saveScoresToDatabase(player1Id: number, player2Id: number, player1Score: number, player2Score: number, winnerId: number) {
-    try{ 
+    try{
 		const game = await prisma.game.create({
 			data: {
 				player_1_id: player1Id,
@@ -38,6 +67,9 @@ async function saveScoresToDatabase(player1Id: number, player2Id: number, player
 			},
     	});
     console.log('Game saved:', game);
+    if(winnerId != 0) {
+        updateScore(winnerId); 
+    }
 	} 
 	catch(error){
 		console.log("Error saving game:", error);
@@ -120,7 +152,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
   handleDisconnect(client: Socket) {
 
     // Find the room that the client was in
-    let index = -1;
+    // let index = -1;
 
       for (const [roomName, gameInfo] of this.rooms) {
         const index = gameInfo.players.findIndex(player => player.socketId === client.id);
