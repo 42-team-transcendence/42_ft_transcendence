@@ -7,6 +7,8 @@ import { UserService } from "./user.service";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express'; 
 import { MulterConfig } from './middlewares';
+import { UserDto } from "./dto/user.dto";
+import { GetUserDto } from "src/auth/dto";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts. 
 @Controller('users') // définit la route "/users" de l'API
@@ -83,34 +85,31 @@ export class UserController {
 	@HttpCode(HttpStatus.OK)
 	@Post('email')
 	async updateEmail(
-		@Body() body: { email: string },
-		@GetUser() user
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto
 		) {
-			const { email } = body;
-			console.log(`new Email = ${email}`);
-			await this.userService.updateEmail(email, user.sub);
+			const  email  = dto.email;
+			await this.userService.updateEmail(email, creator.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('pwd')
 	async updatePwd(
-		@Body() body: { pwd: string },
-		@GetUser() user
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto
 		) {
-			const { pwd } = body;
-			console.log(`new Pwd = ${pwd}`);
-			await this.userService.updatePwd(pwd, user.sub);
+			const pwd = dto.pwd;
+			await this.userService.updatePwd(pwd, creator.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('updateNick')
 	async updateNick(
-		@Body() body: { nickname: string },
-		@GetUser() user 
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto 
 		) {
-			const { nickname } = body;
-			console.log(`new Nick = ${nickname}`);
-			await this.userService.updateNick(nickname, user.sub);
+			const nickname = dto.nickname;
+			await this.userService.updateNick(nickname, creator.sub);
 	}
 
 
@@ -142,12 +141,11 @@ export class UserController {
 	@HttpCode(HttpStatus.OK)
 	@Post('update2fa')
 	async update2fa(
-		@Body() body: {auth2fa: boolean},
-		@GetUser() user
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto
 	) {
-		const { auth2fa } = body;
-		console.log(`Auth2fa = ${auth2fa}`);
-		await this.userService.update2fa(auth2fa, user.sub);
+		const auth2fa  = dto.auth2fa;
+		await this.userService.update2fa(auth2fa, creator.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
@@ -156,7 +154,6 @@ export class UserController {
 		FileInterceptor('avatar', MulterConfig)
 	)
 	async uploadAvatar(
-		// @Body() body: {avatar: string},
 		@UploadedFile() file: any,
 		@GetUser() user
 	) {
@@ -164,16 +161,6 @@ export class UserController {
 		console.log(`Avatar file = ${file}`);
 		await this.userService.uploadAvatar(file, user.sub);
 	}
-
-	// @Post('uploadAvatar')
-	// @UseInterceptors(FileInterceptor('avatar')) // 'avatar' should match the field name in the FormData
-	// async uploadAvatar(
-	// 	@UploadedFile() avatar: Express.Multer.File, // Use UploadedFile decorator
-	// 	@GetUser() user
-	// ) {
-	// 	console.log(`Uploaded Avatar = ${avatar.filename}`);
-	// 	await this.userService.uploadAvatar(avatar.path, user.sub);
-	// }
 
 	@Post('block/:id')
 	async blockUser(

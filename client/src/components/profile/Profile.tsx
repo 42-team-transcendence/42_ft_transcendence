@@ -121,16 +121,18 @@ function Profile() {
 
 	const handleSaveEmail = async (newEmail: string) => {
 		try {
+			console.log("ici")
 			const response = await axiosPrivate.post(
 				'/users/email',
-				JSON.stringify({ email: newEmail }),
+				JSON.stringify({ 'email': newEmail}),
 				{
 					headers: { "Content-Type": "application/json" },
 					withCredentials: true,
 					validateStatus: status => status >= 200 && status < 300,
 				}
 			);
-			
+			console.log("LA")
+			console.log({response})
 			if (response.status === 200) {
 				// Update the user's email in the user state
 				setUser((prevUser) => ({ ...prevUser, email: newEmail }));
