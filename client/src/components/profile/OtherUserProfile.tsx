@@ -33,10 +33,11 @@ interface User {
 	id: number;
 	nickname: string;
 	picture: string;
-	level: string;
 	isOnline: boolean;
 	blockedBy: User[];
 	blocked: User[];
+	score: number;
+	rank: number;
 }
 
 // =============================================================================
@@ -71,7 +72,6 @@ function OtherUserProfile() {
 				setUser({
 					...response.data,
 					picture:"https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg",
-					level : "200",
 					isOnline: isUserOnline,
 
 				});
@@ -223,7 +223,7 @@ function OtherUserProfile() {
 						<div className="profile-info">
 							<h1 className="name">{user?.nickname}</h1>
 					
-							<p>Rank 2 | Lvl {user?.level}</p>
+							<p className="rank">Rank {user.rank} | Lvl {user.score}</p>
 						</div>
 					</div>
 
