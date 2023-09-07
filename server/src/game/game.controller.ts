@@ -1,4 +1,4 @@
-import { Controller, Get, Post, HttpCode, HttpStatus, Body, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, HttpCode, HttpStatus, Body, UseGuards, Param } from "@nestjs/common";
 import { JwtGuard } from "../auth/guard";
 import { GameService } from "./game.service"
 import { GameDto } from "./dto/game.dto";
@@ -25,11 +25,10 @@ export class GameController {
 		return (this.gameService.findAllMyGames(me));
 	}
 
-	// @Get('findGamesByUserId/:userId')
-	// async findGamesByUserId(@Param('userId') userId: string) {
-	// 	return this.gameService.findGamesByUserId(Number(userId));
-	// }
-
+	@Get('findGamesByUserId/:userId')
+	async findGamesByUserId(@Param('userId') userId: number) {
+		return this.gameService.findGamesByUserId(Number(userId));
+	}
 
 	@Get('findAllGames')
 	async findAllGames(){

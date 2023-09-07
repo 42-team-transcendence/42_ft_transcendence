@@ -286,7 +286,7 @@ function OtherUserProfile() {
 						</div>
 					</div>
 				</div>
-				{/* <GameHistoryOther userId={user.id}/> */}
+				<GameHistoryOther userId={user.id}/>
 			</div>
 		}
 	</PageWrapper>

@@ -133,12 +133,13 @@ useEffect(() => { //fetch game data
 								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
 						<TableCell>
-							{/* {adversaire.nickname} */}
-							<div className={`status-indicator ${isAdversaireOnline ? 'online' : 'offline'}`} />
 							<Miniature miniatureUser={{
 							nickname: adversaire.nickname,
 							id: adversaire.id,
-							minAvatar: {url: tchoupi, name:'Tchoupi'}
+							minAvatar: {
+								url: `http://localhost:3333/public/picture/${adversaire.nickname}`,
+								name: adversaire.nickname
+							  }
 						}}
 						></Miniature>
 							</TableCell>
