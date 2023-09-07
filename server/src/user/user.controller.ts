@@ -88,32 +88,28 @@ export class UserController {
 		@Body() dto: UserDto,
 		@GetUser() creator: GetUserDto
 		) {
-			console.log("ICI");
 			const  email  = dto.email;
-			console.log({email});
 			await this.userService.updateEmail(email, creator.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('pwd')
 	async updatePwd(
-		@Body() body: { pwd: string },
-		@GetUser() user
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto
 		) {
-			const { pwd } = body;
-			console.log(`new Pwd = ${pwd}`);
-			await this.userService.updatePwd(pwd, user.sub);
+			const pwd = dto.pwd;
+			await this.userService.updatePwd(pwd, creator.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
 	@Post('updateNick')
 	async updateNick(
-		@Body() body: { nickname: string },
-		@GetUser() user 
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto 
 		) {
-			const { nickname } = body;
-			console.log(`new Nick = ${nickname}`);
-			await this.userService.updateNick(nickname, user.sub);
+			const nickname = dto.nickname;
+			await this.userService.updateNick(nickname, creator.sub);
 	}
 
 
@@ -145,12 +141,11 @@ export class UserController {
 	@HttpCode(HttpStatus.OK)
 	@Post('update2fa')
 	async update2fa(
-		@Body() body: {auth2fa: boolean},
-		@GetUser() user
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto
 	) {
-		const { auth2fa } = body;
-		console.log(`Auth2fa = ${auth2fa}`);
-		await this.userService.update2fa(auth2fa, user.sub);
+		const auth2fa  = dto.auth2fa;
+		await this.userService.update2fa(auth2fa, creator.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
