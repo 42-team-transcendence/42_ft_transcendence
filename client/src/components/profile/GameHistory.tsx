@@ -5,7 +5,6 @@ import PageWrapper from "../navbar/pageWrapper";
 import '../../styles/GameHistory.css';
 import { styled } from "@mui/system";
 import { useOnlineStatus } from "../../context/OnlineStatus";
-import tchoupi from '../../assets/tchoupi50x50.jpg'
 import Miniature from "../miniature/Miniature";
 
 interface User {
@@ -125,8 +124,6 @@ useEffect(() => { //fetch game data
 						my_score = game.player_2_score;
 						adv_score = game.player_1_score;
 					}
-					// Vérifier si l'adversaire est en ligne
-    				const isAdversaireOnline = onlineUsers.includes(adversaire.id);
 					return (
 						<TableRow
 							key={index}
@@ -157,8 +154,7 @@ useEffect(() => { //fetch game data
 						</TableCell>
 						</TableRow>
 					)
-				  })}
-				  
+				})}
                 </TableBody>}
               </Table>
             </TableContainer>

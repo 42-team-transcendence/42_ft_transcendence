@@ -274,9 +274,7 @@ function Profile() {
 		<PageWrapper>
 			<div className="main-container">
 				<div className="container-wrap">
-
 					{/* Render AVATAR */}
-
 					<div className="avatar">
 						<StyledBadge
 							overlap="circular"
@@ -300,7 +298,6 @@ function Profile() {
 								onChange={handleFileChange}
 							/>
 						</StyledBadge>
-						
 							<div className="avater-info">
 								{user ? (
 									<>
@@ -310,11 +307,9 @@ function Profile() {
 								) : (
 									<p>Loading user data...</p>
 								)}
-						
 							<p className="rank">Rank {user.rank} | Lvl {user.score}</p>
 							</div>	
 					</div>
-					
 					{/* Render EMAIL */}
 					<div className="element-profile">
 						<h2>Email</h2>
@@ -329,7 +324,6 @@ function Profile() {
 							)}
 						</div>
 					</div>
-
 					{/* Render PASSWORD */}
 					<div className="element-profile">
 						<h2>Password</h2>
@@ -338,7 +332,6 @@ function Profile() {
 							<span className="modifier"onClick={handleOpenPwdModal}>modifier</span>
 						</div>
 					</div>
-				
 					{/* Render 2FA */}
 					<div className="element-profile">
 						<div className="a-modifier">
@@ -360,21 +353,18 @@ function Profile() {
 				</div>
 				<GameHistory/>
 			</div>
-
 			{/* Render the EmailModal component */}
 			<EmailModal
 				open={isEmailModalOpen}
 				onClose={handleCloseEmailModal}
 				onSave={handleSaveEmail}
 			/>
-
 			{/* Render the PwdModal component */}
 			<PwdModal
 				open={isPwdModalOpen}
 				onClose={handleClosePwdModal}
 				onSave={handleSavePwd}
 			/>
-
 			{/* Render the PwdModal component */}
 				<NickModal
 				open={isNickModalOpen}
