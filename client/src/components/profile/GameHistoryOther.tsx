@@ -10,64 +10,69 @@ import Miniature from "../miniature/Miniature";
 
 interface User {
 	email: string;
+	hash:string;
 	nickname: string;
 }
+interface UserIdProps {
+   userId: number;
+  }
 
 const WinTableCell = styled(TableCell)(({ theme }) => ({
 	color: "green",
 	textDecoration: "none",
-  }));
-  
-  const LossTableCell = styled(TableCell)(({ theme }) => ({
+}));
+
+const LossTableCell = styled(TableCell)(({ theme }) => ({
 	color: "red",
 	textDecoration: "none",
-  }));
+}));
 
-function GameHistory() {
+const GameHistoryOther:React.FC<UserIdProps> = ({
+	userId,}) =>{
 
-const axiosPrivate = useAxiosPrivate();
-const [gameHistory, setGameHistory] = useState([]);
-const [currentUser, setCurrentUser] = useState<any>();
+	const axiosPrivate = useAxiosPrivate();
+	const [gameHistory, setGameHistory] = useState([]);
+	const [currentUser, setCurrentUser] = useState<any>();
 
-const onlineUsers = useOnlineStatus();
-console.log({onlineUsers});
+	const onlineUsers = useOnlineStatus();
+	console.log({onlineUsers});
+	// console.log("userid props", userId);
 
-useEffect(() => { //fetch game data
-	console.log("coucou useEffect")
-	const findAllMyGames = async () =>{
-		try {
-			const response = await axiosPrivate.get('/games/findAllMyGames', {
-				headers: { 'Content-Type': 'application/json'},
-                    withCredentials: true
-			})
-			setGameHistory(response.data);
-			console.log({findAllMyGames:response.data}); 
-		} catch(error: any) {
-			console.log(error.response);
+	useEffect(() => { //fetch game data
+		const findGamesByUserId = async () =>{
+			try {
+				const response = await axiosPrivate.get(`/games/findGamesByUserId/${userId}`, {
+					headers: { 'Content-Type': 'application/json'},
+						withCredentials: true
+				})
+				setGameHistory(response.data);
+				console.log("all user's games", response.data); 
+			} catch(error: any) {
+				console.log(error.response);
+			}
 		}
-	}
-	findAllMyGames();
-  }, [])
+		findGamesByUserId();
+	}, [userId])
 
-  useEffect(() => { //Fetch current user data
-	const getCurrentUser = async () => { //definition de la fonction
-		try {
-			const response = await axiosPrivate.get('/users/me', {
-				headers: { 'Content-Type': 'application/json'},
-				withCredentials: true
-			})
-			setCurrentUser(response.data);
-		} catch (error:any) {
-			console.log(error.response );
-		}
-	}
-	getCurrentUser(); //appel de la fonction
-}, [])
+	// useEffect(() => { //Fetch current user data
+	// 	const getCurrentUser = async () => { //definition de la fonction
+	// 		try {
+	// 			const response = await axiosPrivate.get('/users/me', {
+	// 				headers: { 'Content-Type': 'application/json'},
+	// 				withCredentials: true
+	// 			})
+	// 			setCurrentUser(response.data);
+	// 		} catch (error:any) {
+	// 			console.log(error.response );
+	// 		}
+	// 	}
+	// 	getCurrentUser(); //appel de la fonction
+	// }, [])
 
 
-  return (
-    <PageWrapper>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+	return (
+	 	<PageWrapper>
+			<Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Box
 			sx={{
 				display: "flex",
@@ -92,7 +97,7 @@ useEffect(() => { //fetch game data
 						<TableCell>Result</TableCell>
 					</TableRow>
                 </TableHead>
-                {currentUser && <TableBody> {
+                {<TableBody> {
 					gameHistory
 					.slice(Math.max(gameHistory.length - 5, 0))
 					.map((game:any, index) => {
@@ -100,16 +105,15 @@ useEffect(() => { //fetch game data
 					let my_score;
 					let adv_score;
 					const formattedTimestamp = game.createdAt
-					  ? new Intl.DateTimeFormat("en-GB", {
-						  day: "2-digit",
-						  month: "2-digit",
-						  year: "numeric",
-						  hour: "2-digit",
-						  minute: "2-digit",
-						}).format(new Date(game.createdAt))
-					  : "";
-					  console.log(`current user id = ${currentUser.id}`);
-					if (game.player_1_id === currentUser.id)
+					? new Intl.DateTimeFormat("en-GB", {
+						day: "2-digit",
+						month: "2-digit",
+						year: "numeric",
+						hour: "2-digit",
+						minute: "2-digit",
+					  }).format(new Date(game.createdAt))
+					: "";
+					if (game.player_1_id === userId)
 						adversaire = game.player_2;
 					else
 						adversaire = game.player_1;
@@ -123,8 +127,6 @@ useEffect(() => { //fetch game data
 						my_score = game.player_2_score;
 						adv_score = game.player_1_score;
 					}
-					// Vérifier si l'adversaire est en ligne
-    				const isAdversaireOnline = onlineUsers.includes(adversaire.id);
 					return (
 						<TableRow
 							key={index}
@@ -132,7 +134,7 @@ useEffect(() => { //fetch game data
 								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
 						<TableCell>
-							<Miniature miniatureUser={{
+						<Miniature miniatureUser={{
 							nickname: adversaire.nickname,
 							id: adversaire.id,
 							minAvatar: {
@@ -147,7 +149,7 @@ useEffect(() => { //fetch game data
 						<TableCell>
 									{game.winnerId === 0 ? (
 										"DRAWN GAME"
-									) : game.winnerId === currentUser.id ?(
+									) : game.winnerId === userId ?(
 										<WinTableCell>WIN</WinTableCell>
 									) : (
 										<LossTableCell>LOSE</LossTableCell>
@@ -164,9 +166,8 @@ useEffect(() => { //fetch game data
           </Box>
         </Box>
       </Box>
-    </PageWrapper>
-  );
+	 	</PageWrapper>
+	);
 }
 
-export default GameHistory;
-
+export default GameHistoryOther;

@@ -14,7 +14,7 @@
 
 import React, {useEffect, useState} from "react";
 import PageWrapper from "../navbar/pageWrapper";
-import FriendItem from '../friends/FriendItem';
+
 import { Container, Typography, List } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import '../../styles/Friends.css';
@@ -25,10 +25,6 @@ export interface Friend {
 	name: string;
 	icon: React.ReactNode; 
   }
-
-//   interface User {
-// 	friend: Friend[];
-//   }
 
 const FriendList: React.FC = () => {
 	const axiosPrivate = useAxiosPrivate();

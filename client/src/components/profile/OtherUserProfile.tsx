@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import GameHistory from "./GameHistory";
+import GameHistoryOther from "./GameHistoryOther";
 import { useOnlineStatus } from "../../context/OnlineStatus";
 import PageWrapper from "../navbar/pageWrapper";
 
@@ -286,7 +286,7 @@ function OtherUserProfile() {
 						</div>
 					</div>
 				</div>
-				<GameHistory/>
+				<GameHistoryOther userId={user.id}/>
 			</div>
 		}
 	</PageWrapper>

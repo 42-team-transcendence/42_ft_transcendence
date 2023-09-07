@@ -41,6 +41,27 @@ export class GameService {
 		return myGames;
 	}
 
+	async findGamesByUserId(userId: number) {
+		console.log({userId})
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId },
+		});
+		const games = await this.prisma.game.findMany({
+		  where: {
+			OR: [
+			  { player_1_id: user.id },
+			  { player_2_id: user.id },
+			],
+		  },
+		  include :{
+			player_1: true,
+			player_2: true,
+		  }
+		});
+		console.log({games});
+		return games;
+	  }
+
 	async findAllGames(){
 		const games = await this.prisma.game.findMany();
 			return (games);}
