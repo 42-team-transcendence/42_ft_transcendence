@@ -275,7 +275,7 @@ function OtherUserProfile() {
 
 						<div className="row-other-user">
 							<CustomButtonSecond
-								icon={!userBefriended ? <PersonRemoveIcon />: <PersonAdd/>}
+								icon={!userBefriended ?  <PersonAdd/> : <PersonRemoveIcon />}
 								text={!userBefriended ? "Friend" : "Unfriend"}
 								onClick={handleAddFriend}/>
 
