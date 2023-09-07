@@ -16,11 +16,13 @@ interface User {
 const WinTableCell = styled(TableCell)(({ theme }) => ({
 	color: "green",
 	textDecoration: "none",
+	textAlign: 'center' 
   }));
   
   const LossTableCell = styled(TableCell)(({ theme }) => ({
 	color: "red",
 	textDecoration: "none",
+	textAlign: 'center' 
   }));
 
 function GameHistory() {
@@ -86,10 +88,10 @@ useEffect(() => { //fetch game data
 						sx={{
 							"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 							"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}}>
-						<TableCell>Name</TableCell>
-						<TableCell>Score</TableCell>
-						<TableCell>Date</TableCell>
-						<TableCell>Result</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Name</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Score</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Date</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Result</TableCell>
 					</TableRow>
                 </TableHead>
                 {currentUser && <TableBody> {
@@ -131,26 +133,25 @@ useEffect(() => { //fetch game data
 							sx={{
 								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
-						<TableCell>
-							<Miniature miniatureUser={{
-							nickname: adversaire.nickname,
-							id: adversaire.id,
-							minAvatar: {
-								url: `http://localhost:3333/public/picture/${adversaire.nickname}`,
-								name: adversaire.nickname
-							  }
-						}}
-						></Miniature>
+							<TableCell style={{ textAlign: 'center' }}>
+								<Miniature miniatureUser={{
+									nickname: adversaire.nickname,
+									id: adversaire.id,
+									minAvatar: {
+										url: `http://localhost:3333/public/picture/${adversaire.nickname}`,
+										name: adversaire.nickname
+									}
+								}}></Miniature>
 							</TableCell>
-						<TableCell>{my_score} - {adv_score}</TableCell>
-						<TableCell>{formattedTimestamp}</TableCell>
-						<TableCell>
+						<TableCell style={{ textAlign: 'center' }}>{my_score} - {adv_score}</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>{formattedTimestamp}</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>
 									{game.winnerId === 0 ? (
 										"DRAWN GAME"
 									) : game.winnerId === currentUser.id ?(
-										<WinTableCell>WIN</WinTableCell>
+										<WinTableCell style={{ textAlign: 'center' }}> WIN</WinTableCell>
 									) : (
-										<LossTableCell>LOSE</LossTableCell>
+										<LossTableCell style={{ textAlign: 'center' }}>LOSE</LossTableCell>
 									)}
 								
 						</TableCell>
