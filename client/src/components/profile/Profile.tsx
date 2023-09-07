@@ -29,7 +29,6 @@ interface PwdData {
 
 interface User {
 	email: string;
-	hash:string;
 	nickname: string;
 	auth2fa: boolean;
 	avatar: string;
@@ -51,7 +50,7 @@ function Profile() {
 	// USE EFFECT ==================================================================
 	// const [user, setUser] = useState<any>();
 
-	const [user, setUser] = useState<User>({ email: '', hash: '', nickname: '', auth2fa: false, avatar: '', score: 0, rank: 0, });
+	const [user, setUser] = useState<User>({ email: '', nickname: '', auth2fa: false, avatar: '', score: 0, rank: 0, });
     const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
 	console.log({auth});
 	const handleUserId = async() =>{

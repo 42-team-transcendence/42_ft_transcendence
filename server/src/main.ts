@@ -6,6 +6,7 @@ import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from "@nestjs/config";
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ExcludeSensitiveDataInterceptor } from './interceptors/excludeSensitiveDataInterceptor';
 // import { SanitizePipe } from './sanitize.pipe';
 
 async function bootstrap() {
@@ -37,6 +38,9 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+
+  //use global interceptor to erase hash data from responses to client
+  app.useGlobalInterceptors(new ExcludeSensitiveDataInterceptor());
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('BACKEND_PORT') || 3333;

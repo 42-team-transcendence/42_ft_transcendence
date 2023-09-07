@@ -10,7 +10,6 @@ import Miniature from "../miniature/Miniature";
 
 interface User {
 	email: string;
-	hash:string;
 	nickname: string;
 }
 
