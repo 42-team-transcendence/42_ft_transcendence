@@ -39,22 +39,31 @@ function Leaderboard() {
 
 return (
   <PageWrapper>
-    <Box>
-      <h1>Leaderboard</h1>
+   
+    <Box sx={{
+				display: "flex",
+        flexDirection: "column",
+				backgroundColor: "white",
+				borderRadius: "20px",
+				padding: "5vh",
+				border: "2px solid black",
+		}}>
+      <div className="leader-flex">
+      <h1 className="typo-game">Leaderboard</h1>
       <div>
         <Paper component={Table}>
           <TableHead>
             <TableRow>
-              <TableCell>Rank</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Score</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>Rank</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>Name</TableCell>
+              <TableCell style={{ textAlign: 'center' }}>Score</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((user, index) => (
               <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>
+                <TableCell style={{ textAlign: 'center' }}>{index + 1}</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>
                   <Miniature
                     miniatureUser={{
                       nickname: user.nickname,
@@ -66,14 +75,15 @@ return (
                     }}
                   ></Miniature>
                 </TableCell>
-                <TableCell>{user.score}</TableCell>
+                <TableCell style={{ textAlign: 'center' }}>{user.score}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Paper>
       </div>
-      <Logout />
+      </div>
     </Box>
+   
   </PageWrapper>
 );
 }
