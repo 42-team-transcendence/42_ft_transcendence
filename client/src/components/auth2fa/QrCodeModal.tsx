@@ -75,7 +75,10 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
     <Modal open={isOpen} onClose={onClose}>
       <Box
         sx={{
+          display:'flex',
+          flexDirection:'column',
           position: 'absolute',
+          gap:'20px',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',

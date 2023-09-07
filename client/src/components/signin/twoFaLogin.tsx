@@ -73,7 +73,10 @@ const TwoFaLogin: React.FC<TwoFaLoginProps> = ({
         <Modal open={isModalOpen} onClose={closeModal}>
         <Box
           sx={{
+            display:'flex',
+            flexDirection: 'column',
             position: 'absolute',
+            gap:'20px',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
