@@ -1,7 +1,6 @@
 .miniature-infos {
 	display: flex;
 	align-items: center;
-	border: 2px solid red;
 	gap: 10px;
 }
 
