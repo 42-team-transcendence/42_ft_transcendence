@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect, ChangeEvent } from "react";
-import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -20,13 +19,9 @@ import Checkbox from '@mui/material/Checkbox';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
-import { Balance } from "@mui/icons-material";
+
 // =============================================================================
 // INTERFACES ==================================================================
-interface PwdData {
-	pwd: string;
-}
-
 interface User {
 	email: string;
 	nickname: string;
