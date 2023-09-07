@@ -7,6 +7,8 @@ import { UserService } from "./user.service";
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express'; 
 import { MulterConfig } from './middlewares';
+import { UserDto } from "./dto/user.dto";
+import { GetUserDto } from "src/auth/dto";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts. 
 @Controller('users') // définit la route "/users" de l'API
@@ -83,12 +85,13 @@ export class UserController {
 	@HttpCode(HttpStatus.OK)
 	@Post('email')
 	async updateEmail(
-		@Body() body: { email: string },
-		@GetUser() user
+		@Body() dto: UserDto,
+		@GetUser() creator: GetUserDto
 		) {
-			const { email } = body;
-			console.log(`new Email = ${email}`);
-			await this.userService.updateEmail(email, user.sub);
+			console.log("ICI");
+			const  email  = dto.email;
+			console.log({email});
+			await this.userService.updateEmail(email, creator.sub);
 	}
 
 	@HttpCode(HttpStatus.OK)
@@ -164,16 +167,6 @@ export class UserController {
 		console.log(`Avatar file = ${file}`);
 		await this.userService.uploadAvatar(file, user.sub);
 	}
-
-	// @Post('uploadAvatar')
-	// @UseInterceptors(FileInterceptor('avatar')) // 'avatar' should match the field name in the FormData
-	// async uploadAvatar(
-	// 	@UploadedFile() avatar: Express.Multer.File, // Use UploadedFile decorator
-	// 	@GetUser() user
-	// ) {
-	// 	console.log(`Uploaded Avatar = ${avatar.filename}`);
-	// 	await this.userService.uploadAvatar(avatar.path, user.sub);
-	// }
 
 	@Post('block/:id')
 	async blockUser(
