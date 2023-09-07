@@ -10,3 +10,10 @@
 				0px 0px 0 rgba(0, 0, 0, .20);
 	padding: 5vh;
 }
+
+
+.leader-flex {
+	display: flex;
+	flex-direction: column;
+
+}
