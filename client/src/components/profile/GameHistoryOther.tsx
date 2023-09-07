@@ -91,10 +91,10 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 						sx={{
 							"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 							"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}}>
-						<TableCell>Name</TableCell>
-						<TableCell>Score</TableCell>
-						<TableCell>Date</TableCell>
-						<TableCell>Result</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Name</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Score</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Date</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Result</TableCell>
 					</TableRow>
                 </TableHead>
                 {<TableBody> {
@@ -133,7 +133,7 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 							sx={{
 								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
-						<TableCell>
+						<TableCell style={{ textAlign: 'center' }}>
 						<Miniature miniatureUser={{
 							nickname: adversaire.nickname,
 							id: adversaire.id,
@@ -144,15 +144,15 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 						}}
 						></Miniature>
 							</TableCell>
-						<TableCell>{my_score} - {adv_score}</TableCell>
-						<TableCell>{formattedTimestamp}</TableCell>
-						<TableCell>
+						<TableCell style={{ textAlign: 'center' }}>{my_score} - {adv_score}</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>{formattedTimestamp}</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>
 									{game.winnerId === 0 ? (
 										"DRAWN GAME"
 									) : game.winnerId === userId ?(
-										<WinTableCell>WIN</WinTableCell>
+										<WinTableCell style={{ textAlign: 'center' }}>WIN</WinTableCell>
 									) : (
-										<LossTableCell>LOSE</LossTableCell>
+										<LossTableCell style={{ textAlign: 'center' }}>LOSE</LossTableCell>
 									)}
 								
 						</TableCell>

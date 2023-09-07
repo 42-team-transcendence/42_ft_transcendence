@@ -1,10 +1,8 @@
 .main-container {
-		display: flex;
-		flex-wrap: wrap;
-		/* align-items: center; */
-		justify-content: center;
-		border: 2px solid red;
-		gap: 70px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 70px;
 }
 	
 
