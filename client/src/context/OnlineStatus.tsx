@@ -4,9 +4,9 @@ import io from 'socket.io-client';
 // Set up WebSocket connection
 const socket = io('http://localhost:3333', {
 	path: "/status",
-	// withCredentials: true,
-	// autoConnect: true,
-	// auth: { token: "TODO: gérer les tokens d'authentification ici" },
+	withCredentials: true,
+	autoConnect: true,
+	auth: { token: "TODO: gérer les tokens d'authentification ici" },
 });
 
 //creation du contexte
