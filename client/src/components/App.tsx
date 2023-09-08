@@ -23,12 +23,12 @@ import io from 'socket.io-client';
 function App() {
 
 	// Set up WebSocket connection
-	const socket = io('http://localhost:3333', {
-		path: "/status",
-		withCredentials: true,
-		autoConnect: true,
-		auth: { token: "TODO: gérer les tokens d'authentification ici" },
-	});
+	// const socket = io('http://localhost:3333', {
+	// 	path: "/status",
+	// 	withCredentials: true,
+	// 	autoConnect: true,
+	// 	auth: { token: "TODO: gérer les tokens d'authentification ici" },
+	// });
 
 	// useEffect(() => {
 	//   // Écoute le pong du serveur en réponse à notre ping
@@ -63,7 +63,7 @@ function App() {
           <Route element={<PersistLogin />}>
             <Route element= {<RequireAuth />}>
               <Route path="/" element={<Homepage />} />
-			        <Route path="play" element={<Background />} />
+			  <Route path="play" element={<Background />} />
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="rules" element={<Rules />} />
               <Route path="friendlist" element={<FriendList />} />
