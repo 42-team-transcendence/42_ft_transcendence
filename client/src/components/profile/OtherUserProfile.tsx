@@ -216,7 +216,7 @@ function OtherUserProfile() {
 								variant="dot"
 								invisible={!user.isOnline}
 							>
-								<Avatar sx={{ width: 150, height: 150, border: "2px solid black"  }} variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
+								<Avatar sx={{ width: 180, height: 180, border: "2px solid black"  }} variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
 							</StyledBadge>
 						</div>
 

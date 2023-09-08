@@ -27,6 +27,9 @@
 	
 }
 
+.custom-button{
+	padding: 0;
+}
 
 .modifier {
 	font-size:0.9rem;
@@ -50,7 +53,7 @@
 }
 
 .rank {
-	margin-top: 50px;
+	margin-top: 20px;
 }
 
 
