@@ -2,7 +2,9 @@ import { Controller, Post, Body, Get, Req, Res } from '@nestjs/common';
 import { DoubleAuthService } from './doubleauth.service';
 import speakeasy from 'speakeasy';
 import { Request, Response } from 'express';
-import { GetUser } from "../auth/decorator"
+// import { GetUser } from "../auth/decorator"
+import { DoubleAuthDto } from './dto/doubleAuth.dto';
+
 
 
 
@@ -22,7 +24,7 @@ export class DoubleAuthController {
 
   @Post('verify2fa')
   async verify2FA(
-    @Body() dto: any,
+    @Body() dto: DoubleAuthDto,
     @Res() res) {
     console.log(`CODE = ${dto.otp} USER =`, {dto});
     // Verify the 2FA code using the DoubleAuthService
