@@ -64,7 +64,14 @@ function Profile() {
 	handleUserId();
 	console.log('user id', currentUserId);
 	console.log('online users' , onlineUsers);
-	const isUserOnline = onlineUsers.includes(currentUserId);
+	// const isUserOnline = onlineUsers.includes(currentUserId);
+	let isUserOnline = false;
+	for (const userId of onlineUsers.values()) {
+		if (userId === currentUserId) {
+		  isUserOnline = true;
+		  break;
+		}
+	  }
 	console.log({isUserOnline});
 
     useEffect(() => {

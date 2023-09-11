@@ -35,56 +35,55 @@ import { JwtGuard } from 'src/auth/guard';
 	@WebSocketServer() 
   	server: Server;
 
-	private onlineUsers: Set<string> = new Set();
+	// private onlineUsers: Set<string> = new Set();
+	private onlineUsers: Map<string, string> = new Map();
 
 	afterInit(server: Server) {
 		console.log('!!!!!!!! -User websocket initialized- !!!!!!!');
 	}
   
 	handleConnection(client: Socket) {
-		const userId = client.id;
+		// const socketId = client.id;
+		// for (const [socketIdInMap, userId] of this.onlineUsers.entries()) {
+		// 	if (socketIdInMap === socketId) {
+		// 		this.onlineUsers.set(socketIdInMap, "user id qui n'existe pas pour le moment");
+		// 		break;
+		// 	}
+		// }
 		this.updateOnlineUsers();
-		// // console.log(`updated onlineuser dans handleconnexion`);
-		// // console.log('---------------------------------------');
-		// //console.log(`User ${userId} connected.`);
-
-		// let pingInterval: NodeJS.Timeout;
-		// 	client.on('ping', () => {
-		// 	client.emit('pong');
-		// });
-		// // Envoyez un ping au client toutes les 5 secondes
-		// 	pingInterval = setInterval(() => {
-		// 	client.emit('ping');
-		// }, 5000);
-
-		// client.on('disconnect', () => {
-		// clearInterval(pingInterval);
-		// this.onlineUsers.delete(userId);
-		// this.updateOnlineUsers();
-		// console.log(`updated onlineuser on disconnect`);
-		// console.log('---------------------------------------');
-		// console.log(`Client déconnecté : ${userId}`);
-    	// });
 	}
 
 	handleDisconnect(client: Socket) {
-		// const userId = client.id;
-		// this.onlineUsers.delete(userId);
+		const socketId = client.id;
+		// for (const [socketIdInMap, userId] of this.onlineUsers.entries()) {
+		// 	if (socketIdInMap === socketId) {
+		// 		this.onlineUsers.delete(socketIdInMap);
+		// 		break;
+		// 	}
+		// }
 		// this.updateOnlineUsers();
-		//console.log(`User ${client.id} disconnected.`);
+		// console.log(`User ${client.id} disconnected.`);
 	}
 
 	@SubscribeMessage('userLoggedIn')
   	handleUserLoggedIn(client: Socket, data: { userId: string }) {
 		const userId = data.userId;
-		//console.log(userId);
-		this.onlineUsers.add(userId);
+		// //console.log(userId);
+		// this.onlineUsers.add(userId);
+		// this.updateOnlineUsers();
+		// console.log(`User ${userId} logged in.`);
+		this.onlineUsers.set(client.id, userId);
 		this.updateOnlineUsers();
-		console.log(`User ${userId} logged in.`);
+		console.log(`User ${client.id} logged in.`);
 	}
 
 	@SubscribeMessage('userLogout')
 	handleUserLogout(client: Socket, data: {userId: string}) {
+		// const userId = data.userId;
+		// console.log(`the user wich logged out is ${userId}`);
+		// this.onlineUsers.delete(userId);
+		// this.updateOnlineUsers();
+		// console.log(`User ${userId} logged out.`);
 		const userId = data.userId;
 		console.log(`the user wich logged out is ${userId}`);
 		this.onlineUsers.delete(userId);
@@ -93,7 +92,7 @@ import { JwtGuard } from 'src/auth/guard';
 	}
 
 	private updateOnlineUsers() {
-		const onlineUsersArray = Array.from(this.onlineUsers);
+		const onlineUsersArray = Array.from(this.onlineUsers.entries());
 		console.log({onlineUsersArray});
 		this.server.emit('onlineUsers', onlineUsersArray);
 		console.log('Utilisateurs en ligne mis à jour :', onlineUsersArray);

@@ -4,7 +4,6 @@ import { io, Socket } from 'socket.io-client';
 
 interface SocketIOContextType {
   socket: Socket;
-  onlineStatus: boolean;
 }
 
 interface SocketProviderProps {
@@ -20,15 +19,12 @@ export const SocketIOProvider: React.FC<SocketProviderProps> = ({ children }) =>
 	autoConnect: true,
 	auth: { token: "TODO: gérer les tokens d'authentification ici" },
 })); 
-  const [onlineStatus, setOnlineStatus] = useState(false);
 
   useEffect(() => {
     socket.on('connect', () => {
-      setOnlineStatus(true);
     });
 
     socket.on('disconnect', () => {
-      setOnlineStatus(false);
     });
 
     return () => {
@@ -37,7 +33,7 @@ export const SocketIOProvider: React.FC<SocketProviderProps> = ({ children }) =>
   }, [socket]);
 
   return (
-    <SocketIOContext.Provider value={{ socket, onlineStatus }}>
+    <SocketIOContext.Provider value={{ socket }}>
       {children}
     </SocketIOContext.Provider>
   );

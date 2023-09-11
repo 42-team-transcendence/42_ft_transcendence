@@ -13,7 +13,6 @@ const Logout: React.FC = () => {
     const {auth, setAuth} = useAuth();
 	const {socket} = useSocketIO();
 
-
     const handleClick = async() => {
 
 		const handleOnline =  async () => {
