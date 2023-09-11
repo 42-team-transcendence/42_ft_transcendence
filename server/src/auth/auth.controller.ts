@@ -12,6 +12,8 @@ import { ConfigService } from "@nestjs/config";
 import { ApiTags } from '@nestjs/swagger';
 import { DoubleAuthService } from "./doubleauth.service";
 import * as speakeasy from 'speakeasy';
+import { Enable2faDto } from "./dto/Enable2fa.dto";
+import { GetUserDto } from "./dto";
 
 
 @ApiTags('auth')
@@ -38,7 +40,7 @@ export class AuthController {
 	@Post('enable-2fa')
 	@HttpCode(HttpStatus.CREATED)
 	async enable2FA(
-		@Body() dto: any,
+		@Body() dto: Enable2faDto,
 	) {
         try {
             // Check if the user has already set up 2FA before allowing the setup process again (Optional)
@@ -117,8 +119,9 @@ export class AuthController {
     @UseGuards(JwtGuard)
     @Post('logout')
     @HttpCode(HttpStatus.OK)
-    logout(@GetUser() user,
-            @Res(/*({ passthrough: true })*/) res: Response
+    logout(
+        @GetUser() user: GetUserDto,
+        @Res(/*({ passthrough: true })*/) res: Response
     ) {
         console.log({"controller": user});
         return (this.authService.logout(user.sub, res));
@@ -130,7 +133,7 @@ export class AuthController {
     @Post('refresh')
     @HttpCode(HttpStatus.OK)
     refresh(
-        @GetUser() user,
+        @GetUser() user: GetUserDto,
         @Res(/*({ passthrough: true })*/) res: Response
     ) {
         console.log({"controller_user" : user});

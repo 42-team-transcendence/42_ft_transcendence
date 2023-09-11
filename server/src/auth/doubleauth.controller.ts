@@ -1,26 +1,13 @@
-import { Controller, Post, Body, Get, Req, Res } from '@nestjs/common';
+import { Controller, Post, Body, Res } from '@nestjs/common';
 import { DoubleAuthService } from './doubleauth.service';
 import speakeasy from 'speakeasy';
-import { Request, Response } from 'express';
-// import { GetUser } from "../auth/decorator"
+import { Response } from 'express';
 import { DoubleAuthDto } from './dto/doubleAuth.dto';
-
-
 
 
 @Controller('2fa')
 export class DoubleAuthController {
-    constructor(private readonly doubleAuthService: DoubleAuthService) {}
-
-  // @Get('generate')
-  // async generate2FA(@Res() res: Response) {
-  //   // Generate the secret and QR code using the DoubleAuthService
-  //   const secret = speakeasy.generateSecret();
-  //   const qrcode = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
-
-  //   // Return the secret and QR code data in the response
-  //   return res.json({ secret: secret.base32, qrcode });
-  // }
+  constructor(private readonly doubleAuthService: DoubleAuthService) {}
 
   @Post('verify2fa')
   async verify2FA(
