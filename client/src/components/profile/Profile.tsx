@@ -66,12 +66,14 @@ function Profile() {
 	console.log('online users' , onlineUsers);
 	// const isUserOnline = onlineUsers.includes(currentUserId);
 	let isUserOnline = false;
-	for (const userId of onlineUsers.values()) {
-		if (userId === currentUserId) {
-		  isUserOnline = true;
-		  break;
+	for (const online of onlineUsers.values()) {
+		if (online.userId === currentUserId) {
+			if(online.isOnline) {
+				isUserOnline = true;
+			}
+			break;
 		}
-	  }
+	}
 	console.log({isUserOnline});
 
     useEffect(() => {

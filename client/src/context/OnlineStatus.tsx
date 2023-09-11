@@ -1,17 +1,21 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import { useSocketIO } from './SocketProvider';
+import { useSocket } from './SocketProvider';
 
 //creation du contexte
 // const OnlineStatusContext = createContext<string[]>([]);
-const OnlineStatusContext = createContext<Map<string, string>>(new Map());
+const OnlineStatusContext = createContext<Map<string, Online>>(new Map());
 
+interface Online {
+	userId: string;
+	isOnline: boolean;
+  }
 
 //le composant qui enveloppera l'application et gérera l'état en ligne/hors ligne.
 export const OnlineStatusProvider = ({ children }: {children: React.ReactNode}) => {
-  const {socket} = useSocketIO();
+  const socket = useSocket();
 //   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<Map<string, string>>(new Map());
+  const [onlineUsers, setOnlineUsers] = useState<Map<string, Online>>(new Map());
 
 //   useEffect(() => {
 //     socket.on('onlineUsers', (userIds) => {
@@ -26,14 +30,14 @@ export const OnlineStatusProvider = ({ children }: {children: React.ReactNode}) 
 //   }, []);
 
 useEffect(() => {
-    socket.on('onlineUsers', (userMap) => {
+    socket?.on('onlineUsers', (userMap) => {
       // Met à jour la liste des utilisateurs en ligne avec la liste reçue du serveur
       setOnlineUsers(new Map(userMap));
 	  console.log('Online users updated:', userMap);
     });
 
     return () => {
-      socket.off('onlineUsers');
+      socket?.off('onlineUsers');
     };
   }, []);
 

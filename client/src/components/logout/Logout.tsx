@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import io from 'socket.io-client';
-import { useSocketIO } from "../../context/SocketProvider";
+import { useSocket } from "../../context/SocketProvider";
 import '../../styles/Navbar.css';
 
 const Logout: React.FC = () => {
@@ -11,7 +11,7 @@ const Logout: React.FC = () => {
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const {auth, setAuth} = useAuth();
-	const {socket} = useSocketIO();
+	const socket = useSocket();
 
     const handleClick = async() => {
 
@@ -23,7 +23,7 @@ const Logout: React.FC = () => {
 				headers: { 'Content-Type': 'application/json' },
 				withCredentials: true,
 			});
-				socket.emit('userLogout', {userId: response.data.id});
+				socket?.emit('userLogout', {userId: response.data.id});
 			}catch (error){
 				console.error(error)
 			}

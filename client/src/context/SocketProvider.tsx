@@ -1,50 +1,43 @@
-// socketio.context.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { createContext, useContext, ReactNode } from 'react';
+import io, { Socket } from 'socket.io-client';
 
-interface SocketIOContextType {
-  socket: Socket;
+// Définissez le type pour votre contexte
+interface SocketContextType {
+  socket: Socket | null;
 }
 
-interface SocketProviderProps {
-	children: React.ReactNode;
-  }
+// Créez un contexte pour la socket
+const SocketContext = createContext<SocketContextType>({ socket: null });
 
-const SocketIOContext = createContext<SocketIOContextType | undefined>(undefined);
+// Fonction pour créer une instance de socket
+function createSocket(): Socket {
+  const socket = io("http://localhost:3333", {
+    path: "/status",
+    withCredentials: true,
+    autoConnect: true,
+    auth: { token: "TODO : gérer les tokens d'authentification ici" },
+  });
 
-export const SocketIOProvider: React.FC<SocketProviderProps> = ({ children }) => {
-  const [socket] = useState(() => io('http://localhost:3333', {
-	path: "/status",
-	withCredentials: true,
-	autoConnect: true,
-	auth: { token: "TODO: gérer les tokens d'authentification ici" },
-})); 
+  return socket;
+}
 
-  useEffect(() => {
-    socket.on('connect', () => {
-    });
+// Fournit le contexte de la socket à l'ensemble de l'application
+interface ProvideSocketProps {
+  children: ReactNode;
+}
 
-    socket.on('disconnect', () => {
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket]);
+export function ProvideSocket({ children }: ProvideSocketProps): JSX.Element {
+  const socket = createSocket();
 
   return (
-    <SocketIOContext.Provider value={{ socket }}>
+    <SocketContext.Provider value={{ socket }}>
       {children}
-    </SocketIOContext.Provider>
+    </SocketContext.Provider>
   );
-};
+}
 
-export const useSocketIO = () => {
-  const context = useContext(SocketIOContext);
-
-  if (context === undefined) {
-    throw new Error('useSocketIO must be used within a SocketIOProvider');
-  }
-
-  return context;
-};
+// Utilisez ce hook personnalisé pour accéder à la socket dans vos composants
+export function useSocket(): Socket | null {
+  const { socket } = useContext(SocketContext);
+  return socket;
+}

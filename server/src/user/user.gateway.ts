@@ -1,20 +1,19 @@
 //@nestjs/websockets : base package that makes websocket integration possible in NestJS
 import {
-    MessageBody,
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
     OnGatewayInit,
-    ConnectedSocket,
-    WsResponse,
     OnGatewayDisconnect,
     OnGatewayConnection,
   } from '@nestjs/websockets';
 //@nestjs/platform-socket.io is the specific package for socket.io integration
-import { IoAdapter } from '@nestjs/platform-socket.io';
-import { Server, Socket, ServerOptions } from 'socket.io';
-import { UseGuards } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guard';
+import { Server, Socket } from 'socket.io';
+
+interface Online {
+	userId: string;
+	isOnline: boolean;
+  }
 
 @WebSocketGateway(
 	{
@@ -36,60 +35,78 @@ import { JwtGuard } from 'src/auth/guard';
   	server: Server;
 
 	// private onlineUsers: Set<string> = new Set();
-	private onlineUsers: Map<string, string> = new Map();
+	private onlineUsers: Map<string, Online> = new Map();
+
+
+/**********************************************************************************************************************************************/
+/**********************************************************************************************************************************************/
+
 
 	afterInit(server: Server) {
 		console.log('!!!!!!!! -User websocket initialized- !!!!!!!');
 	}
   
+
+
 	handleConnection(client: Socket) {
-		// const socketId = client.id;
-		// for (const [socketIdInMap, userId] of this.onlineUsers.entries()) {
-		// 	if (socketIdInMap === socketId) {
-		// 		this.onlineUsers.set(socketIdInMap, "user id qui n'existe pas pour le moment");
-		// 		break;
-		// 	}
-		// }
+		let i = 0;
+		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
+			if (socketIdInMap === online.userId) {
+				const existingUserData = this.onlineUsers.get(socketIdInMap);
+				existingUserData.isOnline = true;
+				existingUserData.userId = socketIdInMap;
+				this.onlineUsers.delete(socketIdInMap);
+				this.onlineUsers.set(client.id, existingUserData);
+				i = 1;
+				break;
+			}
+		}
 		this.updateOnlineUsers();
 	}
 
+
+
 	handleDisconnect(client: Socket) {
-		const socketId = client.id;
-		// for (const [socketIdInMap, userId] of this.onlineUsers.entries()) {
-		// 	if (socketIdInMap === socketId) {
-		// 		this.onlineUsers.delete(socketIdInMap);
-		// 		break;
-		// 	}
-		// }
-		// this.updateOnlineUsers();
-		// console.log(`User ${client.id} disconnected.`);
+
+		const existingUserData = this.onlineUsers.get(client.id);
+		this.onlineUsers.delete(client.id);
+		if (existingUserData && existingUserData.isOnline === true) {
+			existingUserData.isOnline = false;
+			this.onlineUsers.set(existingUserData.userId, existingUserData);
+		}
+		this.updateOnlineUsers();
 	}
+
+
+/**********************************************************************************************************************************************/
+/**********************************************************************************************************************************************/
+
 
 	@SubscribeMessage('userLoggedIn')
   	handleUserLoggedIn(client: Socket, data: { userId: string }) {
-		const userId = data.userId;
-		// //console.log(userId);
-		// this.onlineUsers.add(userId);
-		// this.updateOnlineUsers();
-		// console.log(`User ${userId} logged in.`);
-		this.onlineUsers.set(client.id, userId);
-		this.updateOnlineUsers();
-		console.log(`User ${client.id} logged in.`);
+		// const existingUserData = this.onlineUsers.get(client.id);
+
+		// if (existingUserData) {
+		// 	existingUserData.userId = data.userId;
+		// 	existingUserData.isOnline = true;
+			this.onlineUsers.set(client.id, {userId: data.userId, isOnline: true});
+			this.updateOnlineUsers();
+		// }
 	}
+
 
 	@SubscribeMessage('userLogout')
 	handleUserLogout(client: Socket, data: {userId: string}) {
-		// const userId = data.userId;
-		// console.log(`the user wich logged out is ${userId}`);
-		// this.onlineUsers.delete(userId);
-		// this.updateOnlineUsers();
-		// console.log(`User ${userId} logged out.`);
-		const userId = data.userId;
-		console.log(`the user wich logged out is ${userId}`);
-		this.onlineUsers.delete(userId);
+		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
+			if (online.userId == data.userId) {
+				this.onlineUsers.delete(socketIdInMap);
+				break;
+			}
+		}
+		this.onlineUsers.delete(client.id);
 		this.updateOnlineUsers();
-		console.log(`User ${userId} logged out.`);
 	}
+
 
 	private updateOnlineUsers() {
 		const onlineUsersArray = Array.from(this.onlineUsers.entries());
@@ -97,4 +114,5 @@ import { JwtGuard } from 'src/auth/guard';
 		this.server.emit('onlineUsers', onlineUsersArray);
 		console.log('Utilisateurs en ligne mis à jour :', onlineUsersArray);
 	}
+
 }

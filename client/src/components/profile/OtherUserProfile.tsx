@@ -70,10 +70,12 @@ function OtherUserProfile() {
 				}
 				// const isUserOnline = onlineUsers.includes(response.data.id);
 				let isUserOnline = false;
-				for (const userId of onlineUsers.values()) {
-					if (userId === response.data.id) {
-						isUserOnline = true;
-					break;
+				for (const online of onlineUsers.values()) {
+					if (online.userId === response.data.id) {
+						if(online.isOnline) {
+							isUserOnline = true;
+						}
+						break;
 					}
 				}
 				setUser({

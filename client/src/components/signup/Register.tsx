@@ -9,7 +9,7 @@ import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
 import AuthPage from "../0Auth42/AuthPage";
 import io from 'socket.io-client';
-import { useSocketIO } from "../../context/SocketProvider";
+import { useSocket } from "../../context/SocketProvider";
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -23,7 +23,7 @@ const REGISTER_URL = '/auth/signup';
 export default function Register() {
 
     const { setAuth } = useAuth();
-	const {socket} = useSocketIO();
+	const socket = useSocket();
     const navigate = useNavigate();
     const from = "/";
 
@@ -125,7 +125,7 @@ export default function Register() {
 			  
 			console.log("Response 2", response2)
 			// Envoyez un événement au serveur pour signaler la connexion réussie
-			socket.emit('userLoggedIn', {userId: response2.data.id});
+			socket?.emit('userLoggedIn', {userId: response2.data.id});
 			console.log('response2.data.id', response2.data.id);
 
 
