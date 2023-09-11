@@ -3,6 +3,7 @@ import { Box, MenuItem, TextField } from '@mui/material';
 import PageWrapper from "../navbar/pageWrapper";
 import { boardBackground } from './types';
 import Play from './Play';
+import '../../styles/Play.css'
 
 const Background:React.FC = () => {
 

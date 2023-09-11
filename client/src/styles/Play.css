@@ -13,6 +13,26 @@
   	text-shadow: 2px 2px 2px black;
 }
 
+.img-bkg {
+	border: 2px solid black;
+	border-radius: 10px;
+}
+
+.message-game {
+	border: 2px solid black;
+	border-radius: 20px;
+	background-color: white;
+	padding: 3vh;
+	font-family: Alfa Slab One;
+	font-size: 30px;
+	-webkit-text-stroke: 1px black;
+	color: #FF8100;
+	text-shadow: -2px -0px 0 rgba(0, 0, 0, .10),  
+				0px -0px 0 rgba(0, 0, 0, .10),
+				-2px 0px 0 rgba(0, 0, 0, .10),
+				0px 0px 0 rgba(0, 0, 0, .10);
+}
+
 .waitingMessage {
 	position: absolute;
 	top: 50%;
