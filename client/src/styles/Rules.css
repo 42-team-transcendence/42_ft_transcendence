@@ -1,0 +1,37 @@
+h1 {
+	font-family: Alfa Slab One;
+	font-size: 40px;
+	-webkit-text-stroke: 1px black;
+	color: #FF8100;
+	text-shadow: -4px -0px 0 rgba(0, 0, 0, .20),  
+				0px -0px 0 rgba(0, 0, 0, .20),
+				-4px 0px 0 rgba(0, 0, 0, .20),
+				0px 0px 0 rgba(0, 0, 0, .20);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+span {
+    font-family: Alfa Slab One;
+	font-size: 22px;
+	-webkit-text-stroke: 1px black;
+	color: #FF8100;
+	text-shadow: -2px -0px 0 rgba(0, 0, 0, .20),  
+				0px -0px 0 rgba(0, 0, 0, .20),
+				-2px 0px 0 rgba(0, 0, 0, .20),
+				0px 0px 0 rgba(0, 0, 0, .20);
+
+}
+
+.rules {
+    width: 80vh;
+    border: 2px solid black;
+	border-radius: 20px;
+	background-color: white;
+	padding: 4vh;
+    text-align: left;
+}
