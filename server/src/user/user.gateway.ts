@@ -43,7 +43,7 @@ import { JwtGuard } from 'src/auth/guard';
 	}
   
 	handleConnection(client: Socket) {
-		// const socketId = client.id;
+		const socketId = client.id;
 		// for (const [socketIdInMap, userId] of this.onlineUsers.entries()) {
 		// 	if (socketIdInMap === socketId) {
 		// 		this.onlineUsers.set(socketIdInMap, "user id qui n'existe pas pour le moment");
@@ -54,7 +54,7 @@ import { JwtGuard } from 'src/auth/guard';
 	}
 
 	handleDisconnect(client: Socket) {
-		const socketId = client.id;
+		//const socketId = client.id;
 		// for (const [socketIdInMap, userId] of this.onlineUsers.entries()) {
 		// 	if (socketIdInMap === socketId) {
 		// 		this.onlineUsers.delete(socketIdInMap);
@@ -86,6 +86,12 @@ import { JwtGuard } from 'src/auth/guard';
 		// console.log(`User ${userId} logged out.`);
 		const userId = data.userId;
 		console.log(`the user wich logged out is ${userId}`);
+		for (const [socketIdInMap, UserId] of this.onlineUsers.entries()) {
+			if (UserId == userId) {
+				this.onlineUsers.delete(socketIdInMap);
+				break;
+			}
+		}
 		this.onlineUsers.delete(userId);
 		this.updateOnlineUsers();
 		console.log(`User ${userId} logged out.`);
