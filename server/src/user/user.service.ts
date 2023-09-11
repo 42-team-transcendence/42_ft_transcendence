@@ -12,6 +12,7 @@ export class UserService {
 	constructor(
         private prisma: PrismaService,
     ) {}
+	
 	// =============================================================================
 	// GETTERS =====================================================================
 	async getUsers() {
@@ -70,19 +71,6 @@ export class UserService {
 
 	// =============================================================================
 	// UPDATES =====================================================================
-	async updateScore(score: number, userId: number) {
-		try {
-			await this.prisma.user.update({
-				where: { id: userId },
-				data: { score : score },
-		  	});
-	
-			console.log(`Score updated successfully for user with ID: ${userId}`);
-		} catch (error) {
-		  	console.error('Error updating score:', error);
-		}
-	}
-
 	async updatePwd(pwd: string, userId: number) {
 		try {
 			const hash = await argon.hash(pwd);
@@ -138,25 +126,6 @@ export class UserService {
 			throw error;
 		}
 	}
-	  
-	async updateUser(userId: number, updateData: { score?: number, email?: string }) {
-		try {
-			await this.prisma.user.update({
-				where: { id: userId },
-				data: updateData,
-			});
-	
-			if (updateData.score !== undefined) {
-				console.log(`Score updated successfully for user with ID: ${userId}`);
-			}
-			if (updateData.email !== undefined) {
-				console.log (`USER data emil = ${updateData.email}`);
-				console.log(`Email updated successfully for user with ID: ${userId}`);
-			}
-		} catch (error) {
-			console.error('Error updating user:', error);
-		}
-	}
 
 	async update2fa(auth2fa: boolean,  userId: number) {
 		try {
@@ -176,23 +145,6 @@ export class UserService {
 		  	console.error('Error updating 2FA:', error);
 		}
 	}
-
-	// async uploadAvatar(avatar: Express.Multer.File, userId: number) {
-	// 	try {
-	// 	  const data: Prisma.UserUpdateInput = {
-	// 		avatar: avatar.filename, // Use avatar.filename
-	// 	  };
-	  
-	// 	  await this.prisma.user.update({
-	// 		where: { id: userId },
-	// 		data: data,
-	// 	  });
-	  
-	// 	  console.log(`Avatar updated successfully for user with ID: ${userId}`);
-	// 	} catch (error) {
-	// 	  console.error('Error updating Avatar:', error);
-	// 	}
-	// }
 	  
 	async uploadAvatar(file: any,  userId: number) {
 		try {
@@ -217,7 +169,7 @@ export class UserService {
     }
 
 	// =============================================================================
-	// UPDATES USER BLOCKED =====================================================================
+	// UPDATES USER BLOCKED ========================================================
 	async updateBlockedUsers(userId: number, currentUserId: number, block: boolean) {
 		try {
 			const updateBlockedUsers = await this.prisma.user.update({
@@ -238,7 +190,7 @@ export class UserService {
 	}
 
 	// =============================================================================
-	// UPDATES USER AS A FRIEND =====================================================================
+	// UPDATES USER AS A FRIEND ====================================================
 	async updateAddFriend(userId: number, currentUserId: number, friend: boolean) {
 		try {
 			const updateAddFriend = await this.prisma.user.update({

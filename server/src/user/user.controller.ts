@@ -19,7 +19,6 @@ export class UserController {
 
 	// =============================================================================
 	// GETTERS =====================================================================
-	
 	@Get()
 	getUsers() {
 		// console.log(this.userService.getUsers())
@@ -71,18 +70,6 @@ export class UserController {
 	// =============================================================================
 	// UPDATES =====================================================================
 	@HttpCode(HttpStatus.OK)
-	@Post('score')
-	async updateScore(
-		  @Body() body: { score: number },
-		  @GetUser() user
-		) {
-			const { score } = body;
-			console.log({score});
-			console.log({user});
-			await this.userService.updateScore(score, user.sub);
-	}
-
-	@HttpCode(HttpStatus.OK)
 	@Post('email')
 	async updateEmail(
 		@Body() dto: UserDto,
@@ -110,32 +97,6 @@ export class UserController {
 		) {
 			const nickname = dto.nickname;
 			await this.userService.updateNick(nickname, creator.sub);
-	}
-
-
-	//NOT USED 
-	@HttpCode(HttpStatus.OK)
-	@Post('updateUser')
-	async updateUser(
-		@Body() updateData: { score?: number, email?: string },
-		@GetUser() user
-		) {
-			const { score, email } = updateData;
-			try {
-				await this.userService.updateUser(user.sub, { score, email });
-		
-				if (score !== undefined) {
-					console.log(`Score updated successfully for user with ID: ${user.sub}`);
-				}
-				if (email !== undefined) {
-					console.log(`Email updated successfully for user with ID: ${user.sub}`);
-				}
-				return { message: 'User updated successfully' };
-
-			} catch (error) {
-					console.error('Error updating user:', error);
-					return { message: 'Error updating user' };
-			}
 	}
 
 	@HttpCode(HttpStatus.OK)
