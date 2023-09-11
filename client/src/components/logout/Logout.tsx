@@ -2,15 +2,8 @@ import { Link, useNavigate } from "react-router-dom"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
 import io from 'socket.io-client';
-
+import { useSocketIO } from "../../context/SocketProvider";
 import '../../styles/Navbar.css';
-
-const socket = io('http://localhost:3333', {
-	path: "/status",
-	withCredentials: true,
-	autoConnect: true,
-	auth: { token: "TODO: gérer les tokens d'authentification ici" },
-});
 
 const Logout: React.FC = () => {
 
@@ -18,6 +11,7 @@ const Logout: React.FC = () => {
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const {auth, setAuth} = useAuth();
+	const {socket} = useSocketIO();
 
 
     const handleClick = async() => {

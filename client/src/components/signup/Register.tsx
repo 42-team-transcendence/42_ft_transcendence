@@ -9,6 +9,7 @@ import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
 import AuthPage from "../0Auth42/AuthPage";
 import io from 'socket.io-client';
+import { useSocketIO } from "../../context/SocketProvider";
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -19,16 +20,10 @@ import '../../styles/Register_Login.css';
 // =============================================================================
 const REGISTER_URL = '/auth/signup';
 
-const socket = io('http://localhost:3333', {
-	path: "/status",
-	withCredentials: true,
-	autoConnect: true,
-	auth: { token: "TODO: gérer les tokens d'authentification ici" },
-});
-
 export default function Register() {
 
     const { setAuth } = useAuth();
+	const {socket} = useSocketIO();
     const navigate = useNavigate();
     const from = "/";
 
