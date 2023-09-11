@@ -202,15 +202,15 @@ useEffect(() => {
 return (
     <PageWrapper>
         <div id="gameContainer">
-            {!start && !disconnect && <div className="waitingMessage">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
+            {!start && !disconnect && <div className="message-game">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
             {start && !over && (
                 <>
                     <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
                     <div ref={scoreTextRef} id="scoreText">0 : 0</div>
                 </>
             )}
-            {over && winner === currentUser.id && <div id="winnerMessage">You win!</div>}
-            {over && winner !== currentUser.id && <div id="looserMessage">You loose...</div>}
+            {over && winner === currentUser.id && <div className="message-game" id="winnerMessage">You win!</div>}
+            {over && winner !== currentUser.id && <div className="message-game" id="looserMessage">You loose...</div>}
             {disconnect && !start && <div id="disconnect">The other player has disconnected !</div>}
 
         </div>
