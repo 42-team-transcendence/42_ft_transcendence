@@ -37,6 +37,7 @@ function App() {
             <Route element= {<RequireAuth />}>
               <Route path="/" element={<Homepage />} />
 			  <Route path="play" element={<Background />} />
+              <Route path="rules" element={<Rules />}/>
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="rules" element={<Rules />} />
               <Route path="friendlist" element={<FriendList />} />
