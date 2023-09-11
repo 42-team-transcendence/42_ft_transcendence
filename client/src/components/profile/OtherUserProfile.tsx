@@ -68,7 +68,16 @@ function OtherUserProfile() {
 				if (!response.data) {
 					navigate('/', {replace: false});
 				}
-				const isUserOnline = onlineUsers.includes(response.data.id);
+				// const isUserOnline = onlineUsers.includes(response.data.id);
+				let isUserOnline = false;
+				for (const online of onlineUsers.values()) {
+					if (online.userId === response.data.id) {
+						if(online.isOnline) {
+							isUserOnline = true;
+						}
+						break;
+					}
+				}
 				setUser({
 					...response.data,
 					picture:"https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg",

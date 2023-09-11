@@ -7,7 +7,7 @@ import Email from './Email';
 import Password from './Password';
 import { AxiosError } from 'axios';
 import io from 'socket.io-client';
-import { useSocketIO } from '../../context/SocketProvider';
+import { useSocket } from '../../context/SocketProvider';
 
 // STYLE =====================================================
 import CustomButton from "../../styles/buttons/CustomButton";
@@ -25,7 +25,7 @@ interface LoginProps {}
 const Login: React.FC<LoginProps> = () => {
 
     const { setAuth } = useAuth();
-	const {socket} = useSocketIO();
+	const socket = useSocket();
     const navigate = useNavigate(); //useNavigate retourne une fct qui permet de naviguer vers d'autres pages de l'appli
     const location = useLocation(); // useLocation retourne un objet qui contient des éléments sur l'URL de la page actuelle
     const from = location.state?.from?.pathname || "/"; //from = chemin de la page précédente à partir de laquelle l'utilisateur est arrivé sur la page de connexion
@@ -89,7 +89,7 @@ const Login: React.FC<LoginProps> = () => {
             withCredentials: true,
         });
         
-        socket.emit('userLoggedIn', {userId: response2.data.id});
+        socket?.emit('userLoggedIn', {userId: response2.data.id});
 
         navigate(from, { replace: true});
     }
@@ -125,7 +125,7 @@ const Login: React.FC<LoginProps> = () => {
                     withCredentials: true,
                 });
                 
-                socket.emit('userLoggedIn', {userId: response2.data.id});
+                socket?.emit('userLoggedIn', {userId: response2.data.id});
 
                 navigate(from, { replace: true});
             }

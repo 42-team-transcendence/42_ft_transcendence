@@ -5,7 +5,7 @@ import App from './components/App';
 import { AuthProvider } from "./context/AuthProvider";
 import { OnlineStatusProvider } from './context/OnlineStatus';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { SocketIOProvider } from './context/SocketProvider';
+import { ProvideSocket } from './context/SocketProvider';
 
 const container = document.getElementById('root');
 const root = createRoot(container!); // createRoot(container!) if you use TypeScript
@@ -15,13 +15,13 @@ root.render(
 	// <React.StrictMode>
 		<BrowserRouter>
 		<AuthProvider>
-		<SocketIOProvider>
+		<ProvideSocket>
 		<OnlineStatusProvider>	
 			<Routes>
 				<Route path="/*" element={<App />} />
 			</Routes>
 		</OnlineStatusProvider>
-		</SocketIOProvider>	
+		</ProvideSocket>	
 		</AuthProvider>
 		</BrowserRouter>
 	// </React.StrictMode>
