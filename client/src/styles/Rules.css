@@ -15,7 +15,7 @@ p {
     margin-bottom: 20px;
 }
 
-span {
+.rules-nb {
     font-family: Alfa Slab One;
 	font-size: 22px;
 	-webkit-text-stroke: 1px black;
