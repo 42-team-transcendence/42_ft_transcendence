@@ -7,7 +7,7 @@ import '../../styles/Navbar.css';
 
 const Logout: React.FC = () => {
 
-    const from_signup = "/register"; 
+    const from_signup = "/register";
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
     const {auth, setAuth} = useAuth();

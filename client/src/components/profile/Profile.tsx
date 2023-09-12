@@ -350,7 +350,9 @@ function Profile() {
 							<h2> Double factors </h2>
 							{!user.auth2fa ? (
 								<Checkbox checked={user.auth2fa} onChange={() =>
-									setIsDoubleAuthEnabled(!isDoubleAuthEnabled) } 
+									// openDoubleAuthModal(true)
+									setIsDoubleAuthEnabled(!isDoubleAuthEnabled) 
+								} 
 								/>
 							) : (
 								<div>

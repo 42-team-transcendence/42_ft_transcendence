@@ -14,6 +14,7 @@ import { DoubleAuthService } from "./doubleauth.service";
 import * as speakeasy from 'speakeasy';
 import { Enable2faDto } from "./dto/Enable2fa.dto";
 import { GetUserDto } from "./dto";
+import { Request } from 'express';
 
 
 @ApiTags('auth')
@@ -94,6 +95,13 @@ export class AuthController {
 	@UseGuards(IntraGuard)
 	async callback42(@GetUser() user, @Res() res: Response) {
 		return (this.authService.callback42(user, res))
+	}
+
+    @Get('/2fa_42')
+	async callback42_2fa(@Req() req: Request, @Res() res: Response) {
+        const email = req.query.email as string; // Assurez-vous de vérifier que les valeurs existent ou sont valides
+        console.log("EMAIL == " + email);
+		return (this.authService.callback42_2fa(email, res))
 	}
 
 	@Get('/userByMail/:email') 
