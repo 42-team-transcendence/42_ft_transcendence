@@ -339,7 +339,7 @@ function Profile() {
 						<div className="element-profile">
 							<h2>Password</h2>
 							<div className="a-modifier">
-							<p>{auth.pwd}</p>
+							<p>{'*'.repeat(auth.pwd.length)}</p>
 							<span className="modifier" onClick={handleOpenPwdModal}>modifier</span>
 							</div>
 						</div>
