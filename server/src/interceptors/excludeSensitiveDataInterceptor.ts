@@ -32,7 +32,7 @@ const excludeHash = (data: any) => {
 
 //Exclude hashes from returns to client
 @Injectable()
-export class ExcludeSensitiveDataInterceptor implements NestInterceptor {
+export class ExcludeSensitiveData implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
@@ -41,25 +41,3 @@ export class ExcludeSensitiveDataInterceptor implements NestInterceptor {
     );
   }
 }
-
-// @Injectable()
-// export class ExcludeSensitiveDataInterceptor implements NestInterceptor {
-//   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-//     return next
-//         .handle()
-//         .pipe(map(data => {
-//           if (isObject(data)) {
-//             Object.keys(data).forEach((key) => {
-//               if (isArray(data[key])) {
-//                 data[key].map(e => {
-//                   if (isObject(e))
-//                     delete e.hash;
-//                 })
-//               }
-//             });
-//             delete data.hash;
-//             return data
-//           }
-//         }));
-//   }
-// }
