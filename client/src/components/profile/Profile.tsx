@@ -336,13 +336,15 @@ function Profile() {
 						</div>
 					</div>
 					{/* Render PASSWORD */}
-					<div className="element-profile">
-						<h2>Password</h2>
-						<div className="a-modifier">
+					{auth.pwd !== '' ? (
+						<div className="element-profile">
+							<h2>Password</h2>
+							<div className="a-modifier">
 							<p>{auth.pwd}</p>
-							<span className="modifier"onClick={handleOpenPwdModal}>modifier</span>
+							<span className="modifier" onClick={handleOpenPwdModal}>modifier</span>
+							</div>
 						</div>
-					</div>
+					) : <div/>}
 					{/* Render 2FA */}
 					<div className="element-profile">
 						<div className="a-modifier">
