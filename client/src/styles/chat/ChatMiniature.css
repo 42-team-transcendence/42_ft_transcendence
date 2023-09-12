@@ -6,3 +6,14 @@
 	/* background-color: white; */
 	padding: 10px;
 }
+
+.chan-miniature {
+	display: flex;
+	flex-direction: column;
+}
+
+.chan-title {
+	font-weight: 550;
+	font-family: 'Lato';
+	color:#9c27b0;
+}

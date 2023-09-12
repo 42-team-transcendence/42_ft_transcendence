@@ -2,10 +2,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Box, AvatarGroup, Avatar } from "@mui/material";
 
 // =============================================================================
-// IMPORT COMPONENTS ===========================================================
-import tchoupi from '../../../assets/tchoupi50x50.jpg'
-
-// =============================================================================
 // IMPORT STYLES ===============================================================
 import { CenterFocusStrong } from "@mui/icons-material";
 import  "../../../styles/chat/ChatMiniature.css";
@@ -50,8 +46,10 @@ export default function ChannelMiniature({notif, channelName, lastMessage, chann
             {participants &&
                 <div className="chat-miniature">
                     <GroupMiniature participants={participants}></GroupMiniature>
-                    <span>{"CHANNEL " + channelName}</span>
-                    <Box ml={0} mt={0}><div>{lastMessage}</div></Box>
+                    <div className="chan-miniature">
+                        <span className="chan-title">{"CHANNEL " + channelName}</span>
+                        <Box ml={0} mt={0}><div>{lastMessage}</div></Box>
+                    </div>
                 </div>
             }
         </Box>

@@ -1,4 +1,4 @@
-import { Controller, Post ,Param, Body, HttpCode, HttpStatus, UseGuards, Res, Req, Response, Get} from "@nestjs/common";
+import { Controller, Post ,Param, Body, HttpCode, HttpStatus, UseGuards, Res, Req, Response, Get, UseInterceptors} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { AuthDto, SignInAuthDto } from "./dto";
@@ -15,7 +15,7 @@ import * as speakeasy from 'speakeasy';
 import { Enable2faDto } from "./dto/Enable2fa.dto";
 import { GetUserDto } from "./dto";
 import { Request } from 'express';
-
+import { ExcludeSensitiveData } from "src/interceptors/excludeSensitiveDataInterceptor";
 
 @ApiTags('auth')
 @Controller('auth')
@@ -27,6 +27,7 @@ export class AuthController {
 /*********************************************************************************************************/
 
     @Post('signup')
+    @UseInterceptors(ExcludeSensitiveData)
     @HttpCode(HttpStatus.CREATED)
     signup(
         @Body() dto: AuthDto,
@@ -51,7 +52,7 @@ export class AuthController {
             const secret = speakeasy.generateSecret();
             await this.doubleAuthService.saveUserSecret(dto.email, secret.base32);
             console.log({secret});
-            
+
             // Generate the QR code and return the representation of the QR code in the response
             const qrCodeData = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
             console.log({qrCodeData});
@@ -66,6 +67,7 @@ export class AuthController {
 /*********************************************************************************************************/
 
     @Post('signin')
+    @UseInterceptors(ExcludeSensitiveData)
     @HttpCode(HttpStatus.OK)
     signin(
         @Body() dto: SignInAuthDto,
@@ -97,28 +99,26 @@ export class AuthController {
 		return (this.authService.callback42(user, res))
 	}
 
-    @Get('/2fa_42')
+  @Get('/2fa_42')
 	async callback42_2fa(@Req() req: Request, @Res() res: Response) {
         const email = req.query.email as string; // Assurez-vous de vérifier que les valeurs existent ou sont valides
         console.log("EMAIL == " + email);
 		return (this.authService.callback42_2fa(email, res))
 	}
 
-	@Get('/userByMail/:email') 
+  @UseInterceptors(ExcludeSensitiveData)
+	@Get('/userByMail/:email')
 	async getUserBymail(
 		@Param('email') email: string
 	) {
-		//console.log ({email});
-		//console.log("email = ",email);
 		return (this.authService.getUserBymail(email));
 	}
 
-    @Get('/userByNick/:nickname') 
+    @UseInterceptors(ExcludeSensitiveData)
+    @Get('/userByNick/:nickname')
 	async getUserByNick(
 		@Param('nickname') nickname: string
 	) {
-		console.log ({nickname});
-		//console.log("email = ",email);
 		return (this.authService.getUserByNick(nickname));
 	}
 
@@ -149,10 +149,6 @@ export class AuthController {
     }
 
 /*************************************************************************************************/
-// @Get('/login/id')
-// login_42() {
-// 	return(this.authService.login_42 ())
-// }
 
 }
 

@@ -3,7 +3,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	/* justify-content: space-between; */
+	justify-content: space-between;
 	font-family: 'Lato';
 	/* padding: .7rem; */
 	position: fixed;
@@ -40,6 +40,7 @@
 .navbar_links {
 	margin-right: 100px;
 	display: flex;
+	justify-content: flex-end;
 	align-items: center;
 }
 
@@ -74,7 +75,7 @@
 } */
 
 .textLogout {
-	margin-left: 20px;
+	/* margin-left: 20px; */
 	color: #FF79AF;
 	font-weight: 700;
 	font-size: 16px;

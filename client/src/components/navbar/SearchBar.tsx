@@ -29,7 +29,7 @@ const Search = styled('div')(({ theme }) => ({
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
   marginLeft: 0,
-  width: '100%',
+  width: '80%',
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -51,9 +51,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
-    width: '100%',
+    width: '80%',
     [theme.breakpoints.up('sm')]: {
-      width: '12ch',
+      width: '15ch',
       '&:focus': {
         width: '20ch',
       },
@@ -161,7 +161,7 @@ export default function SearchAppBar() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search for friends/channels"
+              placeholder="Search channels"
               inputProps={{ 'aria-label': 'search' }}
 
               value={searchInput}

@@ -5,7 +5,7 @@ import React, { useState, useContext, useEffect, ChangeEvent } from "react";
 import PageWrapper from "../navbar/pageWrapper";
 import GameHistory from "./GameHistory";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import EmailModal from "./EmailModal"; 
+import EmailModal from "./EmailModal";
 import PwdModal from "./PasswordModal";
 import AuthContext, { AuthProvider } from '../../context/AuthProvider';
 import NickModal from "./NicknameModal";
@@ -23,6 +23,7 @@ import Avatar from '@mui/material/Avatar';
 // =============================================================================
 // INTERFACES ==================================================================
 interface User {
+	id:number;
 	email: string;
 	nickname: string;
 	auth2fa: boolean;
@@ -39,59 +40,37 @@ function Profile() {
 	const axiosPrivate = useAxiosPrivate();
 	const { auth, setAuth } = useContext(AuthContext);
 	const onlineUsers = useOnlineStatus();
-	const [currentUserId, setCurrentUserId] = useState("");
 
 	// =============================================================================
 	// USE EFFECT ==================================================================
-	// const [user, setUser] = useState<any>();
+	const [user, setUser] = useState<User>({id:0, email: '', nickname: '', auth2fa: false, avatar: '', score: 0, rank: 0, });
+	const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user?.auth2fa || false);
+	const [isUserOnline, setIsUserOnline] = useState<boolean>(false)
 
-	const [user, setUser] = useState<User>({ email: '', nickname: '', auth2fa: false, avatar: '', score: 0, rank: 0, });
-    const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user.auth2fa || false);
-	console.log({auth});
-	const handleUserId = async() =>{
-		const email = auth.email;
-		try{
-			const response = await axiosPrivate.get(`/auth/userByMail/${email}`, {
-				headers: { 'Content-Type': 'application/json' },
-				withCredentials: true,
-			  });
-			  setCurrentUserId(response.data.id);
-			  
-			}catch (error){
-				console.error(error)
-			}	
-	}
-	handleUserId();
-	console.log('user id', currentUserId);
-	console.log('online users' , onlineUsers);
-	// const isUserOnline = onlineUsers.includes(currentUserId);
-	let isUserOnline = false;
-	for (const online of onlineUsers.values()) {
-		if (online.userId === currentUserId) {
-			if(online.isOnline) {
-				isUserOnline = true;
+	useEffect(()=>{
+		for (const client of onlineUsers.values()) {
+			if (client.userId && parseInt(client.userId) === user?.id) {
+				if(client.isOnline) {
+					setIsUserOnline(true);
+				}
+				break;
 			}
-			break;
 		}
-	}
-	console.log({isUserOnline});
+	}, [user])
 
     useEffect(() => {
-		
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
             .then(response => {
                 setUser(response.data);
-				console.log("AUTH = " + response.data.auth2fa);
             })
             .catch(error => {
                 console.error('Error fetching user details:', error);
             });
-			
-    }, []);
-	
-	const updateUser = async () => {
 
+    }, []);
+
+	const updateUser = async () => {
 		axiosPrivate.get('/')
 		.then(response => {
 			setUser(response.data);
@@ -130,7 +109,6 @@ function Profile() {
 
 	const handleSaveEmail = async (newEmail: string) => {
 		try {
-			console.log("ici")
 			const response = await axiosPrivate.post(
 				'/users/email',
 				JSON.stringify({ 'email': newEmail}),
@@ -140,21 +118,18 @@ function Profile() {
 					validateStatus: status => status >= 200 && status < 300,
 				}
 			);
-			console.log("LA")
-			console.log({response})
 			if (response.status === 200) {
 				// Update the user's email in the user state
 				setUser((prevUser) => ({ ...prevUser, email: newEmail }));
 				setAuth((prevAuth) => ({ ...prevAuth, email: newEmail }))
-				console.log("Email update successful");
-			} 
+			}
 			else {
 				console.error("Email update failed");
 			}
 		} catch (error) {
 			console.error("Error updating email:", error);
 		}
-	
+
 		handleCloseEmailModal();
 	};
 
@@ -176,27 +151,24 @@ function Profile() {
 	};
 
 	const handleSaveNick = async (newNickname: string) => {
-		console.log("handle nick");
 		try {
 		  // Call your backend API to update the nickname
 			const response = await axiosPrivate.post('/users/updateNick', JSON.stringify({ nickname: newNickname }), {
 				headers: { "Content-Type": "application/json" },
 				withCredentials: true,
 			});
-			console.log(`response.status = ${response.status}`);
 			if (response.status === 200) {
 				setUser((prevUser) => ({ ...prevUser, nickname: newNickname }));
-				console.log('Nickname update successful');
 			} else {
 				console.error('Nickname update failed');
 			}
 		} catch (error) {
 		  	console.error('Error updating Nickname:', error);
 		}
-	  
+
 		handleCloseNickModal();
 	};
-	 
+
 	// =============================================================================
 	// PWD MODAL ===================================================================
 
@@ -207,7 +179,7 @@ function Profile() {
 	const handleOpenPwdModal = () => {
 		setPwdModalOpen(true);
 	};
-	
+
 	// Handler for closing the email modal
 	const handleClosePwdModal = () => {
 		setPwdModalOpen(false);
@@ -222,14 +194,13 @@ function Profile() {
 			});
 			if (response.status === 200) {
 				setAuth((prevAuth) => ({ ...prevAuth, pwd: newPwd }));
-				console.log('Pwd update successful');
 			} else {
 				console.error('Pwd update failed');
 			}
 		} catch (error) {
 			console.error('Error updating Pwd:', error);
 		}
-	  
+
 		handleClosePwdModal();
 	};
 
@@ -241,7 +212,6 @@ function Profile() {
 		const file = event.target.files?.[0];
 
 		if (file) {
-			console.log("file = ", file);
 		  	setSelectedFile(file);
 			const formData = new FormData();
 			formData.append('avatar', file);
@@ -250,20 +220,16 @@ function Profile() {
 					headers: {'Content-Type': 'multipart/form-data'},
 					withCredentials: true,
 				});
-			  	console.log("reponse avatar, ", {response});
 				if (response.status === 200) {
 					window.location.reload();
 					setUser((prevUser) => ({ ...prevUser, avatar: response.data.avatarUrl }));
-					console.log('Avatar update successful');
-					console.log('Constructed image URL:', `${process.env.REACT_APP_BACKEND_URL}/public/picture/${user.nickname}`);
-
 			  	} else {
 					console.error('Avatar update failed');
 			  	}
 			} catch (error) {
 				console.error('Error updating avatar:', error);
 			}
-	
+
 		};
 	}
 	const StyledBadge = styled(Badge)(() => ({
@@ -276,7 +242,7 @@ function Profile() {
 		  borderRadius: 10
 		},
 	}));
-	
+
 
 	// =============================================================================
 	// RETURN ======================================================================
@@ -298,7 +264,7 @@ function Profile() {
 									className="img-profile"
 									src={`http://localhost:3333/public/picture/${user.nickname}`}
 								/> */}
-								<Avatar sx={{ width: 180, height: 180, border: "2px solid black"  }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
+								{user.nickname && <Avatar sx={{ width: 180, height: 180, border: "2px solid black"  }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />}
 							</label>
 							<input
 								type="file"
@@ -309,7 +275,7 @@ function Profile() {
 							/>
 						</StyledBadge>
 							<div className="avater-info">
-								{user ? (
+								{user.nickname ? (
 									<>
 										<h1 className="name">{user.nickname}</h1>
 										<span className="modifier" onClick={handleOpenNickModal}>modifier</span>
@@ -318,13 +284,13 @@ function Profile() {
 									<p>Loading user data...</p>
 								)}
 							<p className="rank">Rank {user.rank} | Lvl {user.score}</p>
-							</div>	
+							</div>
 					</div>
 					{/* Render EMAIL */}
 					<div className="element-profile">
 						<h2>Email</h2>
 						<div className="a-modifier">
-							{user ? (
+							{user.email ? (
 							<>
 								<p>{user.email}</p>
 								<span className="modifier" onClick={handleOpenEmailModal}>modifier</span>
@@ -339,7 +305,7 @@ function Profile() {
 						<div className="element-profile">
 							<h2>Password</h2>
 							<div className="a-modifier">
-							<p>{auth.pwd}</p>
+							<p>{'*'.repeat(auth.pwd.length)}</p>
 							<span className="modifier" onClick={handleOpenPwdModal}>modifier</span>
 							</div>
 						</div>
@@ -350,13 +316,12 @@ function Profile() {
 							<h2> Double factors </h2>
 							{!user.auth2fa ? (
 								<Checkbox checked={user.auth2fa} onChange={() =>
-									// openDoubleAuthModal(true)
 									setIsDoubleAuthEnabled(!isDoubleAuthEnabled) 
 								} 
 								/>
 							) : (
 								<div>
-									<button onClick={() => {disabled2fa() 
+									<button onClick={() => {disabled2fa()
 													setIsDoubleAuthEnabled(false)
 													updateUser() }}
 													>Disable 2FA</button>

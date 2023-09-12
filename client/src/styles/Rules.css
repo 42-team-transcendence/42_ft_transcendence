@@ -13,6 +13,7 @@
 
 .rules-p {
     margin-bottom: 20px;
+	
 }
 
 .rules-nb {
@@ -34,4 +35,5 @@
 	background-color: white;
 	padding: 4vh;
     text-align: left;
+	font-size: 20px;
 }

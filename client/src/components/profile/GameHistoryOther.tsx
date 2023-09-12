@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
 import PageWrapper from "../navbar/pageWrapper";
-//import '../../styles/GameHistory.css';
 import { styled } from "@mui/system";
 import { useOnlineStatus } from "../../context/OnlineStatus";
-import tchoupi from '../../assets/tchoupi50x50.jpg'
 import Miniature from "../miniature/Miniature";
 
 interface User {

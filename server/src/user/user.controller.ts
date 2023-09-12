@@ -5,12 +5,13 @@ import * as multer from 'multer';
 import { GetUser } from "../auth/decorator"
 import { UserService } from "./user.service";
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Express } from 'express'; 
+import { Express } from 'express';
 import { MulterConfig } from './middlewares';
 import { UserDto } from "./dto/user.dto";
 import { GetUserDto } from "src/auth/dto";
+import { ExcludeSensitiveData } from "src/interceptors/excludeSensitiveDataInterceptor";
 
-@UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts. 
+@UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('users') // définit la route "/users" de l'API
 export class UserController {
 	constructor (
@@ -19,12 +20,14 @@ export class UserController {
 
 	// =============================================================================
 	// GETTERS =====================================================================
+	@UseInterceptors(ExcludeSensitiveData)
 	@Get()
 	getUsers() {
 		// console.log(this.userService.getUsers())
 		return (this.userService.getUsers());
 	}
-	
+
+	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Get('me') // GET /users/me
     async getMe(
@@ -33,7 +36,8 @@ export class UserController {
         console.log({ user });
         return await this.userService.getMe(user.sub);
     }
- 
+
+	@UseInterceptors(ExcludeSensitiveData)
 	@Get(':id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
 	getUser(@Param('id') id: string) {
 		console.log({id});
@@ -47,6 +51,7 @@ export class UserController {
 		return (user);
 	}
 
+	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Get('score')
 	async getScore(
@@ -54,7 +59,7 @@ export class UserController {
 	) {
 		console.log({user});
 		const score = await this.userService.getScore(user.sub);
-  		return { score: score }; 
+  		return { score: score };
 	}
 
 	// @HttpCode(HttpStatus.OK)
@@ -69,6 +74,7 @@ export class UserController {
 
 	// =============================================================================
 	// UPDATES =====================================================================
+	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('email')
 	async updateEmail(
@@ -79,6 +85,7 @@ export class UserController {
 			await this.userService.updateEmail(email, creator.sub);
 	}
 
+	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('pwd')
 	async updatePwd(
@@ -89,16 +96,18 @@ export class UserController {
 			await this.userService.updatePwd(pwd, creator.sub);
 	}
 
+	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('updateNick')
 	async updateNick(
 		@Body() dto: UserDto,
-		@GetUser() creator: GetUserDto 
+		@GetUser() creator: GetUserDto
 		) {
 			const nickname = dto.nickname;
 			await this.userService.updateNick(nickname, creator.sub);
 	}
 
+	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('update2fa')
 	async update2fa(
@@ -123,6 +132,7 @@ export class UserController {
 		await this.userService.uploadAvatar(file, user.sub);
 	}
 
+	@UseInterceptors(ExcludeSensitiveData)
 	@Post('block/:id')
 	async blockUser(
 		@GetUser() me,
@@ -133,11 +143,12 @@ export class UserController {
 		const userId = parseInt(id);
 		if ((isNaN(userId)))
 			throw new ForbiddenException("incorrect id sent : not a number");
-		
+
 		console.log({me}, {userId});
-		return (this.userService.updateBlockedUsers(userId, me.sub, dto.block));		
+		return (this.userService.updateBlockedUsers(userId, me.sub, dto.block));
 	}
 
+	@UseInterceptors(ExcludeSensitiveData)
 	@Post ('add-friend/:id')
 	async addFriend(
 		@GetUser() me,
@@ -150,6 +161,6 @@ export class UserController {
 			throw new ForbiddenException("Incorrect id sent: not a number");
 		  }
 		console.log({me}, {userId});
-		return (this.userService.updateAddFriend(userId, me.sub, dto.friend)); 
+		return (this.userService.updateAddFriend(userId, me.sub, dto.friend));
 	}
 }
