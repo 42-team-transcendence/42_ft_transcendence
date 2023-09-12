@@ -9,11 +9,15 @@ import {
   } from '@nestjs/websockets';
 //@nestjs/platform-socket.io is the specific package for socket.io integration
 import { Server, Socket } from 'socket.io';
+import { PrismaClient } from '@prisma/client';
 
 interface Online {
 	userId: string;
 	isOnline: boolean;
   }
+
+
+const prisma = new PrismaClient();
 
 @WebSocketGateway(
 	{
@@ -53,6 +57,7 @@ interface Online {
 				existingUserData.userId = socketIdInMap;
 				this.onlineUsers.delete(socketIdInMap);
 				this.onlineUsers.set(client.id, existingUserData);
+				this.updateIsOnline(true, parseInt(existingUserData.userId));
 				break;
 			}
 		}
@@ -66,6 +71,7 @@ interface Online {
 		if (existingUserData && existingUserData.isOnline === true) {
 			existingUserData.isOnline = false;
 			this.onlineUsers.set(existingUserData.userId, existingUserData);
+			this.updateIsOnline(true, parseInt(existingUserData.userId));
 		}
 		this.updateOnlineUsers();
 	}
@@ -74,16 +80,20 @@ interface Online {
 /**********************************************************************************************************************************************/
 /**********************************************************************************************************************************************/
 
+	async updateIsOnline(online: boolean, userId: number) {
+
+		await prisma.user.update({
+			where: { id: userId },
+			data: { isOnline: online },
+		});
+	}
+
 	@SubscribeMessage('userLoggedIn')
   	handleUserLoggedIn(client: Socket, data: { userId: string }) {
-		// const existingUserData = this.onlineUsers.get(client.id);
 
-		// if (existingUserData) {
-		// 	existingUserData.userId = data.userId;
-		// 	existingUserData.isOnline = true;
 			this.onlineUsers.set(client.id, {userId: data.userId, isOnline: true});
+			this.updateIsOnline(true, parseInt(data.userId));
 			this.updateOnlineUsers();
-		// }
 	}
 
 	@SubscribeMessage('userLogout')
@@ -94,6 +104,7 @@ interface Online {
 				break;
 			}
 		}
+		this.updateIsOnline(false, parseInt(data.userId));
 		this.onlineUsers.delete(client.id);
 		this.updateOnlineUsers();
 	}

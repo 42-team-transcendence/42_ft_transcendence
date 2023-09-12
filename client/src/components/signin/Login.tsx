@@ -6,7 +6,6 @@ import axios, { axiosPrivate } from '../../api/axios';
 import Email from './Email';
 import Password from './Password';
 import { AxiosError } from 'axios';
-import io from 'socket.io-client';
 import { useSocket } from '../../context/SocketProvider';
 
 // STYLE =====================================================
@@ -54,10 +53,6 @@ const Login: React.FC<LoginProps> = () => {
 
     const fonctionUpdatePwd = {updatePwd};
 
-    // =============================================================================
-	// 2FA =========================================================================
-    const [show2FaPopup, set2FaPopup] = useState(false);
-
     /// =============================================================================
 	// 	=============================================================================
     const [errMsg, setErrMsg] = useState('');
@@ -67,6 +62,7 @@ const Login: React.FC<LoginProps> = () => {
     }, [email, pwd])
 
     const [display2fa, setDisplay2fa] = useState(false);
+    const [displayAlreadyConnected, setDisplayAlreadyConnected] = useState(false);
 
     const valid2Fa = async () => {
 
@@ -106,10 +102,16 @@ const Login: React.FC<LoginProps> = () => {
                 }
             );
             
+            console.log("response login == ", response.data);
             if(response.data.auth2fa) {
-
                 setDisplay2fa(true);
                 console.log({"test": response?.data})
+            }
+
+            else if(response.data.isOnline) {
+                setDisplayAlreadyConnected(true);
+                setEmail('');
+                setPwd('');
             }
 
             else if (response.data.accessToken) {
@@ -151,6 +153,7 @@ const Login: React.FC<LoginProps> = () => {
 						'& .MuiTextField-root': { m: 1, width: '25ch' },
 					}}>
                 
+                {displayAlreadyConnected && <p> This user is Already connected ! <br /></p>}
                 <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail} />
                 <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd} />
 

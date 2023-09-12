@@ -1,16 +1,9 @@
-import { useState, useEffect, ChangeEvent } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, ChangeEvent } from 'react';
 
-import useAuth from '../../hooks/useAuth';
-import axios, { axiosPrivate } from '../../api/axios';
-import Email from './Email';
-import Password from './Password';
-import { AxiosError } from 'axios';
-import io from 'socket.io-client';
+import { axiosPrivate } from '../../api/axios';
 import { Modal, Box, Button } from '@mui/material';
 
 // STYLE =====================================================
-import CustomButton from "../../styles/buttons/CustomButton";
 import '../../styles/Register_Login.css';
 
 
