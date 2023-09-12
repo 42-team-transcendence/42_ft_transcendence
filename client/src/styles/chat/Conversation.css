@@ -1,8 +1,8 @@
-.conversation {
+/* .conversation {
 	background-color: blue;
 	height: 100vh;
 	width: 100vh;
-}
+} */
 
 .conversation-container {
 	display: flex;
@@ -19,6 +19,17 @@
 
 }
 
+.chan-top {
+	justify-content: center;
+	/* border:2px solid blue; */
+	/* display: flex; */
+	/* align-items: center;  */
+}
+
+
+.chan-left {
+	margin-left:auto;
+}
 .miniature-top {
 	margin-bottom: 30px;
 }
