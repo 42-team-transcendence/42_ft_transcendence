@@ -15,7 +15,7 @@ export class AuthService {
         private config: ConfigService
     ) {}
 
-        
+
     // =============================================================================
 	// SIGN UP =====================================================================
     async signup(dto: AuthDto, res) {
@@ -29,10 +29,10 @@ export class AuthService {
                 data: {
                     nickname: dto.nickname,
                     email: dto.email,
-                    hash 
+                    hash
                 }
             });
-            
+
             // Creation du accessToken et du refreshToken
             const tokens = await this.getToken(user.id, user.email);
             // Stockage du refreshToken dans la DB
@@ -92,7 +92,7 @@ export class AuthService {
                 email : dto.email,
             }
         })
-        
+
         //if user does not exist throw exception
         if (!user) {
             throw new ForbiddenException("Credentials incorrect");
@@ -129,7 +129,7 @@ export class AuthService {
                 email : dto.email,
             }
         })
-        
+
         //if user does not exist throw exception
         if (!user) {
             throw new ForbiddenException("Credentials incorrect");
@@ -169,17 +169,20 @@ export class AuthService {
 
     async callback42(user, res) {
         // console.log("user42 =" + user.profile.name);
-		if (user == undefined)
+    if (user == undefined)
         throw (new UnauthorizedException('profile is undefined'));
+    console.log(user.profile.id);
     const user42 = await this.prisma.user.findFirst({
         where: {
-            nickname: user.profile.name,
+            id: parseInt(user.profile.id),
         },
     });
+    console.log(user42)
     if (!user42) {
         const new_hash = crypto.randomBytes(50).toString('hex');
         await this.prisma.user.create({
             data: {
+                id: parseInt(user.profile.id),
                 nickname: user.profile.name,
                 email: user.profile.email,
                 hash: new_hash,
@@ -188,7 +191,7 @@ export class AuthService {
     }
     const new_user = await this.prisma.user.findFirst({
         where: {
-            nickname: user.profile.name,
+            id: parseInt(user.profile.id),
         },
     });
     await this.prisma.user.update({
@@ -213,7 +216,7 @@ export class AuthService {
 
     // =============================================================================
 	// JWT & REFRESH TOKEN =========================================================
-    
+
     //Création du JWT à partir des infos du user
     //qui servira à authentifier la personne après qu'elle se soit connectée une 1ere fois
     //this is an asynchroneous function returning a promise
