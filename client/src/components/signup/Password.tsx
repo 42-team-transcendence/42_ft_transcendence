@@ -35,6 +35,7 @@ const Password: React.FC<PwdProps> = ({ statePwd, fonctionUpdatePwd }) => {
 				variant="standard"
 				label="password"
 				autoComplete="off"
+				type="password"
 				onChange={(e) => updatePwd(e.target.value)}
 				value={pwd}
 				error={!validPwd && pwd.length > 0}
