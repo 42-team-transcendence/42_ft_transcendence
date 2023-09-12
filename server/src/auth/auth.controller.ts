@@ -14,8 +14,8 @@ import { DoubleAuthService } from "./doubleauth.service";
 import * as speakeasy from 'speakeasy';
 import { Enable2faDto } from "./dto/Enable2fa.dto";
 import { GetUserDto } from "./dto";
+import { Request } from 'express';
 import { ExcludeSensitiveData } from "src/interceptors/excludeSensitiveDataInterceptor";
-
 
 @ApiTags('auth')
 @Controller('auth')
@@ -99,7 +99,14 @@ export class AuthController {
 		return (this.authService.callback42(user, res))
 	}
 
-    @UseInterceptors(ExcludeSensitiveData)
+  @Get('/2fa_42')
+	async callback42_2fa(@Req() req: Request, @Res() res: Response) {
+        const email = req.query.email as string; // Assurez-vous de vérifier que les valeurs existent ou sont valides
+        console.log("EMAIL == " + email);
+		return (this.authService.callback42_2fa(email, res))
+	}
+
+  @UseInterceptors(ExcludeSensitiveData)
 	@Get('/userByMail/:email')
 	async getUserBymail(
 		@Param('email') email: string

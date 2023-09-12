@@ -173,7 +173,6 @@ export class AuthService {
     }
 
     async callback42(user, res) {
-        // console.log("user42 =" + user.profile.name);
     if (user == undefined)
         throw (new UnauthorizedException('profile is undefined'));
     console.log(user.profile.id);
@@ -203,7 +202,8 @@ export class AuthService {
         where: { id: new_user.id },
         data: { avatar:  user.profile._json.image.link},
     });
-
+    
+    if (!new_user.auth2fa) {
         // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(new_user.id, user.profile.email);
         // Stockage du refreshToken dans la DB
@@ -215,9 +215,36 @@ export class AuthService {
             sameSite: 'lax',
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
         });
-		res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + new_user.id);
-	}
+        res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + new_user.id + '&isOnline=' + new_user.isOnline);
+    }
+    else {
+        res.redirect('http://localhost:3000/callback42?email=' + user42.email + '&id=' + user42.id + '&isOnline=' + new_user.isOnline);
+    }
+    }
 
+    async callback42_2fa(email: string, res) {
+
+        const user42 = await this.prisma.user.findFirst({
+            where: {
+                email: email,
+            },
+        });
+
+        // Creation du accessToken et du refreshToken
+        const tokens = await this.getToken(user42.id, user42.email);
+        // Stockage du refreshToken dans la DB
+        await this.updateRtHash(user42.id, tokens.refreshToken);
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax',
+            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        });
+        return res.json({accessToken : tokens.accessToken});
+        // res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + user42.id);
+    }
+    
 
     // =============================================================================
 	// JWT & REFRESH TOKEN =========================================================
