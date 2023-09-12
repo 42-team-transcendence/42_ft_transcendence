@@ -86,7 +86,7 @@ export default function ChatChannels() {
 			}
 		}
 		findAllMyChats(); //appel de la fonction
-    }, [chatFound])
+    }, [chatFound, recipientId, currentUser, channelId, location.state, rerender])
 
     useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => { //definition de la fonction
