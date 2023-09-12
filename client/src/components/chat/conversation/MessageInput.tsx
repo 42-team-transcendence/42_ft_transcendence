@@ -20,18 +20,18 @@ export default function MessageInput({send} : {send: (val:string) => void}) {
     }
 
     return (
-        
+
 
 		<div className="message-input">
-            <TextField 
+            <TextField
 				className="text-field"
                 id="outlined-basic-email" label="Type your message"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter'? sendClearInput(): "undefined"}
+                onKeyDown={(e) => e.key === 'Enter' && value ? sendClearInput(): "undefined"}
             />
             <Fab //MUI floating action button
-                size="small" color="primary" aria-label="add"
+                size="small" color="primary" aria-label="add" disabled={value? false : true}
                 onClick={() => sendClearInput()}
             ><SendIcon /></Fab>
 		</div>
