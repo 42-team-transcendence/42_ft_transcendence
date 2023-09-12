@@ -113,7 +113,7 @@ function OtherUserProfile() {
 		findAllMyPrivateChansOwned();
     }, [currentUser, user])
 
-	useEffect(()=>{
+	useEffect(()=>{ //when we get user data, check if user is online
 		for (const client of onlineUsers.values()) {
 			if (client.userId && parseInt(client.userId) === user?.id) {
 				if(client.isOnline) {
