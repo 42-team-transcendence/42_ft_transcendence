@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios, { CancelTokenSource } from 'axios';
 import Miniature from "../miniature/Miniature";
 
-import tchoupi from '../../assets/tchoupi50x50.jpg'
 import { Box } from "@mui/material";
 import { MiniatureUser } from "../../utils/types";
 
@@ -59,7 +58,10 @@ function Users() {
             const miniatureUser: MiniatureUser = {
               nickname: user?.nickname,
               id: user?.id,
-              minAvatar: {url: tchoupi, name:'Tchoupi'}
+              minAvatar: {
+                url: `http://localhost:3333/public/picture/${user.nickname}`,
+                name: user.nickname
+              }
             }
 						return (
               <Box key={i} sx={{backgroundColor:'gray'}}>

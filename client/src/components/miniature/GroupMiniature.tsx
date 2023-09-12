@@ -3,14 +3,14 @@ import BadgeAvatar from "./BadgeAvatar";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
-import tchoupi from '../../assets/tchoupi50x50.jpg'
 
 export default function GroupMiniature({participants}:{participants:any}) {
 
 	return (
 		<AvatarGroup max={3}> {
-			participants.map(
-				(e:any, idx:number) => <BadgeAvatar key={idx} minAvatar={{url: tchoupi, name:'Tchoupi'}}></BadgeAvatar>
+			
+			participants.map((e:any, idx:number) =>
+				<BadgeAvatar key={idx} minAvatar={{url: `http://localhost:3333/public/picture/${e.nickname}`, name: e.nickname}}></BadgeAvatar>
 			)
 		}
 		</AvatarGroup>

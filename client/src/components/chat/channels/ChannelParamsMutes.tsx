@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 // =============================================================================
 // IMPORT COMPONENTS AND TYPES =================================================
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import tchoupi from '../../../assets/tchoupi50x50.jpg'
 import { MiniatureUser } from "../../../utils/types";
 import Miniature from "../../miniature/Miniature";
 
@@ -56,7 +55,10 @@ export default function ChannelParamsMutes({
 				const miniatureUser: MiniatureUser = {
 					nickname: mute?.user?.nickname,
 					id: mute?.userId,
-					minAvatar: {url: tchoupi, name:'Tchoupi'}
+					minAvatar: {
+                        url: `http://localhost:3333/public/picture/${mute.user.nickname}`,
+                        name: mute.user.nickname
+                    }
 				}
 				return (
 					<ListItem key={idx} disablePadding>

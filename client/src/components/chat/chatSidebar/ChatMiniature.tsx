@@ -4,7 +4,6 @@ import { Container, Box } from "@mui/material";
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import Miniature from "../../miniature/Miniature";
-import tchoupi from '../../../assets/tchoupi50x50.jpg'
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
@@ -50,7 +49,10 @@ export default function ChatMiniature({notif, nickname, lastMessage, userId, sho
 				<Miniature miniatureUser={{
 					nickname: nickname,
 					id: userId,
-					minAvatar: {url: tchoupi, name:'Tchoupi'}
+                    minAvatar: {
+                        url: `http://localhost:3333/public/picture/${nickname}`,
+                        name: nickname
+                    }
 				}}
 				></Miniature>
 				{/* margin left margin top */}

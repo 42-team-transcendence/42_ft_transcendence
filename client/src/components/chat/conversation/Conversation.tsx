@@ -6,9 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import MessageInput from "./MessageInput";
-import MessageInConv from "./MessageInConv";
 import Miniature from "../../miniature/Miniature";
-import tchoupi from '../../../assets/tchoupi50x50.jpg'
 import GroupMiniature from "../../miniature/GroupMiniature";
 
 // =============================================================================
@@ -149,7 +147,10 @@ const isMute = (mutedUsers:any, currentUser:any) => {
                   miniatureUser={{
                     nickname: recipients[0].nickname,
                     id: recipients[0].id,
-                    minAvatar: { url: tchoupi, name: "Tchoupi" },
+                    minAvatar: {
+                      url: `http://localhost:3333/public/picture/${recipients[0].nickname}`,
+                      name: recipients[0].nickname
+                    },
                   }}
                 ></Miniature>
               ) : (  //Si la conversation est un channel
