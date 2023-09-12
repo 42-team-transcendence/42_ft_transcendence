@@ -168,29 +168,33 @@ export class AuthService {
     }
 
     async callback42(user, res) {
-        console.log("user42 =" + user.profile.name);
+        // console.log("user42 =" + user.profile.name);
 		if (user == undefined)
-			throw (new UnauthorizedException('profile is undefined'));
-		const user42 = await this.prisma.user.findFirst({
-			where: {
-				nickname: user.profile.name,
-			},
-		});
-		if (!user42) {
-            const new_hash = crypto.randomBytes(50).toString('hex');
-            await this.prisma.user.create({
-                data: {
-                    nickname: user.profile.name,
-                    email: user.profile.email,
-                    hash: new_hash,
-                }
-            });
-		}
-        const new_user = await this.prisma.user.findFirst({
-			where: {
-				nickname: user.profile.name,
-			},
-		});
+        throw (new UnauthorizedException('profile is undefined'));
+    const user42 = await this.prisma.user.findFirst({
+        where: {
+            nickname: user.profile.name,
+        },
+    });
+    if (!user42) {
+        const new_hash = crypto.randomBytes(50).toString('hex');
+        await this.prisma.user.create({
+            data: {
+                nickname: user.profile.name,
+                email: user.profile.email,
+                hash: new_hash,
+            }
+        });
+    }
+    const new_user = await this.prisma.user.findFirst({
+        where: {
+            nickname: user.profile.name,
+        },
+    });
+    await this.prisma.user.update({
+        where: { id: new_user.id },
+        data: { avatar:  user.profile._json.image.link},
+    });
 
         // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(new_user.id, user.profile.email);
