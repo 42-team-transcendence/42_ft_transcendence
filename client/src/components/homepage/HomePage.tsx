@@ -49,8 +49,6 @@ const Homepage: React.FC = () => {
 
             {!showLinks && (
                 <div className="show_button">
-					{/* <ScoreButton/> */}
-					{/* <GameButton/> */}
                     <CustomButton onClick={handlePlay}> PLAY </CustomButton>
                     <CustomButton onClick={handleRules}> How to Play </CustomButton>
                     <CustomButton onClick={handleLeaderboard}> Leaderboard </CustomButton>
