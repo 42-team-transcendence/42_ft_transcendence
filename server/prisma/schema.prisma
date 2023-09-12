@@ -25,6 +25,8 @@ model User {
 	secret        	String?
 	auth2fa			Boolean @default(false)
 
+	isOnline		Boolean @default(false)
+
 	chatsCreated  	Chat[]			@relation("chatCreator")
 	chats     		Chat[]    		@relation("chatParticipants")
 

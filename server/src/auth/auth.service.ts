@@ -103,7 +103,12 @@ export class AuthService {
         if (!pwdMatch) {
             throw new ForbiddenException("Credentials incorrect");
         }
-         if (!user.auth2fa) {
+        console.log("ISONLINE == ", user.isOnline);
+        if (user.isOnline)
+        {
+            return res.json({isOnline : user.isOnline});
+        }
+        else if (!user.auth2fa) {
             // Creation du accessToken et du refreshToken
             const tokens = await this.getToken(user.id, user.email);
             // Stockage du refreshToken dans la DB
