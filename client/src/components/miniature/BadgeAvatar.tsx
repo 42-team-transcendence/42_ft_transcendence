@@ -24,12 +24,9 @@ export default function BadgeAvatar({ minAvatar }: { minAvatar: MiniAvatarPictur
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         });
-        console.log(minAvatar.name);
-        console.log({id});
-
         // Check if the fetched user ID is in the onlineUsers array
         let connected = false;
-		
+
 		for (const online of onlineUsers.values()) {
 			if (online.userId === id.data.id) {
         if(online.isOnline) {
@@ -38,7 +35,6 @@ export default function BadgeAvatar({ minAvatar }: { minAvatar: MiniAvatarPictur
         break;
 			}
 		}
-		console.log("connected dans avatar", connected);
 		setIsConnected(connected);
         /// Update the isConnected state
       } catch (error) {

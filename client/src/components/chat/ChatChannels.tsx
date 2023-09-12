@@ -27,7 +27,8 @@ export default function ChatChannels() {
 	const [chatFound, setChatFound] = useState<boolean>(false)
 	const [currentChat, setCurrentChat] = useState<any>();
 	const [currentUser, setCurrentUser] = useState<any>();
-	const [showChatSidebar, setShowChatSidebar] = useState(true);
+	const [showChatSidebar, setShowChatSidebar] = useState<boolean>(true);
+	const [rerender, setRerender] = useState<boolean>(false);
 
 	const location = useLocation(); //sert a recuperer le state passer avec useNavigate()
 	let recipientId:number | null = null;
@@ -54,7 +55,7 @@ export default function ChatChannels() {
 						headers: { 'Content-Type': 'application/json'},
 						withCredentials: true
 					})
-					//Si currentUser ne fait pas parti du channel 
+					//Si currentUser ne fait pas parti du channel
 					//ou est ban du channel, redirection hors du channel
 					if (
 						!response.data.participants.find((e:any)=>e.id === currentUser.id) ||
@@ -69,7 +70,7 @@ export default function ChatChannels() {
             }
         }
         findOrCreateChat(); //appel de la fonction
-    }, [recipientId, currentUser, channelId, location.state])
+    }, [recipientId, currentUser, channelId, location.state, rerender])
 
 	//GET ALL CHATS & CHANNELS DATA
     useEffect(() => {
@@ -102,16 +103,10 @@ export default function ChatChannels() {
 		getCurrentUser(); //appel de la fonction
     }, [])
 
-	// useEffect(() => { //Style : resize window
-	//   const handleResize = () => {
-	// 	setShowChatSidebar(window.innerWidth > 768);
-	//   };
-	//   window.addEventListener("resize", handleResize);
-	//   handleResize(); // Call handleResize immediately to set initial state
-	//   return () => {
-	// 	window.removeEventListener("resize", handleResize);
-	//   };
-	// }, []);
+	const handleRerenderParent = () => {
+		console.log("rerender parent youhouuuuuuuuu")
+		setRerender(!rerender)
+	}
 
 	return (
 		<PageWrapper>
@@ -141,6 +136,7 @@ export default function ChatChannels() {
 					<Conversation
 						chat={currentChat}
 						currentUser={currentUser}
+						rerenderParent={handleRerenderParent}
 					></Conversation>
 				) : (
 					<p> Select Chat</p>

@@ -80,22 +80,16 @@ export const MessageLeft: React.FC<MessageProps & { recipients?: any; sender?: S
 	props
   ) => {
 	const { message, timestamp, displayName, recipients = [], sender } = props;
-  
+
 	return (
 		<div style={useStyles.messageRow}>
-		
-			<Box>
-				{sender ? (
-					<>
-				
-						<BadgeAvatar minAvatar={{ url: `http://localhost:3333/public/picture/${sender.nickname}`, name: sender.nickname }} />
-  
-					</>
-				) : (
-					<div>problem finding sender</div>
-			)}
-			</Box>
 
+			<Box>
+				{sender ?
+					<BadgeAvatar minAvatar={{ url: `http://localhost:3333/public/picture/${sender.nickname}`, name: sender.nickname }} />
+				  : <div>problem finding sender</div>
+        }
+			</Box>
 			<div style={useStyles.messageBlue}>
 				<div>
 					<p style={useStyles.messageContent}>{message}</p>

@@ -49,7 +49,7 @@ function OtherUserProfile() {
 
 	const [user, setUser] = useState<User>();
 	const [currentUser, setCurrentUser] = useState<any>();
-	const [currentUserChans, setCurrentUserChans] = useState<any>();
+	const [currentUserChans, setCurrentUserChans] = useState<any>([]);
 	const [userBlocked, setUserBlocked] = useState<boolean>(false);
 	const [userBefriended, setUserAsFriend] = useState<boolean>(false);
 	const [isUserOnline, setIsUserOnline] = useState<boolean>(false)
@@ -125,7 +125,7 @@ function OtherUserProfile() {
 	}, [user])
 
 	const handleClickSendMsg = (event: React.MouseEvent<HTMLElement>) => {
-		if (!currentUserChans) {
+		if (currentUserChans.length === 0) {
 			startPrivateMessage()
 			return;
 		}
@@ -278,7 +278,7 @@ function OtherUserProfile() {
 								onClick={handleBlock} />
 						</div>
 
-					
+
 					</div>
 				</div>
 				<GameHistoryOther userId={user.id}/>

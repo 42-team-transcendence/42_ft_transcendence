@@ -27,7 +27,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 // =============================================================================
 // FUNCTION ====================================================================
 
-function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
+function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser:any, rerenderParent:any}) {
     const [chatSocket, setChatSocket] = useState<Socket>();
     const [messages, setMessages] = useState<Message[]>([]);
 
@@ -62,7 +62,7 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
                 query: {"userId": currentUser.id},
             });
         setChatSocket(newChatSocket)
-        
+
         return (() => {
             chatSocket?.disconnect();
         })
@@ -96,7 +96,8 @@ function Conversation({chat, currentUser}:{chat:any, currentUser:any}) {
 
     //Réception et stockage des messages par le client
     const messageListener = (message:Message) => {
-        setMessages([...messages, message])
+        setMessages([...messages, message]);
+        rerenderParent();
     }
     useEffect(() => {
         chatSocket?.on("message", messageListener); //if we have a socket, when we receive a message, adds function messageListener as listener
@@ -178,6 +179,7 @@ const isMute = (mutedUsers:any, currentUser:any) => {
                   );
                 } else {// Display messages sent by others on the left
                     const sender = chat?.participants.find((e: any) => e.id === msg.senderId);
+
                     const senderBlocked = currentUser.blocked.find((e: any) => e.id === msg.senderId);
                     return (
                       !senderBlocked && <MessageLeft

@@ -20,8 +20,6 @@ export default function MessageInput({send} : {send: (val:string) => void}) {
     }
 
     return (
-
-
 		<div className="message-input">
             <TextField
 				className="text-field"

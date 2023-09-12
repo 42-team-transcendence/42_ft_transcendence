@@ -259,11 +259,6 @@ function Profile() {
 							variant="dot"
 							invisible={!isUserOnline}>
 							<label htmlFor="avatarInput">
-								{/* <img
-									width= "150px"
-									className="img-profile"
-									src={`http://localhost:3333/public/picture/${user.nickname}`}
-								/> */}
 								{user.nickname && <Avatar sx={{ width: 180, height: 180, border: "2px solid black"  }}  variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />}
 							</label>
 							<input
