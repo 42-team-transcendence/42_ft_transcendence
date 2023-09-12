@@ -140,29 +140,33 @@ const isMute = (mutedUsers:any, currentUser:any) => {
 		  <div className="conversation-container">
         {recipients && messages ? (
           <>
-            { //CONVERSATION HEADER
-              isChat ? ( //Si la conversation est un chat
-                recipients.length > 0 &&
-                <Miniature
-                  miniatureUser={{
-                    nickname: recipients[0].nickname,
-                    id: recipients[0].id,
-                    minAvatar: {
-                      url: `http://localhost:3333/public/picture/${recipients[0].nickname}`,
-                      name: recipients[0].nickname
-                    },
-                  }}
-                ></Miniature>
-              ) : (  //Si la conversation est un channel
-                <>
-                  {chat.participants.length > 0 && <GroupMiniature participants={chat.participants}></GroupMiniature>}
-                  {chat.channelInfo &&
-                    <Button onClick={handleChannelTitleClick} endIcon={<SettingsIcon />}>
-                      {chat.channelInfo.name}
-                    </Button>}
-                </>
-              )
-            }
+            <div className="chan-top">
+              { //CONVERSATION HEADER
+                isChat ? ( //Si la conversation est un chat
+                  recipients.length > 0 &&
+                  <Miniature
+                    miniatureUser={{
+                      nickname: recipients[0].nickname,
+                      id: recipients[0].id,
+                      minAvatar: {
+                        url: `http://localhost:3333/public/picture/${recipients[0].nickname}`,
+                        name: recipients[0].nickname
+                      },
+                    }}
+                  ></Miniature>
+                ) : (  //Si la conversation est un channel
+                  <>
+                    <div className="chan-left">
+                      {chat.participants.length > 0 && <GroupMiniature participants={chat.participants}></GroupMiniature>}
+                      {chat.channelInfo &&
+                        <Button onClick={handleChannelTitleClick} endIcon={<SettingsIcon />}>
+                          {chat.channelInfo.name}
+                        </Button>}
+                    </div>
+                  </>
+                )
+              }
+            </div>
             <Box sx={{ width: "100%", marginTop: "30px" }}> { //CONVERSATION BODY
               messages?.map((msg, index) => {
                 if (msg.senderId === currentUser.id) {// Display messages sent by the current user on the right
