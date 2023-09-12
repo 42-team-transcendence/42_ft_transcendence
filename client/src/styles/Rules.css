@@ -1,4 +1,4 @@
-h1 {
+.rules-h1 {
 	font-family: Alfa Slab One;
 	font-size: 40px;
 	-webkit-text-stroke: 1px black;
@@ -11,7 +11,7 @@ h1 {
     text-align: center;
 }
 
-p {
+.rules-p {
     margin-bottom: 20px;
 }
 

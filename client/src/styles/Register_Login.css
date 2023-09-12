@@ -3,12 +3,14 @@
 	justify-content: 'center';
 	align-items: 'center';
 	width: 582px;
-	height: 755px;
+	/* height: 755px; */
 	flex-wrap: wrap;
 	border-radius: 20px;
 	border: 3px solid #000;
 	background: #FFF;
 	font-size: 18px;
+	padding: 4vh;
+
 }
 
 .title {
@@ -34,9 +36,4 @@
 	display: inline-block;
 	font-weight: 700;
 	text-decoration-line: underline;
-}
-
-
-.formLogin {
-	margin-top: 50px;
 }

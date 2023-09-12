@@ -9,11 +9,11 @@ const Rules:React.FC = () => {
 	return (
 		<PageWrapper>
 			<div className="rules">
-				<h1>The Bouncing Beginnings</h1>
+				<h1 className="rules-h1">The Bouncing Beginnings</h1>
 					<p>Pong, the OG of video games, was born in the wild '70s, when disco balls ruled the dance floor and sideburns were a fashion statement.
 					Created by Atari wizardry, Pong was like virtual tennis but with pixelated paddles, making your grandma's ping pong look so yesterday.<p/>
 
-					<p><span className="rules-nb">#1: </span>Two paddles, one on each side, and a bouncing pixel ball. Keep that ball in play, or you'll be the Pong loser of the day!</p>
+					<p className="rules-p"><span className="rules-nb">#1: </span>Two paddles, one on each side, and a bouncing pixel ball. Keep that ball in play, or you'll be the Pong loser of the day!</p>
 
 					<p><span className="rules-nb">#2: </span>No power-ups or fancy moves here. Just slide your paddle up and down, left and right, and defend with all your might.
 					Pong parties were all the rage, as friends gathered 'round the TV screen, hooting and hollering, like they'd never seen.
