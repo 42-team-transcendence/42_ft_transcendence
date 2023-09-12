@@ -267,15 +267,6 @@ function OtherUserProfile() {
 									)
 								})}
 							</Menu>
-
-							<CustomButtonSecond
-								icon={<PublicIcon />}
-								text="Invite to Play"
-								onClick={startPrivateMessage}
-							/>
-						</div>
-
-						<div className="row-other-user">
 							<CustomButtonSecond
 								icon={!userBefriended ?  <PersonAdd/> : <PersonRemoveIcon />}
 								text={!userBefriended ? "Friend" : "Unfriend"}
@@ -286,6 +277,8 @@ function OtherUserProfile() {
 								text={!userBlocked ? "Block": "Unblock"}
 								onClick={handleBlock} />
 						</div>
+
+					
 					</div>
 				</div>
 				<GameHistoryOther userId={user.id}/>
