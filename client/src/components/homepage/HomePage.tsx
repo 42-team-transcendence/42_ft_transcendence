@@ -4,14 +4,10 @@ import React, { useState } from 'react';
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import Navbar from "../navbar/Navbar";
-import CustomButton from "../../styles/buttons/CustomButton";
-import ScoreButton from '../scorebutton/Score';
-import GameButton from '../gamebutton/Game';
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import  "../../styles/HomepageStyle.css";
-
 
 
 // =============================================================================
