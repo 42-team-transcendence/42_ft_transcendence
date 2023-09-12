@@ -40,16 +40,12 @@ interface Online {
 
 /**********************************************************************************************************************************************/
 /**********************************************************************************************************************************************/
-
-
 	afterInit(server: Server) {
 		console.log('!!!!!!!! -User websocket initialized- !!!!!!!');
 	}
   
-
-
 	handleConnection(client: Socket) {
-		let i = 0;
+
 		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
 			if (socketIdInMap === online.userId) {
 				const existingUserData = this.onlineUsers.get(socketIdInMap);
@@ -57,14 +53,11 @@ interface Online {
 				existingUserData.userId = socketIdInMap;
 				this.onlineUsers.delete(socketIdInMap);
 				this.onlineUsers.set(client.id, existingUserData);
-				i = 1;
 				break;
 			}
 		}
 		this.updateOnlineUsers();
 	}
-
-
 
 	handleDisconnect(client: Socket) {
 
@@ -81,7 +74,6 @@ interface Online {
 /**********************************************************************************************************************************************/
 /**********************************************************************************************************************************************/
 
-
 	@SubscribeMessage('userLoggedIn')
   	handleUserLoggedIn(client: Socket, data: { userId: string }) {
 		// const existingUserData = this.onlineUsers.get(client.id);
@@ -94,7 +86,6 @@ interface Online {
 		// }
 	}
 
-
 	@SubscribeMessage('userLogout')
 	handleUserLogout(client: Socket, data: {userId: string}) {
 		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
@@ -106,7 +97,6 @@ interface Online {
 		this.onlineUsers.delete(client.id);
 		this.updateOnlineUsers();
 	}
-
 
 	private updateOnlineUsers() {
 		const onlineUsersArray = Array.from(this.onlineUsers.entries());

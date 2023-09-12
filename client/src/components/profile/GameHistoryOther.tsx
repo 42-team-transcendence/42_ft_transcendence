@@ -54,22 +54,6 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 		findGamesByUserId();
 	}, [userId])
 
-	// useEffect(() => { //Fetch current user data
-	// 	const getCurrentUser = async () => { //definition de la fonction
-	// 		try {
-	// 			const response = await axiosPrivate.get('/users/me', {
-	// 				headers: { 'Content-Type': 'application/json'},
-	// 				withCredentials: true
-	// 			})
-	// 			setCurrentUser(response.data);
-	// 		} catch (error:any) {
-	// 			console.log(error.response );
-	// 		}
-	// 	}
-	// 	getCurrentUser(); //appel de la fonction
-	// }, [])
-
-
 	return (
 	 	<PageWrapper>
 			<Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -97,69 +81,62 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 						<TableCell style={{ textAlign: 'center' }}>Result</TableCell>
 					</TableRow>
                 </TableHead>
-                {<TableBody> {
+                {
+				<TableBody>
+					{
 					gameHistory
-					.slice(Math.max(gameHistory.length - 5, 0))
-					.map((game:any, index) => {
-					let adversaire;
-					let my_score;
-					let adv_score;
-					const formattedTimestamp = game.createdAt
-					? new Intl.DateTimeFormat("en-GB", {
-						day: "2-digit",
-						month: "2-digit",
-						year: "numeric",
-						hour: "2-digit",
-						minute: "2-digit",
-					  }).format(new Date(game.createdAt))
-					: "";
-					if (game.player_1_id === userId)
-						adversaire = game.player_2;
-					else
-						adversaire = game.player_1;
-					if(adversaire === game.player_2)
-					{
-						my_score = game.player_1_score;
-						adv_score = game.player_2_score;
-					}
-					else
-					{
-						my_score = game.player_2_score;
-						adv_score = game.player_1_score;
-					}
-					return (
-						<TableRow
+						.slice(Math.max(gameHistory.length - 5, 0))
+						.map((game: any, index) => {
+						const adversaire = game.player_1_id === userId ? game.player_2 : game.player_1;
+						const my_score = adversaire === game.player_2 ? game.player_1_score : game.player_2_score;
+						const adv_score = adversaire === game.player_2 ? game.player_2_score : game.player_1_score;
+						const formattedTimestamp = game.createdAt
+							? new Intl.DateTimeFormat("en-GB", {
+							day: "2-digit",
+							month: "2-digit",
+							year: "numeric",
+							hour: "2-digit",
+							minute: "2-digit",
+							}).format(new Date(game.createdAt))
+							: "";
+
+						return (
+							<TableRow
 							key={index}
 							sx={{
 								"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
-								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}} >
-						<TableCell style={{ textAlign: 'center' }}>
-						<Miniature miniatureUser={{
-							nickname: adversaire.nickname,
-							id: adversaire.id,
-							minAvatar: {
-								url: `http://localhost:3333/public/picture/${adversaire.nickname}`,
-								name: adversaire.nickname
-							  }
-						}}
-						></Miniature>
+								"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },
+							}}
+							>
+							<TableCell style={{ textAlign: 'center' }}>
+								<Miniature
+								miniatureUser={{
+									nickname: adversaire.nickname,
+									id: adversaire.id,
+									minAvatar: {
+									url: `http://localhost:3333/public/picture/${adversaire.nickname}`,
+									name: adversaire.nickname
+									}
+								}}
+								/>
 							</TableCell>
-						<TableCell style={{ textAlign: 'center' }}>{my_score} - {adv_score}</TableCell>
-						<TableCell style={{ textAlign: 'center' }}>{formattedTimestamp}</TableCell>
-						<TableCell style={{ textAlign: 'center'}}>
-									{game.winnerId === 0 ? (
-										"DRAWN GAME"
-									) : game.winnerId === userId ?(
-										<WinTableCell style={{ borderBottom: 'none', textAlign: 'center' }}>WIN</WinTableCell>
-									) : (
-										<LossTableCell style={{ borderBottom: 'none', textAlign: 'center' }}>LOSE</LossTableCell>
-									)}
-								
-						</TableCell>
-						</TableRow>
-					)
-				  })}
-                </TableBody>}
+							<TableCell style={{ textAlign: 'center' }}>{my_score} - {adv_score}</TableCell>
+							<TableCell style={{ textAlign: 'center' }}>{formattedTimestamp}</TableCell>
+							<TableCell style={{ textAlign: 'center' }}>
+								{game.winnerId === 0 ? (
+								"DRAWN GAME"
+								) : game.winnerId === userId ? (
+								<WinTableCell style={{ borderBottom: 'none', textAlign: 'center' }}>WIN</WinTableCell>
+								) : (
+								<LossTableCell style={{ borderBottom: 'none', textAlign: 'center' }}>LOSE</LossTableCell>
+								)}
+							</TableCell>
+							</TableRow>
+						)
+						})
+					}
+				</TableBody>
+				}
               </Table>
             </TableContainer>
           </Box>
