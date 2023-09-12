@@ -33,7 +33,6 @@ interface User {
 	id: number;
 	nickname: string;
 	picture: string;
-	isOnline: boolean;
 	blockedBy: User[];
 	blocked: User[];
 	score: number;
@@ -46,21 +45,20 @@ interface User {
 function OtherUserProfile() {
 	const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();
-
 	const onlineUsers = useOnlineStatus();
-	console.log({onlineUsers});
-	
+
 	const [user, setUser] = useState<User>();
 	const [currentUser, setCurrentUser] = useState<any>();
 	const [currentUserChans, setCurrentUserChans] = useState<any>();
 	const [userBlocked, setUserBlocked] = useState<boolean>(false);
 	const [userBefriended, setUserAsFriend] = useState<boolean>(false);
+	const [isUserOnline, setIsUserOnline] = useState<boolean>(false)
 
 	const [anchorChatMenu, setAnchorChatMenu] = useState<null | HTMLElement>(null);
     const openChatMenu = Boolean(anchorChatMenu);
 
 	let { userId } = useParams();
-  
+
   useEffect(() => {//GET USER DATA
 		const getUser = async () => {
 			try {
@@ -68,23 +66,7 @@ function OtherUserProfile() {
 				if (!response.data) {
 					navigate('/', {replace: false});
 				}
-				// const isUserOnline = onlineUsers.includes(response.data.id);
-				let isUserOnline = false;
-				for (const online of onlineUsers.values()) {
-					if (online.userId === response.data.id) {
-						if(online.isOnline) {
-							isUserOnline = true;
-						}
-						break;
-					}
-				}
-				setUser({
-					...response.data,
-					picture:"https://anniversaire-celebrite.com/upload/250x333/alf-250.jpg",
-					isOnline: isUserOnline,
-
-				});
-				console.log(response.data);
+				setUser(response.data);
 			} catch (error:any) {
 				console.log(error.response );
 			}
@@ -130,6 +112,17 @@ function OtherUserProfile() {
 		}
 		findAllMyPrivateChansOwned();
     }, [currentUser, user])
+
+	useEffect(()=>{
+		for (const client of onlineUsers.values()) {
+			if (client.userId && parseInt(client.userId) === user?.id) {
+				if(client.isOnline) {
+					setIsUserOnline(true);
+				}
+				break;
+			}
+		}
+	}, [user])
 
 	const handleClickSendMsg = (event: React.MouseEvent<HTMLElement>) => {
 		if (!currentUserChans) {
@@ -202,16 +195,16 @@ function OtherUserProfile() {
 
 	const StyledBadge = styled(Badge)(() => ({
 		'& .MuiBadge-badge': {
-		  backgroundColor: user?.isOnline ? 'green' : 'grey',
-		  color: user?.isOnline ? 'green' : 'grey',
+		  backgroundColor: isUserOnline ? 'green' : 'grey',
+		  color: isUserOnline ? 'green' : 'grey',
 		  boxShadow: "0 0 0 2px white",
 		  width: "20px",
 		  height: "20px",
 		  borderRadius: 10
 		},
 	}));
-	
-	  
+
+
 	return (
 	<PageWrapper>
 		{user && currentUser &&
@@ -223,7 +216,7 @@ function OtherUserProfile() {
 								overlap="circular"
 								anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 								variant="dot"
-								invisible={!user.isOnline}
+								invisible={!isUserOnline}
 							>
 								<Avatar sx={{ width: 180, height: 180, border: "2px solid black"  }} variant="square" alt={user.nickname} src={`http://localhost:3333/public/picture/${user.nickname}`} />
 							</StyledBadge>
@@ -231,7 +224,7 @@ function OtherUserProfile() {
 
 						<div className="profile-info">
 							<h1 className="name">{user?.nickname}</h1>
-					
+
 							<p className="rank">Rank {user.rank} | Lvl {user.score}</p>
 						</div>
 					</div>
