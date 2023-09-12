@@ -49,6 +49,7 @@ const MatchPwd: React.FC<MatchPwdProps> = ({ stateMatchPwd, fonctionUpdateMatchP
 	variant="standard"
 	label="confirm password"
 	autoComplete="off"
+	type="password"
 	onChange={(e) => updateMatchPwd(e.target.value)}
 	value={matchPwd}
 	error={!validMatch && matchPwd.length > 0}

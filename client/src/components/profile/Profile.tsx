@@ -291,8 +291,7 @@ function Profile() {
 							overlap="circular"
 							anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 							variant="dot"
-							invisible={!isUserOnline}
-						>
+							invisible={!isUserOnline}>
 							<label htmlFor="avatarInput">
 								{/* <img
 									width= "150px"
@@ -361,7 +360,7 @@ function Profile() {
 													>Disable 2FA</button>
 								</div>
 							)}
-							{isDoubleAuthEnabled && <DoubleAuth /> }
+							{isDoubleAuthEnabled && <DoubleAuth/> }
 						</div>
 					</div>
 				</div>
