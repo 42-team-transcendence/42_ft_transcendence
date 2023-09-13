@@ -26,7 +26,7 @@ const Rules:React.FC = () => {
 				<p><span className="rules-nb">#3: </span>Score a point when your opponent drops the ball, but don't get too cocky, 'cause Pong can make you fall!
 				</p>
 
-				<p className="rules-p">History lesson: Pong paved the way, making arcades cool and controllers sway. It's where the gaming journey found its first play.
+				<p className="rules-p1">History lesson: Pong paved the way, making arcades cool and controllers sway. It's where the gaming journey found its first play.
 					Simplicity is key, with Pong's timeless charm, a game so easy, it'll do no harm.
 					So, here's to Pong, the game that started it all. From 1972 to forevermore, it'll always be a ball!
 				</p>	
