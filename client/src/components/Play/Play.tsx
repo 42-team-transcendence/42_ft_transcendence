@@ -211,7 +211,7 @@ return (
             )}
             {over && winner === currentUser.id && <div className="message-game" id="winnerMessage">You win!</div>}
             {over && winner !== currentUser.id && <div className="message-game" id="looserMessage">You loose...</div>}
-            {disconnect && !start && <div id="disconnect">The other player has disconnected !</div>}
+            {disconnect && !start && <div id="disconnect" className="message-game">The other player has disconnected !</div>}
 
         </div>
     </PageWrapper>

@@ -139,7 +139,7 @@ export default function ChatChannels() {
 						rerenderParent={handleRerenderParent}
 					></Conversation>
 				) : (
-					<p> Select Chat</p>
+					<p className="chat-select"> Select Chat</p>
 				)}
 				</Box>
 		 	</div>
