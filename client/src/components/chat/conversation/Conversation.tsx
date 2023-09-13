@@ -186,7 +186,6 @@ const isMute = (mutedUsers:any, currentUser:any) => {
                         key={index}
                         message={msg.content}
                         timestamp={formattedTimestamp(msg.createdAt)}
-                        displayName={sender?.nickname}
                         sender={chat?.participants.find((e: any) => e.id === msg.senderId)}
                     />);
                 }

@@ -1,5 +1,4 @@
 import React from "react";
-import Avatar from "@mui/material/Avatar";
 import { deepOrange } from "@mui/material/colors";
 
 import {Box} from "@mui/material";
@@ -9,7 +8,6 @@ type MessageProps = {
   message: string;
   timestamp: string; // Adjust the type as needed
   photoURL?: string;
-  displayName?: string;
   sender?: string;
 //   id?: string;
 };
@@ -79,7 +77,7 @@ const useStyles: any = {
 export const MessageLeft: React.FC<MessageProps & { recipients?: any; sender?: SenderType }> = (
 	props
 ) => {
-	const { message, timestamp, displayName, recipients = [], sender } = props;
+	const { message, timestamp, sender } = props;
 
 	return (
 		<div style={useStyles.messageRow}>
