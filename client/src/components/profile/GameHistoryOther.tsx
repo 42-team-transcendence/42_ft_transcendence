@@ -123,9 +123,9 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 								{game.winnerId === 0 ? (
 								<TableCell style={{ textAlign: 'center' }}>"DRAWN GAME"</TableCell>
 								) : game.winnerId === userId ? (
-								<WinTableCell style={{ borderBottom: 'none', textAlign: 'center' }}>WIN</WinTableCell>
+								<WinTableCell style={{ textAlign: 'center' }}>WIN</WinTableCell>
 								) : (
-								<LossTableCell style={{ borderBottom: 'none', textAlign: 'center' }}>LOSE</LossTableCell>
+								<LossTableCell style={{ textAlign: 'center' }}>LOSE</LossTableCell>
 								)}
 							</TableRow>
 						)

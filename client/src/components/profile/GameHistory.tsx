@@ -134,9 +134,9 @@ function GameHistory() {
 											{game.winnerId === 0 ? (
 											<TableCell style={{ textAlign: 'center' }}>"DRAWN GAME"</TableCell>
 											) : game.winnerId === currentUser.id ? (
-											<WinTableCell style={{ borderBottom: 'none', alignItems: 'center', textAlign: 'center' }}> WIN</WinTableCell>
+											<WinTableCell style={{ alignItems: 'center', textAlign: 'center' }}> WIN</WinTableCell>
 											) : (
-											<LossTableCell style={{ borderBottom: 'none', textAlign: 'center' }}>LOSE</LossTableCell>
+											<LossTableCell style={{ textAlign: 'center' }}>LOSE</LossTableCell>
 											)}
 										</TableRow>
 									)
