@@ -54,9 +54,11 @@ export default function ChatSidebar({
 								nickname={recipient.nickname}
 								lastMessage={
 									chat.messages.length > 0 && !currentUser.blocked.find((e:any)=>e.id === recipient.id)
-									? chat.messages[chat.messages.length - 1].message
-									: ""
-								}
+									  ? (chat.messages[chat.messages.length - 1].message.length > 20
+										? chat.messages[chat.messages.length - 1].message.substring(0, 20) + "..."
+										: chat.messages[chat.messages.length - 1].message)
+									  : ""
+								  }
 								showChatSidebar={showChatSidebar}
 								setShowChatSidebar={setShowChatSidebar}
 							></ChatMiniature>
@@ -72,7 +74,9 @@ export default function ChatSidebar({
 							lastMessage={
 								chat.messages.length > 0 && !currentUser.blocked.find(
 									(e:any)=>e.id === chat.messages[chat.messages.length - 1].senderId
-								) ? chat.messages[chat.messages.length - 1].message
+								) ? (chat.messages[chat.messages.length - 1].message.length > 20
+									? chat.messages[chat.messages.length - 1].message.substring(0, 20) + "..."
+									: chat.messages[chat.messages.length - 1].message)
 								: ""
 							}
 							showChatSidebar={showChatSidebar}

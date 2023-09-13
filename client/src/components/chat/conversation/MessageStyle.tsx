@@ -78,41 +78,43 @@ const useStyles: any = {
 // Avatar is on the left
 export const MessageLeft: React.FC<MessageProps & { recipients?: any; sender?: SenderType }> = (
 	props
-  ) => {
+) => {
 	const { message, timestamp, displayName, recipients = [], sender } = props;
 
 	return (
 		<div style={useStyles.messageRow}>
-
 			<Box>
 				{sender ?
 					<BadgeAvatar minAvatar={{ url: `http://localhost:3333/public/picture/${sender.nickname}`, name: sender.nickname }} />
-				  : <div>problem finding sender</div>
-        }
+					: <div>problem finding sender</div>
+				}
 			</Box>
 			<div style={useStyles.messageBlue}>
-				<div>
-					<p style={useStyles.messageContent}>{message}</p>
+				<div style={useStyles.messageContent}>
+					<p style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap', margin: 0 }}>{message}</p>
 				</div>
 				<div style={useStyles.messageTimeStampRight}>{timestamp}</div>
 			</div>
-    	</div>
-  	);
+		</div>
+	);
 };
 
 // Avatar is on the right
 export const MessageRight: React.FC<MessageProps> = (props) => {
-  const { message, timestamp } = props;
+	const { message, timestamp } = props;
 
-  return (
-    <div style={useStyles.messageRowRight}>
-      <div style={useStyles.messageOrange}>
-        <p style={useStyles.messageContent}>{message}</p>
-        <div style={useStyles.messageTimeStampRight}>{timestamp}</div>
-      </div>
-    </div>
-  );
+	return (
+		<div style={useStyles.messageRowRight}>
+			<div style={useStyles.messageOrange}>
+				<div style={useStyles.messageContent}>
+					<p style={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap', margin: 0 }}>{message}</p>
+				</div>
+				<div style={useStyles.messageTimeStampRight}>{timestamp}</div>
+			</div>
+		</div>
+	);
 };
+
 
 
 
