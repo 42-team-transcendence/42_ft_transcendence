@@ -117,9 +117,9 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 				.then(userInfos => {
 					setUserInfo(userInfos);
 					if(userInfos[0].id === currentUser.id)
-						setDisplayMin(1);
+						setDisplayMin(0);
 					else if(userInfos[1].id === currentUser.id)
-						setDisplayMin(2);
+						setDisplayMin(1);
 					// userInfos contient les informations de tous les utilisateurs
 				})
 				.catch(error => {
