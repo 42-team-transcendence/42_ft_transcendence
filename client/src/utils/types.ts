@@ -30,11 +30,11 @@ export type Conversation = {
 
 export type MiniAvatarPicture = {
     url: string,
-    name: string
+    name: string | undefined
 }
 
 export type MiniatureUser = {
-    nickname: string,
-    id: number,
+    nickname: string | undefined,
+    id: number | undefined,
     minAvatar: MiniAvatarPicture
 }

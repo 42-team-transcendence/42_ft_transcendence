@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import io, {Socket} from "socket.io-client"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import '../../styles/Play.css'
+import Miniature from "../miniature/Miniature";
 
 const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) => {
 
@@ -18,6 +19,7 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 	interface Paddle {
 	  socketId: string | undefined,
 	  Id: number,
+	  nickname: string,
 	  width: number,
 	  height: number,
 	  x: number,
@@ -44,6 +46,8 @@ const axiosPrivate = useAxiosPrivate();
 	const [over, setOver] = useState<boolean>(false);
 	const [disconnect, setDisconnect] = useState<boolean>(false);
 	const [roomName, setRoomName] = useState<string>();
+	const [otherPlayer, setOtherPlayer] = useState<Paddle>();
+	const [myPlayer, setmyPlayer] = useState<Paddle>();
 	const roomNameRef = useRef<string | undefined>(roomName);
 
 	useEffect(() => { //Fetch current user data
@@ -88,6 +92,7 @@ const axiosPrivate = useAxiosPrivate();
 				setRoomName(room);
 				const data = {
 					currentUser: currentUser.id,
+					nickname: currentUser.nickname,
 					socketId: socket?.id,
 					roomName: room,
 				}
@@ -104,7 +109,7 @@ const axiosPrivate = useAxiosPrivate();
 		socket?.on('game',  (data: { ball: Ball, players: Paddle[] }) => {
 			const receivedBall = data.ball;
 			const receivedPlayers = data.players;
-		
+
 			// Appelle la fonction game en passant receivedBall et receivedPlayers comme arguments
 			setStart(true);
 			game(receivedBall, receivedPlayers);
@@ -142,6 +147,15 @@ useEffect(() => {
 	};
 
 	const game = (ball: Ball, players: Paddle[]) => {
+
+		if (players[0].Id === currentUser.id) {
+			setOtherPlayer(players[1]);
+			setmyPlayer(players[0]);
+		}
+		else if (players[1].Id === currentUser.id) {
+			setOtherPlayer(players[0]);
+			setmyPlayer(players[1]);
+		}
 
 		const gameBoard = gameBoardRef.current;
 		const ctx = gameBoard?.getContext('2d');
@@ -203,6 +217,60 @@ return (
     <PageWrapper>
         <div id="gameContainer">
             {!start && !disconnect && <div className="message-game">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
+			  { currentUser && myPlayer?.color === "pink" ? (
+			  	 otherPlayer && myPlayer && 
+					<div>
+					<Miniature
+					key={myPlayer.Id}
+					miniatureUser={{
+					nickname: myPlayer.nickname,
+					id: myPlayer.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${myPlayer.nickname}`,
+						name: myPlayer.nickname
+						}
+					}}
+					/>
+					<Miniature
+					key={otherPlayer?.Id}
+					miniatureUser={{
+					nickname: otherPlayer?.nickname,
+					id: otherPlayer?.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${otherPlayer?.nickname}`,
+						name: otherPlayer?.nickname
+					}
+					}}
+				/> 
+				</div>
+			  ) : (
+				 otherPlayer && myPlayer && 
+					<div>
+					<Miniature
+					key={otherPlayer?.Id}
+					miniatureUser={{
+					nickname: otherPlayer?.nickname,
+					id: otherPlayer?.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${otherPlayer?.nickname}`,
+						name: otherPlayer?.nickname
+					}
+					}}
+				/> 
+					<Miniature
+					key={myPlayer.Id}
+					miniatureUser={{
+					nickname: myPlayer.nickname,
+					id: myPlayer.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${myPlayer.nickname}`,
+						name: myPlayer.nickname
+						}
+					}}
+					/>
+				</div>
+			  )
+			}
             {start && !over && (
                 <>
                     <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
