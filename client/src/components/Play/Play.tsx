@@ -4,7 +4,6 @@ import io, {Socket} from "socket.io-client"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Miniature from "../miniature/Miniature";
 import '../../styles/Play.css'
-import Miniature from "../miniature/Miniature";
 
 const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) => {
 
@@ -234,35 +233,39 @@ return (
     <PageWrapper>
         <div id="gameContainer">		
             {!start && !disconnect && <div className="message-game">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
+			{start && !over && (
+                <>
 			  { currentUser && myPlayer?.color === "pink" ? (
 			  	 otherPlayer && myPlayer && 
-					<div>
-					<Miniature
-					key={myPlayer.Id}
-					miniatureUser={{
-					nickname: myPlayer.nickname,
-					id: myPlayer.Id,
-					minAvatar: {
-						url: `http://localhost:3333/public/picture/${myPlayer.nickname}`,
-						name: myPlayer.nickname
-						}
-					}}
-					/>
-					<Miniature
-					key={otherPlayer?.Id}
-					miniatureUser={{
-					nickname: otherPlayer?.nickname,
-					id: otherPlayer?.Id,
-					minAvatar: {
-						url: `http://localhost:3333/public/picture/${otherPlayer?.nickname}`,
-						name: otherPlayer?.nickname
-					}
-					}}
-				/> 
-				</div>
-			  ) : (
+				   
+					<div className="case1">
+						<Miniature
+							key={myPlayer.Id}
+							miniatureUser={{
+							nickname: myPlayer.nickname,
+							id: myPlayer.Id,
+							minAvatar: {
+								url: `http://localhost:3333/public/picture/${myPlayer.nickname}`,
+								name: myPlayer.nickname
+								}
+							}}
+						/>
+						<div ref={scoreTextRef} id="scoreText">0 : 0</div>
+						<Miniature
+							key={otherPlayer?.Id}
+							miniatureUser={{
+							nickname: otherPlayer?.nickname,
+							id: otherPlayer?.Id,
+							minAvatar: {
+								url: `http://localhost:3333/public/picture/${otherPlayer?.nickname}`,
+								name: otherPlayer?.nickname
+							}
+							}}
+						/> 
+					</div>
+			 		) : (
 				 otherPlayer && myPlayer && 
-					<div>
+					<div className="case2">
 					<Miniature
 					key={otherPlayer?.Id}
 					miniatureUser={{
@@ -274,6 +277,7 @@ return (
 					}
 					}}
 				/> 
+				<div ref={scoreTextRef} id="scoreText">0 : 0</div>
 					<Miniature
 					key={myPlayer.Id}
 					miniatureUser={{
@@ -286,13 +290,9 @@ return (
 					}}
 					/>
 				</div>
-			  )
-			}
-            {start && !over && (
-                <>
-                    <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
-                    <div ref={scoreTextRef} id="scoreText">0 : 0</div>
-                </>
+			  		)}
+					 <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
+				</>
             )}
             {over && winner === currentUser.id && <div className="message-game" id="winnerMessage">You win!</div>}
             {over && winner !== currentUser.id && <div className="message-game" id="looserMessage">You loose...</div>}

@@ -55,3 +55,19 @@
 	  opacity: 1;
 	}
   }
+
+.case1{
+	margin-bottom: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
+
+.case2{
+	margin-bottom: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
+}
