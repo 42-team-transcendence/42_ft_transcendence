@@ -37,7 +37,7 @@ const Callback42 = () => {
             });
             navigate('/', { replace: true });
         } catch (error) {
-            console.log("GRAOUUUUUUUUUUU", error);
+            console.log(error);
         }
     }
 

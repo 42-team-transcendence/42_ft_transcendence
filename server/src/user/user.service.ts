@@ -22,14 +22,13 @@ export class UserService {
 
 	async getMe(userId: number) {
 		const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-		  include: {
-			blocked:true,
-			blockedBy:true,
-			friend: true,
-			friendOf: true,
-		}
-
+			where: { id: userId },
+				include: {
+					blocked:true,
+					blockedBy:true,
+					friend: true,
+					friendOf: true,
+			}
 		});
 		if (!user) {
             throw new Error('User not found');

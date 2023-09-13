@@ -61,7 +61,6 @@ export class AuthService {
 				where: {email: userEmail},
                 select: {id: true}
 			})
-			//console.log("user by mail is: ", {user});
 			return (user);
 		} catch(error){
 			console.error(error)
@@ -101,7 +100,6 @@ export class AuthService {
         if (!pwdMatch) {
             throw new ForbiddenException("Credentials incorrect");
         }
-        console.log("ISONLINE == ", user.isOnline);
         if (user.isOnline)
         {
             return res.json({isOnline : user.isOnline});
@@ -166,20 +164,17 @@ export class AuthService {
         url += this.config.get('OAUTH_INTRA_CLIENT_ID');
         url += '&redirect_uri=http://localhost:3333/auth/callback/42';
         url += '&response_type=code';
-        console.log("url =" + url);
         return ({ url: url });
     }
 
     async callback42(user, res) {
         if (user == undefined)
             throw (new UnauthorizedException('profile is undefined'));
-        console.log(user.profile.id);
         const user42 = await this.prisma.user.findFirst({
             where: {
                 id: parseInt(user.profile.id),
             },
         });
-        console.log(user42)
         if (!user42) {
             const new_hash = crypto.randomBytes(50).toString('hex');
             try {
@@ -317,7 +312,6 @@ export class AuthService {
     // =============================================================================
 	// REFRESH  ====================================================================
     async refresh(userId: number, rt: string, res) {
-        // console.log({userId, rt})
         const user = await this.prisma.user.findUnique({
             where : {
                 id: userId,

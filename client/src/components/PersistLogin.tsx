@@ -19,7 +19,6 @@ const PersistLogin: React.FC = () => {
             }
         }
 
-        console.log("PersistLogin :", auth);
         //Si il n'y a pas d'access token dans auth (par exemple si on vient de refresh)
         // ==> on redemande un accessToken
         !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);

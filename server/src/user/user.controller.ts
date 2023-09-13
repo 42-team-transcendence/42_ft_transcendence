@@ -84,7 +84,7 @@ export class UserController {
 			catch (error) {
 				throw error;
 			}
-			
+
 	}
 
 	@UseInterceptors(ExcludeSensitiveData)
@@ -129,8 +129,6 @@ export class UserController {
 		@UploadedFile() file: any,
 		@GetUser() user
 	) {
-
-		console.log(`Avatar file = ${file}`);
 		await this.userService.uploadAvatar(file, user.sub);
 	}
 

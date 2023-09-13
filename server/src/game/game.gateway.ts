@@ -66,11 +66,10 @@ async function saveScoresToDatabase(player1Id: number, player2Id: number, player
 				winnerId: winnerId,
 			},
     	});
-    console.log('Game saved:', game);
     if(winnerId != 0) {
-        updateScore(winnerId); 
+        updateScore(winnerId);
     }
-	} 
+	}
 	catch(error){
 		console.log("Error saving game:", error);
 	}
@@ -96,11 +95,11 @@ async function saveScoresToDatabase(player1Id: number, player2Id: number, player
   },
 )
 export default class GameGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-    
+
   // Déclare une instance du Server de socket.io
   //this allows you to access the WebSocket server instance and utilize its methods,
   //including the emit() method.
-  @WebSocketServer() 
+  @WebSocketServer()
   server: Server;
 
   private rooms: Map<string, GameInfo> = new Map();
@@ -109,7 +108,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
   /*-------------------------------------------------------------------------------------------------------------------------------*/
 
   //lifecycle method : it will be executed automatically (due to OnGatewayInit interface) once the gateway is initialized.
-  //This provides an opportunity to perform any necessary 
+  //This provides an opportunity to perform any necessary
   //setup or initialization tasks before the WebSocket server starts accepting connections.
   afterInit(server: Server) {
       // Perform initialization tasks here
@@ -122,7 +121,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
   ) {
     const gameInfo: GameInfo = {
       players: [],
-      gameWidth: 800, 
+      gameWidth: 800,
       gameHeight: 400,
       ballRadius: 12.5,
       paddleSpeed: 50,
@@ -176,8 +175,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
 		}
         if (index !== -1) {
           gameInfo.players.splice(index, 1);
-          console.log("!!! DISCONNECTED !!! == " + gameInfo.players.length);
-  
+
       // Emit a 'playerDisconnected' event to the remaining client in the room
           if (gameInfo.players.length === 1) {
             this.server.to(roomName).emit('playerDisconnected', 'The other player has disconnected');
@@ -229,9 +227,7 @@ heartBeat(roomName: string, gameInfo: GameInfo, client: Socket) {
 		player1Id = info.players[0].Id;
 		player2Id = info.players[1].Id;
 		player1Score = gameInfo.players[0].score;
-		console.log(`player1 id ${player1Id}`);
 		player2Score = gameInfo.players[1].score;
-		console.log(`player2 id ${player2Id}`);
 		if(player1Score > player2Score)
 			winnerId = player1Id;
 		else if(player1Score < player2Score)
@@ -260,8 +256,8 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
 		this.heartBeat(roomName, gameInfo, client);
 	}, 33);
 }
-  
-//   The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate 
+
+//   The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate
 //   that a particular method should be invoked when a specific WebSocket message is received.
   @SubscribeMessage('playerData')
   handleUserData(
@@ -320,7 +316,7 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
     const paddleUp = "ArrowUp";
     const paddleDown = "ArrowDown";
     let i = 0;
-    
+
     if(client.id === info.players[0].socketId) {
         i = 0;
     }
@@ -328,7 +324,7 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
         i = 1;
     }
         switch (data.keyPressed) {
-        case paddleUp:		
+        case paddleUp:
         if (info.players[i].y > 0) {
           info.players[i].y -= info.paddleSpeed;
         }
@@ -340,7 +336,7 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
         break;
         }
   };
-  
+
    moveBall (gameInfo: GameInfo) {
     gameInfo.ball.X += gameInfo.ballSpeed * gameInfo.ballXDirection;
     gameInfo.ball.Y += gameInfo.ballSpeed * gameInfo.ballYDirection;

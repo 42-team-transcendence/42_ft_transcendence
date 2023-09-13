@@ -58,13 +58,9 @@ const DoubleAuth: React.FC<DoubleAuthProps> = ({
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true
             });
-
-			console.log({response})
             if (response.data.isVerified === true) {
-                console.log('OTP is valid');
                 return true;
             } else {
-                console.log('Invalid OTP');
                 return false;
             }
         } catch (error) {

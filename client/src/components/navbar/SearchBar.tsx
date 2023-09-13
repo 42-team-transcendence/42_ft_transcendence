@@ -145,12 +145,10 @@ export default function SearchAppBar() {
 
   const handlePwdInput = async (inputPwd: string, channelPwd: string, channelId: number) => {
     if (inputPwd != channelPwd) {
-      console.log("!!! PWD IS INVALID !!!")
       setPwdModal(!pwdModal)
     } else {
       joinChannel(channelId)
       setPwdModal(!pwdModal)
-      console.log("PWD IS VALID !")
     }
   };
 

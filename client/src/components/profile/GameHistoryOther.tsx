@@ -33,8 +33,6 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 	const [currentUser, setCurrentUser] = useState<any>();
 
 	const onlineUsers = useOnlineStatus();
-	console.log({onlineUsers});
-	// console.log("userid props", userId);
 
 	useEffect(() => { //fetch game data
 		const findGamesByUserId = async () =>{
@@ -44,7 +42,6 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 						withCredentials: true
 				})
 				setGameHistory(response.data);
-				console.log("all user's games", response.data); 
 			} catch(error: any) {
 				console.log(error.response);
 			}

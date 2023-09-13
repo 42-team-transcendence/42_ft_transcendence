@@ -16,7 +16,6 @@ const Logout: React.FC = () => {
     const handleClick = async() => {
 
 		const handleOnline =  async () => {
-			console.log(`auth dans logout`, {auth});
 			const email = auth.email;
 			try{
 				const response = await axiosPrivate.get(`/auth/userByMail/${email}`, {

@@ -29,7 +29,6 @@ export class RtJwtStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
     //tout ce qui est retourné avec la fonction validate est passée aux fonctions suivantes
     // via l'objet request d'Express, dans l'objet "user"
     validate(req: Request, payload : JwtPayload): JwtPayloadWithRt {
-        console.log({payload});
         const refreshToken = RtJwtStrategy.extractJWTFromCookie(req);
         if (!refreshToken) throw new ForbiddenException('Refresh token malformed');
 
