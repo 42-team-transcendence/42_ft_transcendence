@@ -1,11 +1,11 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable, UnauthorizedException  } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma } from '@prisma/client';
 import * as argon from 'argon2';
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import * as multer from 'multer';
-import { disconnect } from "process";
+import { disconnect, nextTick } from "process";
 
 @Injectable()
 export class UserService {
@@ -114,7 +114,7 @@ export class UserService {
 				Array.isArray((error.meta as any)?.target) &&
 				(error.meta as any)?.target.includes('email')
 			) {
-				throw new Error('Email is already taken. Please choose a different email.');
+				throw new UnauthorizedException('Email is already taken. Please choose a different nickname.');
 			}
 			// Handle other errors or re-throw if needed.
 			throw error;

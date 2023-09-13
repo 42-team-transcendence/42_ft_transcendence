@@ -20,6 +20,27 @@ const EmailModal: React.FC<EmailModalProps> = ({ open, onClose, onSave }) => {
   const [newEmail, setNewEmail] = useState('');
   const [validEmail, setValidEmail] = useState(true); // Initialize with true
 
+
+  // const checkEmailExists = async (email: string) => {
+  //   try {
+  //     // Make a GET request to your backend endpoint to check if the email exists
+  //     const response = await axiosPrivate..get(`${API_BASE_URL}/check-email-exists`, {
+  //       params: {
+  //         email: email,
+  //       },
+  //     });
+  
+  //     // If the response status is 200, it means the email exists
+  //     return response.status === 200;
+  //   } catch (error) {
+  //     // Handle any errors that occur during the request (e.g., network error)
+  //     console.error('Error checking email existence:', error);
+  //     return false; // Return false to indicate an error or unknown status
+  //   }
+  // };
+
+
+
   const validateEmail = (email: string) => {
     setValidEmail(EMAIL_REGEX.test(email));
   };
@@ -28,7 +49,10 @@ const EmailModal: React.FC<EmailModalProps> = ({ open, onClose, onSave }) => {
     validateEmail(newEmail);
   }, [newEmail]);
 
+ 
+
   const handleSave = () => {
+    console.log({validEmail});
     if (validEmail) {
       onSave(newEmail);
       handleClose();
