@@ -15,6 +15,18 @@
 	height: 100%;
 }
 
+.chat-select {
+	font-family: Alfa Slab One;
+	font-size: 40px;
+	-webkit-text-stroke: 1px black;
+	color: #FF8100;
+	text-shadow: -4px -0px 0 rgba(0, 0, 0, .20),  
+				0px -0px 0 rgba(0, 0, 0, .20),
+				-4px 0px 0 rgba(0, 0, 0, .20),
+				0px 0px 0 rgba(0, 0, 0, .20);
+				margin-top: 20px;
+}
+
 
 @media (max-width: 768px) {
 	.chat-sidebar.hidden {
