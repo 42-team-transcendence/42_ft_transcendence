@@ -312,30 +312,35 @@ export class AuthService {
     // =============================================================================
 	// REFRESH  ====================================================================
     async refresh(userId: number, rt: string, res) {
-        const user = await this.prisma.user.findUnique({
-            where : {
-                id: userId,
-            },
-        });
+        try {
+            const user = await this.prisma.user.findUnique({
+                where : {
+                    id: userId,
+                },
+            });
 
-        if (!user) throw new ForbiddenException("Credentials incorrect");
-        if (!user.hashedRt) throw new ForbiddenException("Credentials incorrect");
+            if (!user) throw new ForbiddenException("Credentials incorrect");
+            if (!user.hashedRt) throw new ForbiddenException("Credentials incorrect");
 
-        const rtMatches = await argon.verify(user.hashedRt, rt);
-        if (!rtMatches) throw new ForbiddenException("Credentials incorrect");
+            const rtMatches = await argon.verify(user.hashedRt, rt);
+            if (!rtMatches) throw new ForbiddenException("Credentials incorrect");
 
-        // Creation du accessToken et du refreshToken
-        const tokens = await this.getToken(user.id, user.email);
-        // Stockage du refreshToken dans la Database
-        await this.updateRtHash(user.id, tokens.refreshToken);
+            // Creation du accessToken et du refreshToken
+            const tokens = await this.getToken(user.id, user.email);
+            // Stockage du refreshToken dans la Database
+            await this.updateRtHash(user.id, tokens.refreshToken);
 
-        res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
-            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
-        });
+            res.cookie('refreshToken', tokens.refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax',
+                expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+            });
 
-        return res.json({accessToken : tokens.accessToken});
+            return res.json({accessToken : tokens.accessToken});
+        } catch {
+            res.redirect('http://localhost:3000')
+        }
     }
+
 }
