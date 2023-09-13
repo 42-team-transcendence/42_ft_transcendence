@@ -2,6 +2,7 @@ import PageWrapper from "../navbar/pageWrapper";
 import React, { useState, useEffect, useRef } from 'react';
 import io, {Socket} from "socket.io-client"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Miniature from "../miniature/Miniature";
 import '../../styles/Play.css'
 
 const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) => {
@@ -32,10 +33,12 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 		color: string;
 	  }
 
+	let userIds;
+
 /*---------------------------------------Get User & Create NewSocket-------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------------------------------*/
     
-const axiosPrivate = useAxiosPrivate();
+	const axiosPrivate = useAxiosPrivate();
 
     const [socket, setSocket] = useState<Socket>();
     const [currentUser, setCurrentUser] = useState<any>();
@@ -45,6 +48,8 @@ const axiosPrivate = useAxiosPrivate();
 	const [disconnect, setDisconnect] = useState<boolean>(false);
 	const [roomName, setRoomName] = useState<string>();
 	const roomNameRef = useRef<string | undefined>(roomName);
+	const [userInfo, setUserInfo] = useState<any[]>([]);
+	const [displayMin, setDisplayMin] = useState<number>();
 
 	useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => { //definition de la fonction
@@ -104,7 +109,23 @@ const axiosPrivate = useAxiosPrivate();
 		socket?.on('game',  (data: { ball: Ball, players: Paddle[] }) => {
 			const receivedBall = data.ball;
 			const receivedPlayers = data.players;
-		
+			userIds = receivedPlayers.map(player => player.Id);
+			//console.log("tableau de user ids", userIds);
+			const userInfoPromises = userIds.map(userId => getUserInfoById(userId));
+
+			Promise.all(userInfoPromises)
+				.then(userInfos => {
+					setUserInfo(userInfos);
+					if(userInfos[0].id === currentUser.id)
+						setDisplayMin(0);
+					else if(userInfos[1].id === currentUser.id)
+						setDisplayMin(1);
+					// userInfos contient les informations de tous les utilisateurs
+				})
+				.catch(error => {
+					console.error('Error fetching user info:', error);
+				});
+
 			// Appelle la fonction game en passant receivedBall et receivedPlayers comme arguments
 			setStart(true);
 			game(receivedBall, receivedPlayers);
@@ -118,6 +139,18 @@ const axiosPrivate = useAxiosPrivate();
 		};
 
 	}, [socket]);
+
+	const getUserInfoById = async (userId: number) => {
+		try {
+		  const response = await axiosPrivate.get(`/users/${userId}`);
+		  return response.data;
+		} catch (error) {
+		  console.error(`Error fetching user info for ID ${userId}:`, error);
+		  throw error;
+		}
+	  };
+	  
+	
 
 /*-------------------------------------------------------------------------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------------------------------*/
@@ -201,9 +234,22 @@ useEffect(() => {
 
 return (
     <PageWrapper>
-        <div id="gameContainer">
+        <div id="gameContainer">		
             {!start && !disconnect && <div className="message-game">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
-            {start && !over && (
+            {userInfo.map((user) => (
+              <Miniature
+                key={user.id}
+                miniatureUser={{
+                  nickname: user.nickname,
+                  id: user.id,
+                  minAvatar: {
+                    url: `http://localhost:3333/public/picture/${user.nickname}`,
+                    name: user.nickname
+                  }
+                }}
+              />
+            ))}
+			{start && !over && (
                 <>
                     <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
                     <div ref={scoreTextRef} id="scoreText">0 : 0</div>
