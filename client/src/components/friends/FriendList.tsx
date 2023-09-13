@@ -17,14 +17,14 @@ import { Box } from "@mui/material";
 // INTERFACES ==================================================================
 export interface Friend {
 	name: string;
-	icon: React.ReactNode; 
+	icon: React.ReactNode;
 }
 
 // =============================================================================
 // FUNCTION ====================================================================
 const FriendList: React.FC = () => {
 	const axiosPrivate = useAxiosPrivate();
-	const [currentUser, setCurrentUser] = useState<any>();
+	// const [currentUser, setCurrentUser] = useState<any>();
 	const [friends, setFriends] = useState<any[]>();
 
 	useEffect(() => {
@@ -34,10 +34,7 @@ const FriendList: React.FC = () => {
 					headers: { 'Content-Type': 'application/json'},
 					withCredentials: true
 			})
-			console.log(response.data);
-			console.log("friends", response.data.friend);
-
-			setCurrentUser(response.data);
+			// setCurrentUser(response.data);
 			setFriends(response.data.friend);
 		}catch(error: any){
 				console.log(error.response);
@@ -45,7 +42,7 @@ const FriendList: React.FC = () => {
 		}
 		getFriends();
   	}, []);
-	
+
   return (
     <PageWrapper>
       	<Box

@@ -13,7 +13,7 @@ export class GameService {
 	// async createGame(gameDto: GameDto) {
 	// async createGame(gameDto) {
 	// 	console.log({gameDto});
-	// 	const data = await this.prisma.game.create({ 
+	// 	const data = await this.prisma.game.create({
 	// 		data: {
 	// 			player_1_id: gameDto.winnerId,
 	// 			player_2_id: gameDto.loserId,
@@ -22,7 +22,7 @@ export class GameService {
 	// 	console.log(data)
 	// 	return data
 	// }
-	
+
 	async findAllMyGames(me) {
 		//find all the games that I played
 		const myGames = await this.prisma.game.findMany({
@@ -42,7 +42,6 @@ export class GameService {
 	}
 
 	async findGamesByUserId(userId: number) {
-		console.log({userId})
 		const user = await this.prisma.user.findUnique({
 			where: { id: userId },
 		});
@@ -58,7 +57,6 @@ export class GameService {
 			player_2: true,
 		  }
 		});
-		console.log({games});
 		return games;
 	  }
 

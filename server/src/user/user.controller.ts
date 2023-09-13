@@ -34,21 +34,18 @@ export class UserController {
     async getMe(
         @GetUser() user: any
     ) {
-        console.log({ user });
         return await this.userService.getMe(user.sub);
     }
 
 	@UseInterceptors(ExcludeSensitiveData)
 	@Get(':id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
 	getUser(@Param('id') id: string) {
-		console.log({id});
 		const userId = parseInt(id);
 		if ((isNaN(userId))) throw new ForbiddenException("incorrect id sent : not a number");
 		const user = this.userService.getUser(userId);
 		if (!user) {
 			throw new ForbiddenException("No user found with given id");
 		}
-		console.log({user});
 		return (user);
 	}
 
@@ -58,7 +55,6 @@ export class UserController {
 	async getScore(
 		@GetUser() user
 	) {
-		console.log({user});
 		const score = await this.userService.getScore(user.sub);
   		return { score: score };
 	}
@@ -68,7 +64,6 @@ export class UserController {
 	async getAuth2fa(
 		@Body() dto: any,
 	) {
-		console.log ({dto});
 		const auth2fa = await this.userService.getAuth2fa(dto.email)
 		return {auth2fa: auth2fa};
 	}
@@ -89,7 +84,7 @@ export class UserController {
 			catch (error) {
 				throw error;
 			}
-			
+
 	}
 
 	@UseInterceptors(ExcludeSensitiveData)
@@ -134,8 +129,6 @@ export class UserController {
 		@UploadedFile() file: any,
 		@GetUser() user
 	) {
-
-		console.log(`Avatar file = ${file}`);
 		await this.userService.uploadAvatar(file, user.sub);
 	}
 
@@ -146,12 +139,10 @@ export class UserController {
 		@Body() dto : {block: boolean},
 		@Param('id') id: string,
 	) {
-		console.log("blockUser controller")
 		const userId = parseInt(id);
 		if ((isNaN(userId)))
 			throw new ForbiddenException("incorrect id sent : not a number");
 
-		console.log({me}, {userId});
 		return (this.userService.updateBlockedUsers(userId, me.sub, dto.block));
 	}
 
@@ -162,12 +153,10 @@ export class UserController {
 		@Body() dto: {friend: boolean},
 		@Param('id') id: string,
 	){
-		console.log("addFriend controller")
 		const userId = parseInt(id);
 		if (isNaN(userId)) {
 			throw new ForbiddenException("Incorrect id sent: not a number");
 		  }
-		console.log({me}, {userId});
 		return (this.userService.updateAddFriend(userId, me.sub, dto.friend));
 	}
 }

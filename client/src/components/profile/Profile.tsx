@@ -63,7 +63,6 @@ function Profile() {
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
             .then(response => {
-				console.log("auth2fa === ", response.data.auth2fa);
 				setDisplay(response.data.auth2fa);
                 setUser(response.data);
             })
@@ -312,8 +311,8 @@ function Profile() {
 							<h2> Double factors </h2>
 							{!display ? (
 								<Checkbox checked={false} onChange={() =>
-									handleSetIsDoubleAuthEnabled(true) 
-								} 
+									handleSetIsDoubleAuthEnabled(true)
+								}
 								/>
 							) : (
 								<div>

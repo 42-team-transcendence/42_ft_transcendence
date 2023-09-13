@@ -33,7 +33,6 @@ export class AuthController {
         @Body() dto: AuthDto,
         @Res()/*({ passthrough: true })*/ res: Response
     ) {
-        console.log(dto);
         return (this.authService.signup(dto, res));
     }
 
@@ -51,11 +50,9 @@ export class AuthController {
             // Generate the 2FA secret and store it in the database
             const secret = speakeasy.generateSecret();
             await this.doubleAuthService.saveUserSecret(dto.email, secret.base32);
-            console.log({secret});
 
             // Generate the QR code and return the representation of the QR code in the response
             const qrCodeData = await this.doubleAuthService.generateQRCode(secret.otpauth_url);
-            console.log({qrCodeData});
             return ({ qrCodeData });
         } catch (error) {
             console.error('Error enabling 2FA:', error);
@@ -96,13 +93,16 @@ export class AuthController {
     @Get('/callback/42')
 	@UseGuards(IntraGuard)
 	async callback42(@GetUser() user, @Res() res: Response) {
-		return (this.authService.callback42(user, res))
+        try {
+            return (this.authService.callback42(user, res))
+        } catch (error) {
+            throw error;
+        }
 	}
 
   @Get('/2fa_42')
 	async callback42_2fa(@Req() req: Request, @Res() res: Response) {
         const email = req.query.email as string; // Assurez-vous de vérifier que les valeurs existent ou sont valides
-        console.log("EMAIL == " + email);
 		return (this.authService.callback42_2fa(email, res))
 	}
 
@@ -131,7 +131,6 @@ export class AuthController {
         @GetUser() user: GetUserDto,
         @Res(/*({ passthrough: true })*/) res: Response
     ) {
-        console.log({"controller": user});
         return (this.authService.logout(user.sub, res));
     }
 

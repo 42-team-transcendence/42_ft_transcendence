@@ -21,8 +21,6 @@ function Leaderboard() {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         });
-
-	  	  console.log("RESPONSE USERS == ", usersResponse.data);
         const sortedUser = usersResponse.data;
         sortedUser.sort((a: any, b: any) => b.score - a.score);
         setUsers(sortedUser);
@@ -36,7 +34,7 @@ function Leaderboard() {
 
 return (
   <PageWrapper>
-   
+
     <Box sx={{
 				display: "flex",
         flexDirection: "column",
@@ -80,7 +78,7 @@ return (
       </div>
       </div>
     </Box>
-   
+
   </PageWrapper>
 );
 }

@@ -8,7 +8,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 	// =============================================================================
 	// 2FA MODAL ===================================================================
 
-	
+
 
 
 interface QRCodeModalProps {
@@ -49,9 +49,8 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
             withCredentials: true,
           }
         );
-      
+
         if (response.status === 200) {
-          console.log('2FA state update successful');
         } else {
           console.error('2FA state update failed');
         }

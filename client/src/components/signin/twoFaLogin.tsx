@@ -44,16 +44,13 @@ const TwoFaLogin: React.FC<TwoFaLoginProps> = ({
                 withCredentials: true
             });
 
-			      console.log({response})
             if (response.data.isVerified === true) {
-                console.log('OTP is valid');
                 valid2Fa();
                 closeModal();
                 return true;
             } else {
                 setIsValid(false);
                 setCurrentOTP('');
-                console.log('Invalid OTP');
                 return false;
             }
         } catch (error) {
@@ -84,7 +81,7 @@ const TwoFaLogin: React.FC<TwoFaLoginProps> = ({
             borderRadius: '5px',
           }}
         >
-  
+
           <input type="text" value={currentOTP} onChange={handleOTPInputChange} />
           <Button variant="contained" onClick={validateOTP}>
             Send OTP

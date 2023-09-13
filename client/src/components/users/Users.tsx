@@ -31,7 +31,6 @@ function Users() {
           cancelToken: cancelTokenSource.token
         });
 
-        console.log(response.data);
         if (isMounted) {
           setUsers(response.data);
         }

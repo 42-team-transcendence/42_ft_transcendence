@@ -31,7 +31,7 @@ export default function Register() {
 	// USERS =======================================================================
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
-    
+
     const stateUser = {user, validName};
 
     const updateUser = (newValue: string) => {
@@ -57,32 +57,32 @@ export default function Register() {
         setValidEmail(newValue);
     }
     const fonctionUpdateEmail = {updateEmail, updateValideEmail};
-    
-    
+
+
     // =============================================================================
 	// PWD MATCH ===================================================================
     const [matchPwd, setMatchPwd] = useState('');
     const [validMatch, setValidMatch] = useState(false);
-    
+
     const stateMatchPwd = {matchPwd, validMatch, user};
-    
+
     const updateMatchPwd = (newValue: string) => {
         setMatchPwd(newValue);
     }
     const updateValideMatch = (newValue: boolean) => {
         setValidMatch(newValue);
     }
-    
+
     const fonctionUpdateMatchPwd = {updateMatchPwd};
-    
+
 
    	// =============================================================================
 	// PASSWORD ====================================================================
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
-    
+
     const statePwd = {user, pwd, matchPwd, validPwd};
-    
+
     const updatePwd = (newValue: string) => {
         setPwd(newValue);
     }
@@ -91,7 +91,7 @@ export default function Register() {
     }
     const fonctionUpdatePwd = {updatePwd, updateValidePwd, updateValideMatch};
 
-    
+
 	// =============================================================================
 	// =============================================================================
     const [errMsg, setErrMsg] = useState<string>('');
@@ -103,7 +103,7 @@ export default function Register() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); //on enlève le comportement par défaut du bouton pour mettre le n$otre
-        
+
         try {
             const response = await axios.post(
                 REGISTER_URL,
@@ -116,20 +116,13 @@ export default function Register() {
             const accessToken = response?.data?.accessToken;
             setAuth({email, pwd, accessToken});
 
-
-			//console.log("email = ", email)
 			const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
 				headers: { 'Content-Type': 'application/json' },
 				withCredentials: true,
 			  });
-			  
-			console.log("Response 2", response2)
+
 			// Envoyez un événement au serveur pour signaler la connexion réussie
 			socket?.emit('userLoggedIn', {userId: response2.data.id});
-			console.log('response2.data.id', response2.data.id);
-
-
-
 
             navigate(from, { replace: false});
             //TODO if needed : clear input fields avec les setStates
@@ -139,8 +132,8 @@ export default function Register() {
             } else if (err.response) {
                 //vérifier le statut de la réponse : err.response.status
                 //409...
-                setErrMsg('Registration failed');
-                console.log(err);
+                setErrMsg('Registration failed : ' + err.response.data.error + " ; " + err.response.data.message);
+                console.log({error : err.response});
             }
         }
     }
@@ -178,7 +171,7 @@ export default function Register() {
 				</Box>
                 <p>
 					Already got an account ?<br />
-					{/* //TODO Put router link here 
+					{/* //TODO Put router link here
 					//TODO placeholder link */}
 					<Link to="/login" className="line">Log in</Link>
                 </p>

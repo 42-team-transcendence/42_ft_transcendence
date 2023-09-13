@@ -21,25 +21,22 @@ export class DoubleAuthService {
   }
 
   async verify2FA(userEmail: string, code: string): Promise<boolean> {
-    console.log("verify 2fa function user.scret")
     try {
       const user = await this.prisma.user.findUnique({
         where: { email: userEmail},
       })
-      console.log("user", {user});
       const secret = user.secret
 
       if (!secret) {
         return false;
       }
-  
+
       const verified = speakeasy.totp.verify({
         secret: secret,
         encoding: 'base32',
         token: code,
         window: 1,
       });
-      console.log("verified", {verified});
       return verified;
     } catch (error) {
       console.error("error secret = ", error)
@@ -47,7 +44,6 @@ export class DoubleAuthService {
   }
 
   async saveUserSecret(userEmail: string, secret: string): Promise<void> {
-	console.log('userEmail:', userEmail);
 	try {
 	  const updatedUser = await this.prisma.user.update({
       where: { email: userEmail }, // Make sure to use the userId parameter to identify the user
@@ -55,7 +51,6 @@ export class DoubleAuthService {
         secret: secret,
       },
 	  });
-    console.log(updatedUser);
 	} catch (error) {
 	  // Handle any potential errors that may occur during the update process
 	  console.error('Error updating user secret:', error);

@@ -66,7 +66,7 @@ const Login: React.FC<LoginProps> = () => {
 
     const valid2Fa = async () => {
 
-        const response = await axios.post('/auth/signin2FA', 
+        const response = await axios.post('/auth/signin2FA',
             JSON.stringify({email, 'password': pwd}),
             {
                 headers: { 'Content-Type': 'application/json'},
@@ -75,7 +75,7 @@ const Login: React.FC<LoginProps> = () => {
         );
 
         const accessToken = response?.data?.accessToken;
-        //TODO est ce important de set l'email et le pwd dans auth ? 
+        //TODO est ce important de set l'email et le pwd dans auth ?
         setAuth({email, pwd, accessToken});
         setEmail('');
         setPwd('');
@@ -84,7 +84,7 @@ const Login: React.FC<LoginProps> = () => {
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true,
         });
-        
+
         socket?.emit('userLoggedIn', {userId: response2.data.id});
 
         navigate(from, { replace: true});
@@ -94,18 +94,16 @@ const Login: React.FC<LoginProps> = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post(LOGIN_URL, 
+            const response = await axios.post(LOGIN_URL,
                 JSON.stringify({email, 'password': pwd}),
                 {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 }
             );
-            
-            console.log("response login == ", response.data);
+
             if(response.data.auth2fa) {
                 setDisplay2fa(true);
-                console.log({"test": response?.data})
             }
 
             else if(response.data.isOnline) {
@@ -117,7 +115,7 @@ const Login: React.FC<LoginProps> = () => {
             else if (response.data.accessToken) {
 
                 const accessToken = response?.data?.accessToken;
-                //TODO est ce important de set l'email et le pwd dans auth ? 
+                //TODO est ce important de set l'email et le pwd dans auth ?
                 setAuth({email, pwd, accessToken});
                 setEmail('');
                 setPwd('');
@@ -126,7 +124,7 @@ const Login: React.FC<LoginProps> = () => {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true,
                 });
-                
+
                 socket?.emit('userLoggedIn', {userId: response2.data.id});
 
                 navigate(from, { replace: true});
@@ -145,14 +143,14 @@ const Login: React.FC<LoginProps> = () => {
         <section className="Register">
             <h1 className="title">PONG</h1>
             <form className="formLogin" onSubmit={handleSubmit}>
-				<Box 
+				<Box
 					sx={{
 						display: 'flex',
 						flexDirection: 'column',
 						alignItems: 'center',
 						'& .MuiTextField-root': { m: 1, width: '25ch' },
 					}}>
-                
+
                 {displayAlreadyConnected && <p> This user is Already connected ! <br /></p>}
                 <Email stateEmail={stateEmail} fonctionUpdateEmail={fonctionUpdateEmail} />
                 <Password statePwd={statePwd} fonctionUpdatePwd={fonctionUpdatePwd} />
@@ -167,7 +165,7 @@ const Login: React.FC<LoginProps> = () => {
                 {display2fa && <TwoFaLogin email={email} valid2Fa={valid2Fa} />}
             <p>
                 Need an Account ?<br />
-        
+
                     {/* TODO Put router link here */}
                     {/* // placeholder link */}
                     <Link to="/register" className="line">Sign Up</Link>

@@ -10,12 +10,12 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 	const gameBoardRef = useRef<HTMLCanvasElement>(null);
   	const scoreTextRef = useRef<HTMLDivElement>(null);
 
-	const gameWidth = 800; 
+	const gameWidth = 800;
 	const gameHeight = 400;
 	const paddleBorder = "black";
 	const ballBordercolor = "black";
 	const ballRadius = 12.5;
-	
+
 	interface Paddle {
 	  socketId: string | undefined,
 	  Id: number,
@@ -38,7 +38,7 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 
 /*---------------------------------------Get User & Create NewSocket-------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------------------------------*/
-    
+
 	const axiosPrivate = useAxiosPrivate();
 
     const [socket, setSocket] = useState<Socket>();
@@ -62,7 +62,6 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
                     withCredentials: true
                 })
                 setCurrentUser(response.data);
-                console.log({currentUser : response.data});
 			} catch (error:any) {
 				console.log(error.response );
 			}
@@ -83,16 +82,14 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 				query: {"Id": currentUser.id}
 			});
 		setSocket(newSocket)
-		console.log("!! current user ID !! == " + currentUser.id);
 		}
 	}, [currentUser])
 
 	useEffect(() => {
-		
+
 		function onConnect() {
-			
+
 			socket?.on('roomAssigned', (room) => {
-				console.log("ROOMNAME == " + room);
 				setRoomName(room);
 				const data = {
 					currentUser: currentUser.id,
@@ -137,8 +134,8 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 		  throw error;
 		}
 	  };
-	  
-	
+
+
 
 /*-------------------------------------------------------------------------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------------------------------*/
@@ -158,7 +155,7 @@ useEffect(() => {
 			keyPressed: event.key,
 			roomName: currentRoomName,
 		}
-		
+
 		socket?.emit("changeDirection", data);
 	};
 
@@ -176,7 +173,7 @@ useEffect(() => {
 		const gameBoard = gameBoardRef.current;
 		const ctx = gameBoard?.getContext('2d');
 		const scoreText = scoreTextRef.current;
-	
+
 		if (!gameBoard || !ctx || !scoreText ) return;
 
 		  const drawBall = () => {
@@ -190,27 +187,27 @@ useEffect(() => {
 		  };
 
 		const drawPaddles = () => {
-			
+
 			const backgroundImage = new Image();
 			backgroundImage.src = selectedBackground; // Mettez le chemin vers votre image ici
 			backgroundImage.onload = () => {
 				ctx.drawImage(backgroundImage, 0, 0, gameWidth, gameHeight);
-				
+
 				ctx.strokeStyle = paddleBorder;
-				
+
 				ctx.fillStyle = players[0].color;
 				ctx.fillRect(players[0].x, players[0].y, players[0].width, players[0].height);
 				ctx.strokeRect(players[0].x, players[0].y, players[0].width, players[0].height);
-				
+
 				ctx.fillStyle = players[1].color;
 				ctx.fillRect(players[1].x, players[1].y, players[1].width, players[1].height);
 				ctx.strokeRect(players[1].x, players[1].y, players[1].width, players[1].height);
 
 				drawBall();
 			};
-		
+
 		};
-	
+
 		const updateScore = () => {
 			const scoreText = scoreTextRef.current;
 			if (scoreText) {
@@ -231,7 +228,7 @@ useEffect(() => {
 
 return (
     <PageWrapper>
-        <div id="gameContainer">		
+        <div id="gameContainer">
             {!start && !disconnect && <div className="message-game">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
 			{start && !over && (
                 <>

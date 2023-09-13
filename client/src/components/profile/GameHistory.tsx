@@ -15,13 +15,13 @@ interface User {
 const WinTableCell = styled(TableCell)(({ theme }) => ({
 	color: "green",
 	textDecoration: "none",
-	textAlign: 'center' 
+	textAlign: 'center'
   }));
-  
+
   const LossTableCell = styled(TableCell)(({ theme }) => ({
 	color: "red",
 	textDecoration: "none",
-	textAlign: 'center' 
+	textAlign: 'center'
   }));
 
 function GameHistory() {
@@ -31,10 +31,8 @@ function GameHistory() {
 	const [currentUser, setCurrentUser] = useState<any>();
 
 	const onlineUsers = useOnlineStatus();
-	console.log({onlineUsers});
 
 	useEffect(() => { //fetch game data
-		console.log("coucou useEffect")
 		const findAllMyGames = async () =>{
 			try {
 				const response = await axiosPrivate.get('/games/findAllMyGames', {
@@ -42,7 +40,6 @@ function GameHistory() {
 						withCredentials: true
 				})
 				setGameHistory(response.data);
-				console.log({findAllMyGames:response.data}); 
 			} catch(error: any) {
 				console.log(error.response);
 			}
@@ -106,8 +103,6 @@ function GameHistory() {
 										minute: "2-digit",
 										}).format(new Date(game.createdAt))
 										: "";
-
-									console.log(`current user id = ${currentUser.id}`);
 
 									return (
 										<TableRow

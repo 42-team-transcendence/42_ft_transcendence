@@ -13,7 +13,7 @@
 // 					headers: { 'Content-Type': 'application/json' },
 // 					withCredentials: true,
 // 				});
-				
+
 // 				setAuth(prev => {
 // 					return { ...prev, accessToken: response.data.accessToken}
 // 				});
@@ -49,7 +49,7 @@ function useRefreshToken(): () => Promise<string> {
       return response.data.accessToken;
     } catch (error) {
       // Handle error here
-      console.error("Error refreshing token:", error);
+      // console.error("Error refreshing token:", error);
       throw error;
     }
   };

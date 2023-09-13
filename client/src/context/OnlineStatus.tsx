@@ -17,18 +17,6 @@ export const OnlineStatusProvider = ({ children }: {children: React.ReactNode}) 
 //   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [onlineUsers, setOnlineUsers] = useState<Map<string, Online>>(new Map());
 
-//   useEffect(() => {
-//     socket.on('onlineUsers', (userIds) => {
-//       // Met à jour la liste des utilisateurs en ligne avec la liste reçue du serveur
-//       setOnlineUsers(userIds);
-// 	  console.log('Online users updated:', userIds);
-//     });
-
-//     return () => {
-//       socket.off('onlineUsers');
-//     };
-//   }, []);
-
 useEffect(() => {
     socket?.on('onlineUsers', (userMap) => {
       // Met à jour la liste des utilisateurs en ligne avec la liste reçue du serveur

@@ -155,7 +155,6 @@ function OtherUserProfile() {
 	}
 
 	const handleBlock = async () => {
-		console.log("userBlocked", !userBlocked);
 		try {
 			if (user) {
 				const response = await axiosPrivate.post(
@@ -172,7 +171,6 @@ function OtherUserProfile() {
 	}
 
 	const handleAddFriend = async () => {
-		console.log("userBefriended", !userBefriended);
 		try {
 		  if(user) {
 			const response = await axiosPrivate.post(
