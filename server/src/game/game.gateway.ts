@@ -276,6 +276,7 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
         paddleInstance = {
             socketId: data.socketId,
             Id: data.currentUser || 0,
+            nickname: data.nickname,
             width: 25,
             height: 100,
             x: 0,
@@ -287,6 +288,7 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
         paddleInstance = {
             socketId: data.socketId,
             Id: data.currentUser || 0,
+            nickname: data.nickname,
             width: 25,
             height: 100,
             x: info.gameWidth - 25,

@@ -4,6 +4,7 @@ import io, {Socket} from "socket.io-client"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import Miniature from "../miniature/Miniature";
 import '../../styles/Play.css'
+import Miniature from "../miniature/Miniature";
 
 const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) => {
 
@@ -19,6 +20,7 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 	interface Paddle {
 	  socketId: string | undefined,
 	  Id: number,
+	  nickname: string,
 	  width: number,
 	  height: number,
 	  x: number,
@@ -47,6 +49,8 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 	const [over, setOver] = useState<boolean>(false);
 	const [disconnect, setDisconnect] = useState<boolean>(false);
 	const [roomName, setRoomName] = useState<string>();
+	const [otherPlayer, setOtherPlayer] = useState<Paddle>();
+	const [myPlayer, setmyPlayer] = useState<Paddle>();
 	const roomNameRef = useRef<string | undefined>(roomName);
 	const [userInfo, setUserInfo] = useState<any[]>([]);
 	const [displayMin, setDisplayMin] = useState<number>();
@@ -93,6 +97,7 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 				setRoomName(room);
 				const data = {
 					currentUser: currentUser.id,
+					nickname: currentUser.nickname,
 					socketId: socket?.id,
 					roomName: room,
 				}
@@ -109,22 +114,6 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 		socket?.on('game',  (data: { ball: Ball, players: Paddle[] }) => {
 			const receivedBall = data.ball;
 			const receivedPlayers = data.players;
-			userIds = receivedPlayers.map(player => player.Id);
-			//console.log("tableau de user ids", userIds);
-			const userInfoPromises = userIds.map(userId => getUserInfoById(userId));
-
-			Promise.all(userInfoPromises)
-				.then(userInfos => {
-					setUserInfo(userInfos);
-					if(userInfos[0].id === currentUser.id)
-						setDisplayMin(0);
-					else if(userInfos[1].id === currentUser.id)
-						setDisplayMin(1);
-					// userInfos contient les informations de tous les utilisateurs
-				})
-				.catch(error => {
-					console.error('Error fetching user info:', error);
-				});
 
 			// Appelle la fonction game en passant receivedBall et receivedPlayers comme arguments
 			setStart(true);
@@ -175,6 +164,15 @@ useEffect(() => {
 	};
 
 	const game = (ball: Ball, players: Paddle[]) => {
+
+		if (players[0].Id === currentUser.id) {
+			setOtherPlayer(players[1]);
+			setmyPlayer(players[0]);
+		}
+		else if (players[1].Id === currentUser.id) {
+			setOtherPlayer(players[0]);
+			setmyPlayer(players[1]);
+		}
 
 		const gameBoard = gameBoardRef.current;
 		const ctx = gameBoard?.getContext('2d');
@@ -236,20 +234,61 @@ return (
     <PageWrapper>
         <div id="gameContainer">		
             {!start && !disconnect && <div className="message-game">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
-            {userInfo.map((user) => (
-              <Miniature
-                key={user.id}
-                miniatureUser={{
-                  nickname: user.nickname,
-                  id: user.id,
-                  minAvatar: {
-                    url: `http://localhost:3333/public/picture/${user.nickname}`,
-                    name: user.nickname
-                  }
-                }}
-              />
-            ))}
-			{start && !over && (
+			  { currentUser && myPlayer?.color === "pink" ? (
+			  	 otherPlayer && myPlayer && 
+					<div>
+					<Miniature
+					key={myPlayer.Id}
+					miniatureUser={{
+					nickname: myPlayer.nickname,
+					id: myPlayer.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${myPlayer.nickname}`,
+						name: myPlayer.nickname
+						}
+					}}
+					/>
+					<Miniature
+					key={otherPlayer?.Id}
+					miniatureUser={{
+					nickname: otherPlayer?.nickname,
+					id: otherPlayer?.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${otherPlayer?.nickname}`,
+						name: otherPlayer?.nickname
+					}
+					}}
+				/> 
+				</div>
+			  ) : (
+				 otherPlayer && myPlayer && 
+					<div>
+					<Miniature
+					key={otherPlayer?.Id}
+					miniatureUser={{
+					nickname: otherPlayer?.nickname,
+					id: otherPlayer?.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${otherPlayer?.nickname}`,
+						name: otherPlayer?.nickname
+					}
+					}}
+				/> 
+					<Miniature
+					key={myPlayer.Id}
+					miniatureUser={{
+					nickname: myPlayer.nickname,
+					id: myPlayer.Id,
+					minAvatar: {
+						url: `http://localhost:3333/public/picture/${myPlayer.nickname}`,
+						name: myPlayer.nickname
+						}
+					}}
+					/>
+				</div>
+			  )
+			}
+            {start && !over && (
                 <>
                     <canvas ref={gameBoardRef} width={gameWidth} height={gameHeight}></canvas>
                     <div ref={scoreTextRef} id="scoreText">0 : 0</div>

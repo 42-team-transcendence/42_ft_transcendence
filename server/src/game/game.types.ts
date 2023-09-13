@@ -3,6 +3,7 @@ import { Server, Socket, ServerOptions} from 'socket.io';
 export interface Paddle {
 	socketId: string,
 	Id: number,
+	nickname: string,
 	width: number,
 	height: number,
 	x: number,
