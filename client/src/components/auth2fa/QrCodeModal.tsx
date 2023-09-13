@@ -19,6 +19,8 @@ interface QRCodeModalProps {
   handleOTPInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   validateOTP: () => Promise<boolean>;
   closeModal: () => void;
+  handleSetIsDoubleAuthEnabled: (bool: boolean) => void;
+  handleSetDisplay: (bool: boolean) => void;
 }
 
 const QRCodeModal: React.FC<QRCodeModalProps> = ({
@@ -29,6 +31,8 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
   handleOTPInputChange,
   validateOTP,
   closeModal,
+  handleSetIsDoubleAuthEnabled,
+  handleSetDisplay,
 }) => {
 
   const axiosPrivate = useAxiosPrivate();
@@ -61,6 +65,7 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
     validateOTP()
       .then((result) => {
         setIsValid(result);
+        handleSetDisplay(result);
         if (result) {
           save2faState(true);
             // If OTP is valid, close the modal
@@ -72,7 +77,12 @@ const QRCodeModal: React.FC<QRCodeModalProps> = ({
 
 
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal open={isOpen} onClose={(event, reason) => {
+      if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+        handleSetIsDoubleAuthEnabled(false);
+        onClose();
+      }
+    }}>
       <Box
         sx={{
           display:'flex',
