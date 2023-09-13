@@ -2,6 +2,7 @@ import PageWrapper from "../navbar/pageWrapper";
 import React, { useState, useEffect, useRef } from 'react';
 import io, {Socket} from "socket.io-client"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Miniature from "../miniature/Miniature";
 import '../../styles/Play.css'
 import Miniature from "../miniature/Miniature";
 
@@ -34,10 +35,12 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 		color: string;
 	  }
 
+	let userIds;
+
 /*---------------------------------------Get User & Create NewSocket-------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------------------------------*/
     
-const axiosPrivate = useAxiosPrivate();
+	const axiosPrivate = useAxiosPrivate();
 
     const [socket, setSocket] = useState<Socket>();
     const [currentUser, setCurrentUser] = useState<any>();
@@ -49,6 +52,8 @@ const axiosPrivate = useAxiosPrivate();
 	const [otherPlayer, setOtherPlayer] = useState<Paddle>();
 	const [myPlayer, setmyPlayer] = useState<Paddle>();
 	const roomNameRef = useRef<string | undefined>(roomName);
+	const [userInfo, setUserInfo] = useState<any[]>([]);
+	const [displayMin, setDisplayMin] = useState<number>();
 
 	useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => { //definition de la fonction
@@ -123,6 +128,18 @@ const axiosPrivate = useAxiosPrivate();
 		};
 
 	}, [socket]);
+
+	const getUserInfoById = async (userId: number) => {
+		try {
+		  const response = await axiosPrivate.get(`/users/${userId}`);
+		  return response.data;
+		} catch (error) {
+		  console.error(`Error fetching user info for ID ${userId}:`, error);
+		  throw error;
+		}
+	  };
+	  
+	
 
 /*-------------------------------------------------------------------------------------------------------------------------------*/
 /*-------------------------------------------------------------------------------------------------------------------------------*/
@@ -215,7 +232,7 @@ useEffect(() => {
 
 return (
     <PageWrapper>
-        <div id="gameContainer">
+        <div id="gameContainer">		
             {!start && !disconnect && <div className="message-game">Waiting for an opponent <span className="dot-1">.</span><span className="dot-2">.</span><span className="dot-3">.</span></div>}
 			  { currentUser && myPlayer?.color === "pink" ? (
 			  	 otherPlayer && myPlayer && 

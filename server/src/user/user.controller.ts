@@ -10,6 +10,7 @@ import { MulterConfig } from './middlewares';
 import { UserDto } from "./dto/user.dto";
 import { GetUserDto } from "src/auth/dto";
 import { ExcludeSensitiveData } from "src/interceptors/excludeSensitiveDataInterceptor";
+import { error } from "console";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('users') // définit la route "/users" de l'API
@@ -81,8 +82,14 @@ export class UserController {
 		@Body() dto: UserDto,
 		@GetUser() creator: GetUserDto
 		) {
-			const  email  = dto.email;
-			await this.userService.updateEmail(email, creator.sub);
+			const email  = dto.email;
+			try {
+				await this.userService.updateEmail(email, creator.sub);
+			}
+			catch (error) {
+				throw error;
+			}
+			
 	}
 
 	@UseInterceptors(ExcludeSensitiveData)

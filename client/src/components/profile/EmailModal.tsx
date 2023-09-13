@@ -28,7 +28,10 @@ const EmailModal: React.FC<EmailModalProps> = ({ open, onClose, onSave }) => {
     validateEmail(newEmail);
   }, [newEmail]);
 
+ 
+
   const handleSave = () => {
+    console.log({validEmail});
     if (validEmail) {
       onSave(newEmail);
       handleClose();

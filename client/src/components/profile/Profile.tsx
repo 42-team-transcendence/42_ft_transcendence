@@ -111,6 +111,7 @@ function Profile() {
 					validateStatus: status => status >= 200 && status < 300,
 				}
 			);
+			console.log({response})
 			if (response.status === 200) {
 				// Update the user's email in the user state
 				setUser((prevUser) => ({ ...prevUser, email: newEmail }));
