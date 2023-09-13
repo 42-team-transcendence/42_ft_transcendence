@@ -35,7 +35,7 @@ const prisma = new PrismaClient();
 	},
   )
   export default class UserGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-	@WebSocketServer() 
+	@WebSocketServer()
   	server: Server;
 
 	// private onlineUsers: Set<string> = new Set();
@@ -47,7 +47,7 @@ const prisma = new PrismaClient();
 	afterInit(server: Server) {
 		console.log('!!!!!!!! -User websocket initialized- !!!!!!!');
 	}
-  
+
 	handleConnection(client: Socket) {
 
 		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
@@ -57,6 +57,7 @@ const prisma = new PrismaClient();
 				existingUserData.userId = socketIdInMap;
 				this.onlineUsers.delete(socketIdInMap);
 				this.onlineUsers.set(client.id, existingUserData);
+				console.log("handleConnection: ", {existingUserData}, {client});
 				this.updateIsOnline(true, parseInt(existingUserData.userId));
 				break;
 			}
@@ -71,6 +72,7 @@ const prisma = new PrismaClient();
 		if (existingUserData && existingUserData.isOnline === true) {
 			existingUserData.isOnline = false;
 			this.onlineUsers.set(existingUserData.userId, existingUserData);
+			console.log("handleDisconnect: ", {existingUserData}, {client});
 			this.updateIsOnline(true, parseInt(existingUserData.userId));
 		}
 		this.updateOnlineUsers();
@@ -81,17 +83,24 @@ const prisma = new PrismaClient();
 /**********************************************************************************************************************************************/
 
 	async updateIsOnline(online: boolean, userId: number) {
-
-		await prisma.user.update({
-			where: { id: userId },
-			data: { isOnline: online },
-		});
+		if (userId) {
+			try {
+				await prisma.user.update({
+					where: { id: userId },
+					data: { isOnline: online },
+				});
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
+		}
 	}
 
 	@SubscribeMessage('userLoggedIn')
   	handleUserLoggedIn(client: Socket, data: { userId: string }) {
 
 			this.onlineUsers.set(client.id, {userId: data.userId, isOnline: true});
+			console.log("userLoggedIn: ", {data}, {client});
 			this.updateIsOnline(true, parseInt(data.userId));
 			this.updateOnlineUsers();
 	}
@@ -104,6 +113,7 @@ const prisma = new PrismaClient();
 				break;
 			}
 		}
+		console.log("userLogout: ", {data}, {client});
 		this.updateIsOnline(false, parseInt(data.userId));
 		this.onlineUsers.delete(client.id);
 		this.updateOnlineUsers();

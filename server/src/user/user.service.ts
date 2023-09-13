@@ -12,7 +12,7 @@ export class UserService {
 	constructor(
         private prisma: PrismaService,
     ) {}
-	
+
 	// =============================================================================
 	// GETTERS =====================================================================
 	async getUsers() {
@@ -31,7 +31,6 @@ export class UserService {
 		}
 
 		});
-		console.log('---------ME---------');
 		if (!user) {
             throw new Error('User not found');
         }
@@ -56,7 +55,6 @@ export class UserService {
 		  where: { id: userId },
 		  select: { score: true },
 		});
-		console.log('---------GET SCORE---------');
 		return user?.score ?? 0;
 	}
 
@@ -67,7 +65,7 @@ export class UserService {
 		});
 		return user?.auth2fa;
 	}
-	
+
 
 	// =============================================================================
 	// UPDATES =====================================================================
@@ -78,8 +76,6 @@ export class UserService {
 				where: { id: userId },
 				data: { hash : hash },
 			});
-	
-			console.log(`Pwd updated successfully for user with ID: ${userId}`);
 		} catch (error) {
 		  	console.error('Error updating pwd:', error);
 		}
@@ -104,15 +100,13 @@ export class UserService {
 			throw error;
 	  	}
 	}
-	
+
 	async updateEmail(email: string, userId: number) {
 		try {
 			await this.prisma.user.update({
 				where: { id: userId },
 				data: { email : email },
 		  });
-	
-			console.log(`Email updated successfully for user with ID: ${userId}`);
 		} catch (error) {
 			if (
 				error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -140,21 +134,17 @@ export class UserService {
 				where: {id: userId},
 				data: { auth2fa: auth2fa }
 			});
-			console.log(`2FA updated successfully for user with ID: ${userId}`);
 		} catch (error) {
 		  	console.error('Error updating 2FA:', error);
 		}
 	}
-	  
+
 	async uploadAvatar(file: any,  userId: number) {
 		try {
 			await this.prisma.user.update({
 				where: {id: userId},
 				data: { avatar: file.path }
 			});
-			console.log("avatar url = ", file.path);
-			console.log(`Avatar updated successfully for user with ID: ${userId}`);
-			
 		} catch (error) {
 		  	console.error('Error updating Avatar:', error);
 		}
@@ -181,7 +171,6 @@ export class UserService {
 					}
 				},
 		  	});
-			console.log({updateBlockedUsers});
 			return updateBlockedUsers;
 		} catch (error) {
 		  	console.error(error);
@@ -202,7 +191,6 @@ export class UserService {
 					}
 				},
 		  	});
-			console.log({updateAddFriend});
 			return updateAddFriend;
 		} catch (error) {
 		  	console.error(error);

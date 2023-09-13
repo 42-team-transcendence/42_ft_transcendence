@@ -4,9 +4,8 @@ import useAuth from "../hooks/useAuth";
 const RequireAuth: React.FC = () => {
     const { auth } = useAuth();
     const location = useLocation();
-    
-    // console.log("EMAIL == " + auth.email);
-    console.log("TOKENS == " + auth.accessToken);
+
+    console.log("RequireAuth: ", auth);
 
     return (
         auth?.accessToken

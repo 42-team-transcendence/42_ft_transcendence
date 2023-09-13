@@ -19,16 +19,11 @@ const PersistLogin: React.FC = () => {
             }
         }
 
-        console.log({auth});
-        //Si il n'y a pas d'access token dans auth (par exemple si on vient de refresh) 
+        console.log("PersistLogin :", auth);
+        //Si il n'y a pas d'access token dans auth (par exemple si on vient de refresh)
         // ==> on redemande un accessToken
         !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);
     }, [])
-
-    // useEffect(() => {
-    //     console.log("is loading: " + isLoading)
-    //     console.log('access token ' + JSON.stringify(auth?.accessToken) )
-    // }, [isLoading])
 
     return (
         <>
@@ -36,7 +31,7 @@ const PersistLogin: React.FC = () => {
                 ? <p>Loading...</p>
                 : <Outlet />
             }
-        
+
         </>
     )
 }

@@ -104,7 +104,6 @@ export default function ChatChannels() {
     }, [])
 
 	const handleRerenderParent = () => {
-		console.log("rerender parent youhouuuuuuuuu")
 		setRerender(!rerender)
 	}
 

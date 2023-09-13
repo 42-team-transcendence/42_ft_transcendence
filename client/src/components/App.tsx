@@ -33,13 +33,12 @@ function App() {
           <Route path="callback42" element={<Callback42 />} />
 
           {/* Routes protégées avec JWT */}
-          <Route element={<PersistLogin />}>
-            <Route element= {<RequireAuth />}>
+            <Route element={<PersistLogin />}>
+          <Route element= {<RequireAuth />}>
               <Route path="/" element={<Homepage />} />
-			  <Route path="play" element={<Background />} />
+			        <Route path="play" element={<Background />} />
               <Route path="rules" element={<Rules />}/>
               <Route path="leaderboard" element={<Leaderboard />} />
-              <Route path="rules" element={<Rules />} />
               <Route path="friendlist" element={<FriendList />} />
               <Route path="chat" element={<ChatChannels />} />
               <Route path="createChannel" element={<ChannelCreation />} />
