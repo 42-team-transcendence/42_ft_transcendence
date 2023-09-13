@@ -49,6 +49,7 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 	const [roomName, setRoomName] = useState<string>();
 	const roomNameRef = useRef<string | undefined>(roomName);
 	const [userInfo, setUserInfo] = useState<any[]>([]);
+	const [displayMin, setDisplayMin] = useState<number>();
 
 	useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => { //definition de la fonction
@@ -115,6 +116,10 @@ const Play: React.FC<{ selectedBackground: string }> = ({ selectedBackground }) 
 			Promise.all(userInfoPromises)
 				.then(userInfos => {
 					setUserInfo(userInfos);
+					if(userInfos[0].id === currentUser.id)
+						setDisplayMin(1);
+					else if(userInfos[1].id === currentUser.id)
+						setDisplayMin(2);
 					// userInfos contient les informations de tous les utilisateurs
 				})
 				.catch(error => {
