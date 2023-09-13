@@ -46,6 +46,7 @@ function Profile() {
 	const [user, setUser] = useState<User>({id:0, email: '', nickname: '', auth2fa: false, avatar: '', score: 0, rank: 0, });
 	const [isDoubleAuthEnabled, setIsDoubleAuthEnabled] = useState(user?.auth2fa || false);
 	const [isUserOnline, setIsUserOnline] = useState<boolean>(false)
+	const [display, setDisplay] = useState<boolean | undefined>(undefined);
 
 	useEffect(()=>{
 		for (const client of onlineUsers.values()) {
@@ -62,6 +63,8 @@ function Profile() {
         // Make an API request to fetch user details
         axiosPrivate.get('/users/me')
             .then(response => {
+				console.log("auth2fa === ", response.data.auth2fa);
+				setDisplay(response.data.auth2fa);
                 setUser(response.data);
             })
             .catch(error => {
@@ -69,16 +72,6 @@ function Profile() {
             });
 
     }, []);
-
-	const updateUser = async () => {
-		axiosPrivate.get('/')
-		.then(response => {
-			setUser(response.data);
-		})
-		.catch(error => {
-			console.error('Error fetching user details:', error);
-		});
-	}
 
 	const disabled2fa = async () => {
         const response = await axiosPrivate.post(
@@ -247,6 +240,13 @@ function Profile() {
 	// =============================================================================
 	// RETURN ======================================================================
 
+	const handleSetIsDoubleAuthEnabled = (bool: boolean) => {
+		setIsDoubleAuthEnabled(bool);
+	}
+	const handleSetDisplay = (bool: boolean) => {
+		setDisplay(bool);
+	}
+
   	return (
 		<PageWrapper>
 			<div className="main-container">
@@ -309,20 +309,20 @@ function Profile() {
 					<div className="element-profile">
 						<div className="a-modifier">
 							<h2> Double factors </h2>
-							{!user.auth2fa ? (
-								<Checkbox checked={user.auth2fa} onChange={() =>
-									setIsDoubleAuthEnabled(!isDoubleAuthEnabled) 
+							{!display ? (
+								<Checkbox checked={false} onChange={() =>
+									handleSetIsDoubleAuthEnabled(true) 
 								} 
 								/>
 							) : (
 								<div>
 									<button onClick={() => {disabled2fa()
-													setIsDoubleAuthEnabled(false)
-													updateUser() }}
+													handleSetIsDoubleAuthEnabled(false)
+													handleSetDisplay(false)}}
 													>Disable 2FA</button>
 								</div>
 							)}
-							{isDoubleAuthEnabled && <DoubleAuth/> }
+							{isDoubleAuthEnabled && <DoubleAuth handleSetIsDoubleAuthEnabled={handleSetIsDoubleAuthEnabled} handleSetDisplay={handleSetDisplay} /> }
 						</div>
 					</div>
 				</div>

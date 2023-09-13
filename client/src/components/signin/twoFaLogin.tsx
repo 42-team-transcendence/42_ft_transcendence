@@ -63,7 +63,11 @@ const TwoFaLogin: React.FC<TwoFaLoginProps> = ({
     };
 
     return (
-        <Modal open={isModalOpen} onClose={closeModal}>
+        <Modal open={isModalOpen} onClose={(event, reason) => {
+          if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
+            closeModal();
+          }}
+        }>
         <Box
           sx={{
             display:'flex',

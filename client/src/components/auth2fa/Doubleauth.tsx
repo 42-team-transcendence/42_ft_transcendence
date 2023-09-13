@@ -3,7 +3,15 @@ import QRCodeModal from './QrCodeModal';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import AuthContext from '../../context/AuthProvider';
 
-const DoubleAuth = () => {
+interface DoubleAuthProps {
+    handleSetIsDoubleAuthEnabled: (bool: boolean) => void;
+    handleSetDisplay: (bool: boolean) => void;
+  }
+
+const DoubleAuth: React.FC<DoubleAuthProps> = ({
+    handleSetIsDoubleAuthEnabled,
+    handleSetDisplay,
+  })=> {
     const { auth } = useContext(AuthContext);
     const [qrCodeData, setQrCodeData] = useState('');
     const axiosPrivate = useAxiosPrivate();
@@ -84,6 +92,8 @@ const DoubleAuth = () => {
                 handleOTPInputChange={handleOTPInputChange}
                 validateOTP={validateOTP}
                 closeModal={closeModal}
+                handleSetIsDoubleAuthEnabled={handleSetIsDoubleAuthEnabled}
+                handleSetDisplay={handleSetDisplay}
             />
             {/* <input type="text" value={currentOTP} onChange={handleOTPInputChange} />
             <button onClick={validateOTP}>Valider OTP</button> */}
