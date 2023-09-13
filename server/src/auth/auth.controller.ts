@@ -144,7 +144,6 @@ export class AuthController {
         @GetUser() user: GetUserDto,
         @Res(/*({ passthrough: true })*/) res: Response
     ) {
-        console.log({"controller_user" : user});
         return (this.authService.refresh(user.sub, user.refreshToken, res));
     }
 

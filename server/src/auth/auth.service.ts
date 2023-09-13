@@ -70,12 +70,10 @@ export class AuthService {
 
     async getUserByNick(userNick: string){
 		try{
-            console.log("ICI");
 			const user = await this.prisma.user.findUnique({
 				where: {nickname: userNick},
                 select: {id: true}
 			})
-			console.log("user by nick is: ", {user});
 			return (user);
 		} catch(error){
 			console.error(error)
@@ -202,7 +200,7 @@ export class AuthService {
         where: { id: new_user.id },
         data: { avatar:  user.profile._json.image.link},
     });
-    
+
     if (!new_user.auth2fa) {
         // Creation du accessToken et du refreshToken
         const tokens = await this.getToken(new_user.id, user.profile.email);
@@ -244,7 +242,7 @@ export class AuthService {
         return res.json({accessToken : tokens.accessToken});
         // res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + user42.id);
     }
-    
+
 
     // =============================================================================
 	// JWT & REFRESH TOKEN =========================================================
@@ -260,7 +258,7 @@ export class AuthService {
 
         const secret = this.config.get('JWT_SECRET');
         const token = await this.jwt.signAsync(payload, {
-            expiresIn: '30s',
+            expiresIn: '300m',
             secret: secret //après 15min, le user devra à nouveau se connecter
         })
 
