@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ForbiddenException, HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthDto, SignInAuthDto } from "./dto";
 import * as argon from 'argon2';
@@ -171,53 +171,58 @@ export class AuthService {
     }
 
     async callback42(user, res) {
-    if (user == undefined)
-        throw (new UnauthorizedException('profile is undefined'));
-    console.log(user.profile.id);
-    const user42 = await this.prisma.user.findFirst({
-        where: {
-            id: parseInt(user.profile.id),
-        },
-    });
-    console.log(user42)
-    if (!user42) {
-        const new_hash = crypto.randomBytes(50).toString('hex');
-        await this.prisma.user.create({
-            data: {
+        if (user == undefined)
+            throw (new UnauthorizedException('profile is undefined'));
+        console.log(user.profile.id);
+        const user42 = await this.prisma.user.findFirst({
+            where: {
                 id: parseInt(user.profile.id),
-                nickname: user.profile.name,
-                email: user.profile.email,
-                hash: new_hash,
+            },
+        });
+        console.log(user42)
+        if (!user42) {
+            const new_hash = crypto.randomBytes(50).toString('hex');
+            try {
+                await this.prisma.user.create({
+                    data: {
+                        id: parseInt(user.profile.id),
+                        nickname: user.profile.name,
+                        email: user.profile.email,
+                        hash: new_hash,
+                    }
+                });
+            } catch (error) {
+                // throw new UnauthorizedException('credentials already taken', { cause: new Error(), description: 'credentials already taken' })
+                res.redirect('http://localhost:3000')
             }
+        }
+        const new_user = await this.prisma.user.findFirst({
+            where: {
+                id: parseInt(user.profile.id),
+            },
         });
-    }
-    const new_user = await this.prisma.user.findFirst({
-        where: {
-            id: parseInt(user.profile.id),
-        },
-    });
-    await this.prisma.user.update({
-        where: { id: new_user.id },
-        data: { avatar:  user.profile._json.image.link},
-    });
-
-    if (!new_user.auth2fa) {
-        // Creation du accessToken et du refreshToken
-        const tokens = await this.getToken(new_user.id, user.profile.email);
-        // Stockage du refreshToken dans la DB
-        await this.updateRtHash(new_user.id, tokens.refreshToken);
-
-        res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'lax',
-            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+        await this.prisma.user.update({
+            where: { id: new_user.id },
+            data: { avatar:  user.profile._json.image.link},
         });
-        res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + new_user.id + '&isOnline=' + new_user.isOnline);
-    }
-    else {
-        res.redirect('http://localhost:3000/callback42?email=' + user42.email + '&id=' + user42.id + '&isOnline=' + new_user.isOnline);
-    }
+
+        if (!new_user.auth2fa) {
+            // Creation du accessToken et du refreshToken
+            const tokens = await this.getToken(new_user.id, user.profile.email);
+            // Stockage du refreshToken dans la DB
+            await this.updateRtHash(new_user.id, tokens.refreshToken);
+
+            res.cookie('refreshToken', tokens.refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'lax',
+                expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+            });
+            res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + new_user.id + '&isOnline=' + new_user.isOnline);
+        }
+        else {
+            res.redirect('http://localhost:3000/callback42?email=' + user42.email + '&id=' + user42.id + '&isOnline=' + new_user.isOnline);
+        }
     }
 
     async callback42_2fa(email: string, res) {
