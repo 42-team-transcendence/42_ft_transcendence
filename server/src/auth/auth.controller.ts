@@ -96,7 +96,11 @@ export class AuthController {
     @Get('/callback/42')
 	@UseGuards(IntraGuard)
 	async callback42(@GetUser() user, @Res() res: Response) {
-		return (this.authService.callback42(user, res))
+        try {
+            return (this.authService.callback42(user, res))
+        } catch (error) {
+            throw error;
+        }
 	}
 
   @Get('/2fa_42')

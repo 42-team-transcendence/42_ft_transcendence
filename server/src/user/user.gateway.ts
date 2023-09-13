@@ -57,7 +57,7 @@ const prisma = new PrismaClient();
 				existingUserData.userId = socketIdInMap;
 				this.onlineUsers.delete(socketIdInMap);
 				this.onlineUsers.set(client.id, existingUserData);
-				console.log("handleConnection: ", {existingUserData}, {client});
+				console.log("handleConnection: ", {existingUserData}, client.id);
 				this.updateIsOnline(true, parseInt(existingUserData.userId));
 				break;
 			}
@@ -72,7 +72,7 @@ const prisma = new PrismaClient();
 		if (existingUserData && existingUserData.isOnline === true) {
 			existingUserData.isOnline = false;
 			this.onlineUsers.set(existingUserData.userId, existingUserData);
-			console.log("handleDisconnect: ", {existingUserData}, {client});
+			console.log("handleDisconnect: ", {existingUserData}, client.id);
 			this.updateIsOnline(true, parseInt(existingUserData.userId));
 		}
 		this.updateOnlineUsers();
@@ -100,7 +100,7 @@ const prisma = new PrismaClient();
   	handleUserLoggedIn(client: Socket, data: { userId: string }) {
 
 			this.onlineUsers.set(client.id, {userId: data.userId, isOnline: true});
-			console.log("userLoggedIn: ", {data}, {client});
+			console.log("userLoggedIn: ", {data}, client.id);
 			this.updateIsOnline(true, parseInt(data.userId));
 			this.updateOnlineUsers();
 	}
@@ -113,7 +113,7 @@ const prisma = new PrismaClient();
 				break;
 			}
 		}
-		console.log("userLogout: ", {data}, {client});
+		console.log("userLogout: ", {data}, client.id);
 		this.updateIsOnline(false, parseInt(data.userId));
 		this.onlineUsers.delete(client.id);
 		this.updateOnlineUsers();

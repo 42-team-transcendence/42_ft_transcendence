@@ -24,6 +24,7 @@ const excludeHash = (data: any) => {
     }
     delete data.hash;
     delete data.hashedRt;
+    delete data.secret;
   } else if (isArray(data)) {
     data = data.map((item) => excludeHash(item)); // Recursively traverse the array
   }
