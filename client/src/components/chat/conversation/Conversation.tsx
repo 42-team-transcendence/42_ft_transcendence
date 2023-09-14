@@ -96,8 +96,12 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
 
     //Réception et stockage des messages par le client
     const messageListener = (message:Message) => {
-        setMessages([...messages, message]);
-        rerenderParent();
+        try {
+          setMessages([...messages, message]);
+          rerenderParent();
+        } catch (e) {
+          console.log(e);
+        }
     }
     useEffect(() => {
         chatSocket?.on("message", messageListener); //if we have a socket, when we receive a message, adds function messageListener as listener

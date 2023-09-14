@@ -125,7 +125,7 @@ export default function ChannelParamsParticipants(
 			try {
 				//if user leaves, also need to strip of admins and mutes
 				let erase = eraseData(currentUser.id);
-                const response = await axiosPrivate.post(`channels/update/${chatId}`,
+                const response = await axiosPrivate.post(`channels/leave/${chatId}`,
                     JSON.stringify({
 						oldParticipant: currentUser.id,
 						oldAdmin: erase.admin,

@@ -67,6 +67,26 @@ export class ChannelController {
 	}
 
 	@UseInterceptors(ExcludeSensitiveData)
+	@Post('leave/:id')
+	async leaveChannel(
+		@GetUser() user: GetUserDto,
+		@Param('id', ParseIntPipe) channelId: number,
+		@Body() payload: UpdateChannelDto
+    ) {
+		try {
+			//check that currentUser is admin
+			// const isAdmin = await this.channelService.checkIsAdmin(channelId, user.sub)
+			// if (!isAdmin)
+			// 	throw new ForbiddenException('User is not admin of channel',);
+
+			return (this.channelService.updateChannelInfos(channelId, user.sub, payload));
+		} catch (error) {
+			console.log(error);
+			throw error;
+		}
+	}
+
+	@UseInterceptors(ExcludeSensitiveData)
 	@Post('updateMutes/:id')
 	async updateChannelMutedUsers(
 		@GetUser() user: GetUserDto,
