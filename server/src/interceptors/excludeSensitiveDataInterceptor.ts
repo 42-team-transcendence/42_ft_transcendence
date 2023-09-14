@@ -1,5 +1,6 @@
 
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { ServerResponse } from 'http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -37,7 +38,12 @@ export class ExcludeSensitiveData implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((data) => {
-        return excludeHash(data);
+        if (data instanceof ServerResponse) {
+          return data;
+        } else {
+          console.log({data})
+          return excludeHash(data);
+        }
       })
     );
   }
