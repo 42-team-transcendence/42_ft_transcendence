@@ -125,7 +125,7 @@ export default class GameGateway implements OnGatewayInit, OnGatewayConnection, 
       gameHeight: 400,
       ballRadius: 12.5,
       paddleSpeed: 50,
-      ballSpeed: 3,
+      ballSpeed: 5,
       ball: {
         X: 0,
         Y: 0,
@@ -374,7 +374,7 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
         if (gameInfo.ball.Y > gameInfo.players[0].y && gameInfo.ball.Y < gameInfo.players[0].y + gameInfo.players[0].height) {
           gameInfo.ball.X = gameInfo.players[0].x + gameInfo.players[0].width + gameInfo.ballRadius; //if ball gets stuck
           gameInfo.ballXDirection *= -1;
-          gameInfo.ballSpeed += 0.5;
+          gameInfo.ballSpeed += 1;
           gameInfo.ball.color = "pink";
         }
     }
@@ -383,7 +383,7 @@ interval(roomName: string, gameInfo: GameInfo, client: Socket) {
 		if (gameInfo.ball.Y > gameInfo.players[1].y && gameInfo.ball.Y < gameInfo.players[1].y + gameInfo.players[1].height) {
       gameInfo.ball.X = gameInfo.players[1].x - gameInfo.ballRadius; //if ball gets stuck
       gameInfo.ballXDirection *= -1;
-      gameInfo.ballSpeed += 0.5;
+      gameInfo.ballSpeed += 1;
       gameInfo.ball.color = "orange";
 		}
 	}
