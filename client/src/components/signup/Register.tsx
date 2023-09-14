@@ -113,7 +113,8 @@ export default function Register() {
                 }
                 );
             const accessToken = response?.data?.accessToken;
-            setAuth({email, pwd, accessToken});
+            const userId = response?.data?.userId;
+            setAuth({email, pwd, accessToken, userId});
 
 			const response2 = await axiosPrivate.get(`/auth/userByMail/${email}`, {
 				headers: { 'Content-Type': 'application/json' },
@@ -121,7 +122,7 @@ export default function Register() {
 			  });
 
 			// Envoyez un événement au serveur pour signaler la connexion réussie
-			socket?.emit('userLoggedIn', {userId: response2.data.id});
+			socket?.emit('userLoggedIn', {userId: response2.data.id, userEmail: email});
 
             navigate(from, { replace: false});
             //TODO if needed : clear input fields avec les setStates

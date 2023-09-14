@@ -31,10 +31,10 @@ import { useOnlineStatus } from "../../../context/OnlineStatus";
 function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser:any, rerenderParent:any}) {
     const [chatSocket, setChatSocket] = useState<Socket>();
     const [messages, setMessages] = useState<Message[]>([]);
-    const [recipientOnline, setRecipientOnline] = useState<boolean>(false);
+    // const [recipientOnline, setRecipientOnline] = useState<boolean>(false);
 
     const navigate = useNavigate();
-    const onlineUsers = useOnlineStatus();
+    // const onlineUsers = useOnlineStatus();
 
     let isChat = true;
     if (chat.channelInfo) //Check si c'est un chat ou un channel
@@ -128,16 +128,18 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
     }
 
 
-    useEffect(() => {
-      if (isChat) {
-        for (const u of onlineUsers.values()) {
-          if (u.userId === recipients[0].id) {
-            u.isOnline ? setRecipientOnline(true) : setRecipientOnline(false)
-            break;
-          }
-        }
-      }
-    }, [isChat, onlineUsers])
+    // useEffect(() => {
+    //   if (isChat) {
+    //     for (const u of onlineUsers.values()) {
+    //       if (u.userId === recipients[0].id) {
+    //         if(u.isOnline) {
+    //           setRecipientOnline(true)
+    //         }
+    //         break;
+    //       }
+    //     }
+    //   }
+    // }, [isChat, onlineUsers])
 
 
 
@@ -176,7 +178,8 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
                 isChat ? ( //Si la conversation est un chat
                   recipients.length > 0 &&
                   <>
-                    <Button disabled={!recipientOnline} onClick={handleInviteToPlay}>
+                    <Button onClick={handleInviteToPlay}>
+                    {/* <Button disabled={!recipientOnline} onClick={handleInviteToPlay}> */}
                       {"Invite to play"}
                     </Button>
                     <Miniature
@@ -220,7 +223,8 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
                       !senderBlocked && <MessageLeft
                         key={index}
                         message={
-                          msg.content === "Please play with me!" && recipientOnline ?
+                          msg.content === "Please play with me!" ?
+                          // msg.content === "Please play with me!" && recipientOnline ?
                           <Button onClick={goToPlayPage}>{msg.content}</Button>
                           :msg.content
                         }

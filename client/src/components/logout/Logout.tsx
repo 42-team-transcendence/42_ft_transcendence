@@ -30,7 +30,7 @@ const Logout: React.FC = () => {
 		try{
 			handleOnline();
 			await axiosPrivate.post('/auth/logout');
-			setAuth({ accessToken: '', email: '', pwd: ''});// supprime l'accessToken du state auth.
+			setAuth({ accessToken: '', email: '', pwd: '', userId: -1});// supprime l'accessToken du state auth.
 			navigate(from_signup, { replace: true});//redirige vers la page register en remplacant l'historique.
 		}catch (error){
 			console.error(error)

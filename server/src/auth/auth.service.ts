@@ -44,7 +44,7 @@ export class AuthService {
                 sameSite: 'lax',
                 expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
             });
-            return res.json({accessToken: tokens.accessToken});
+            return res.json({accessToken: tokens.accessToken, userId: user.id});
 
         } catch (error) {
             if (error.code === 'P2002') {
@@ -116,7 +116,7 @@ export class AuthService {
                 sameSite: 'lax',
                 expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
             });
-            return res.json({accessToken : tokens.accessToken});
+            return res.json({accessToken : tokens.accessToken, userId: user.id});
         }
         else {
             return res.json({auth2fa : user.auth2fa});
@@ -152,7 +152,7 @@ export class AuthService {
             sameSite: 'lax',
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
         });
-        return res.json({accessToken : tokens.accessToken});
+        return res.json({accessToken : tokens.accessToken, userId: user.id});
     }
 
 
@@ -213,10 +213,10 @@ export class AuthService {
                 sameSite: 'lax',
                 expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
             });
-            res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + new_user.id + '&isOnline=' + new_user.isOnline);
+            res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&email=' + new_user.email + '&id=' + new_user.id + '&isOnline=' + new_user.isOnline);
         }
         else {
-            res.redirect('http://localhost:3000/callback42?email=' + user42.email + '&id=' + user42.id + '&isOnline=' + new_user.isOnline);
+            res.redirect('http://localhost:3000/callback42?email=' + new_user.email + '&id=' + new_user.id + '&isOnline=' + new_user.isOnline);
         }
     }
 

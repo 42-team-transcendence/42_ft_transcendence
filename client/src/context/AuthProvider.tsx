@@ -5,6 +5,7 @@ interface Auth {
   email:  string;
   pwd:  string;
   accessToken: string;
+  userId: number;
 }
 
 interface AuthContextProps {

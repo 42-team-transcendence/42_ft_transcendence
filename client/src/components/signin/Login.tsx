@@ -75,8 +75,9 @@ const Login: React.FC<LoginProps> = () => {
         );
 
         const accessToken = response?.data?.accessToken;
+        const userId = response?.data?.userId;
         //TODO est ce important de set l'email et le pwd dans auth ?
-        setAuth({email, pwd, accessToken});
+        setAuth({email, pwd, accessToken, userId});
         setEmail('');
         setPwd('');
 
@@ -85,7 +86,7 @@ const Login: React.FC<LoginProps> = () => {
             withCredentials: true,
         });
 
-        socket?.emit('userLoggedIn', {userId: response2.data.id});
+        socket?.emit('userLoggedIn', {userId: response2.data.id, userEmail: email});
 
         navigate(from, { replace: true});
     }
@@ -115,8 +116,9 @@ const Login: React.FC<LoginProps> = () => {
             else if (response.data.accessToken) {
 
                 const accessToken = response?.data?.accessToken;
+                const userId = response?.data?.userId;
                 //TODO est ce important de set l'email et le pwd dans auth ?
-                setAuth({email, pwd, accessToken});
+                setAuth({email, pwd, accessToken, userId});
                 setEmail('');
                 setPwd('');
 
@@ -125,7 +127,7 @@ const Login: React.FC<LoginProps> = () => {
                     withCredentials: true,
                 });
 
-                socket?.emit('userLoggedIn', {userId: response2.data.id});
+                socket?.emit('userLoggedIn', {userId: response2.data.id, userEmail: email});
 
                 navigate(from, { replace: true});
             }

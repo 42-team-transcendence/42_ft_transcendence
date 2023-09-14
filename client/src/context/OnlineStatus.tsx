@@ -20,7 +20,7 @@ useEffect(() => {
     socket?.on('onlineUsers', (userMap) => {
       // Met à jour la liste des utilisateurs en ligne avec la liste reçue du serveur
       setOnlineUsers(new Map(userMap));
-	  // console.log('Online users updated:', userMap);
+	    console.log('Online users updated:', userMap);
     });
 
     return () => {

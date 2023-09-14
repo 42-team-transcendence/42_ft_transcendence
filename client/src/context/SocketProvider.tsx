@@ -1,5 +1,7 @@
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
+import { axiosPrivate } from '../api/axios';
+import useAuth from '../hooks/useAuth';
 
 // Définissez le type pour votre contexte
 interface SocketContextType {
@@ -10,12 +12,13 @@ interface SocketContextType {
 const SocketContext = createContext<SocketContextType>({ socket: null });
 
 // Fonction pour créer une instance de socket
-function createSocket(): Socket {
+function createSocket(userId: number): Socket {
   const socket = io("http://localhost:3333", {
     path: "/status",
     withCredentials: true,
     autoConnect: true,
     auth: { token: "TODO : gérer les tokens d'authentification ici" },
+    query: {"userId": userId},
   });
 
   return socket;
@@ -27,7 +30,10 @@ interface ProvideSocketProps {
 }
 
 export function ProvideSocket({ children }: ProvideSocketProps): JSX.Element {
-  const socket = createSocket();
+
+  const {auth} = useAuth();
+
+  const socket = createSocket(auth.userId);
 
   return (
     <SocketContext.Provider value={{ socket }}>

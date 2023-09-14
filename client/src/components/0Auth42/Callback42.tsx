@@ -4,15 +4,10 @@ import useAuth from '../../hooks/useAuth';
 import io from 'socket.io-client';
 import axios from "../../api/axios"
 import TwoFaLogin from "../signin/twoFaLogin";
-
-const socket = io('http://localhost:3333', {
-	path: "/status",
-	withCredentials: true,
-	autoConnect: true,
-	auth: { token: "TODO: gérer les tokens d'authentification ici" },
-});
+import { useSocket } from "../../context/SocketProvider";
 
 const Callback42 = () => {
+    const socket = useSocket();
 
     const navigate = useNavigate();
     const { setAuth } = useAuth();
@@ -29,11 +24,12 @@ const Callback42 = () => {
                     withCredentials: true
                 }
             );
-            socket.emit('userLoggedIn', {userId: id});
+            socket?.emit('userLoggedIn', {userId: id, userEmail: email});
             setAuth({
                 email: email,
                 pwd: "",
                 accessToken: response.data.token || "",
+                userId: id,
             });
             navigate('/', { replace: true });
         } catch (error) {
@@ -57,6 +53,7 @@ const Callback42 = () => {
                     email: response.data.email,
                     pwd: "",
                     accessToken: token || "",
+                    userId: intValue,
                 });
             } catch (error) {
                 console.log(error)
@@ -73,8 +70,9 @@ const Callback42 = () => {
         if (isOnline42 === "true"){
             navigate("/register");
         }
-        else if (!email42 && token && isOnline42 === "false") {
-            socket.emit('userLoggedIn', {userId: intValue});
+        else if (email42 && token && isOnline42 === "false") {
+            console.log({email})
+            socket?.emit('userLoggedIn', {userId: intValue, userEmail: email42});
 
             handleMe();
 
