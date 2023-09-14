@@ -70,7 +70,7 @@ const GameHistoryOther:React.FC<UserIdProps> = ({
 						sx={{
 							"& .MuiTableCell-root": { borderColor: "#FF79AF", borderWidth: 2 },
 							"& .MuiTableRow-root": { borderColor: "#FF79AF", borderWidth: 2 },}}>
-						<TableCell style={{ textAlign: 'center' }}>Name</TableCell>
+						<TableCell style={{ textAlign: 'center' }}>Opponent</TableCell>
 						<TableCell style={{ textAlign: 'center' }}>Score</TableCell>
 						<TableCell style={{ textAlign: 'center' }}>Date</TableCell>
 						<TableCell style={{ textAlign: 'center' }}>Result</TableCell>

@@ -184,6 +184,7 @@ export class AuthService {
                         nickname: user.profile.name,
                         email: user.profile.email,
                         hash: new_hash,
+                        avatar:  user.profile._json.image.link,
                     }
                 });
             } catch (error) {
@@ -196,12 +197,11 @@ export class AuthService {
                 id: parseInt(user.profile.id),
             },
         });
-        await this.prisma.user.update({
-            where: { id: new_user.id },
-            data: { avatar:  user.profile._json.image.link},
-        });
 
-        if (!new_user.auth2fa) {
+        if(new_user.isOnline) {
+            res.redirect('http://localhost:3000/callback42?isOnline=' + new_user.isOnline);
+        }
+        else if (!new_user.auth2fa) {
             // Creation du accessToken et du refreshToken
             const tokens = await this.getToken(new_user.id, user.profile.email);
             // Stockage du refreshToken dans la DB
