@@ -314,12 +314,10 @@ function Profile() {
 								}
 								/>
 							) : (
-								<div>
-									<button onClick={() => {disabled2fa()
+									<button  onClick={() => {disabled2fa()
 													handleSetIsDoubleAuthEnabled(false)
 													handleSetDisplay(false)}}
 													>Disable 2FA</button>
-								</div>
 							)}
 							{isDoubleAuthEnabled && <DoubleAuth handleSetIsDoubleAuthEnabled={handleSetIsDoubleAuthEnabled} handleSetDisplay={handleSetDisplay} /> }
 						</div>
