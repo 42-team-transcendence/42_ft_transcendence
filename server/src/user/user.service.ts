@@ -98,7 +98,7 @@ export class UserService {
 				Array.isArray((error.meta as any)?.target) &&
 				(error.meta as any)?.target.includes('nickname')
 			) {
-				throw new Error('Nickname is already taken. Please choose a different nickname.');
+				throw new UnauthorizedException('Nickname is already taken. Please choose a different nickname.');
 			}
 			// Handle other errors or re-throw if needed.
 			throw error;
@@ -118,7 +118,7 @@ export class UserService {
 				Array.isArray((error.meta as any)?.target) &&
 				(error.meta as any)?.target.includes('email')
 			) {
-				throw new UnauthorizedException('Email is already taken. Please choose a different nickname.');
+				throw new UnauthorizedException('Email is already taken. Please choose a different email.');
 			}
 			// Handle other errors or re-throw if needed.
 			throw error;
