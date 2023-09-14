@@ -24,7 +24,6 @@ export class UserController {
 	@UseInterceptors(ExcludeSensitiveData)
 	@Get('number')
 	getUsersNumber() {
-		// console.log(this.userService.getUsers())
 		return (this.userService.getUsersNumber());
 	}
 	
@@ -32,7 +31,6 @@ export class UserController {
 	@UseInterceptors(ExcludeSensitiveData)
 	@Get()
 	getUsers() {
-		// console.log(this.userService.getUsers())
 		return (this.userService.getUsers());
 	}
 

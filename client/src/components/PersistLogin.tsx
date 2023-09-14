@@ -15,7 +15,9 @@ const PersistLogin: React.FC = () => {
 
         const verifyRefreshToken = async () => {
             try {
+                if (refresh) {
                 await refresh();
+                }
             } catch (err) {
                 console.error(err);
             } finally {

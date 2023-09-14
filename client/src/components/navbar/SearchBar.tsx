@@ -62,7 +62,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 
-
 export default function SearchAppBar() {
   const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();

@@ -189,7 +189,7 @@ export class AuthService {
                 });
             } catch (error) {
                 // throw new UnauthorizedException('credentials already taken', { cause: new Error(), description: 'credentials already taken' })
-                res.redirect('http://localhost:3000')
+                res.redirect('http://localhost:3000/register')
             }
         }
         const new_user = await this.prisma.user.findFirst({
@@ -240,7 +240,6 @@ export class AuthService {
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
         });
         return res.json({accessToken : tokens.accessToken});
-        // res.redirect('http://localhost:3000/callback42?token=' + tokens.accessToken + '&id=' + user42.id);
     }
 
 
