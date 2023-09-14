@@ -20,6 +20,11 @@ export class UserService {
 		return (users);
 	}
 
+	async getUsersNumber() {
+		const users = await this.prisma.user.findMany();
+		return (users.length);
+	}
+
 	async getMe(userId: number) {
 		const user = await this.prisma.user.findUnique({
 			where: { id: userId },
