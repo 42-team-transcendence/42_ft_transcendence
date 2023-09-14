@@ -12,7 +12,7 @@ import { GetUserDto } from "src/auth/dto";
 import { ExcludeSensitiveData } from "src/interceptors/excludeSensitiveDataInterceptor";
 import { error } from "console";
 
-@UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
+// @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('users') // définit la route "/users" de l'API
 export class UserController {
 	constructor (
@@ -22,12 +22,21 @@ export class UserController {
 	// =============================================================================
 	// GETTERS =====================================================================
 	@UseInterceptors(ExcludeSensitiveData)
+	@Get('number')
+	getUsersNumber() {
+		// console.log(this.userService.getUsers())
+		return (this.userService.getUsersNumber());
+	}
+	
+	@UseGuards(JwtGuard)
+	@UseInterceptors(ExcludeSensitiveData)
 	@Get()
 	getUsers() {
 		// console.log(this.userService.getUsers())
 		return (this.userService.getUsers());
 	}
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Get('me') // GET /users/me
@@ -37,6 +46,7 @@ export class UserController {
         return await this.userService.getMe(user.sub);
     }
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@Get(':id') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
 	getUser(@Param('id') id: string) {
@@ -49,6 +59,7 @@ export class UserController {
 		return (user);
 	}
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Get('score')
@@ -60,6 +71,7 @@ export class UserController {
 	}
 
 	// @HttpCode(HttpStatus.OK)
+	@UseGuards(JwtGuard)
 	@Get('auth2fa')
 	async getAuth2fa(
 		@Body() dto: any,
@@ -70,6 +82,7 @@ export class UserController {
 
 	// =============================================================================
 	// UPDATES =====================================================================
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('email')
@@ -87,6 +100,7 @@ export class UserController {
 
 	}
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('pwd')
@@ -98,6 +112,7 @@ export class UserController {
 			await this.userService.updatePwd(pwd, creator.sub);
 	}
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('updateNick')
@@ -109,6 +124,7 @@ export class UserController {
 			await this.userService.updateNick(nickname, creator.sub);
 	}
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@HttpCode(HttpStatus.OK)
 	@Post('update2fa')
@@ -120,6 +136,7 @@ export class UserController {
 		await this.userService.update2fa(auth2fa, creator.sub);
 	}
 
+	@UseGuards(JwtGuard)
 	@HttpCode(HttpStatus.OK)
 	@Post('uploadAvatar')
 	@UseInterceptors(
@@ -132,6 +149,7 @@ export class UserController {
 		await this.userService.uploadAvatar(file, user.sub);
 	}
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@Post('block/:id')
 	async blockUser(
