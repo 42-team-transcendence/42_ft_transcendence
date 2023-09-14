@@ -5,7 +5,7 @@ import {Box} from "@mui/material";
 import BadgeAvatar from "../../miniature/BadgeAvatar";
 
 type MessageProps = {
-  message: string;
+  message: string | JSX.Element;
   timestamp: string; // Adjust the type as needed
   photoURL?: string;
   sender?: string;

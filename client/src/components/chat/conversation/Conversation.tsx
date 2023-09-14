@@ -115,6 +115,15 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
       navigate('/channelParams', {state: {chatId : chat.id}});
     }
 
+    const handleInviteToPlay = () => {
+      send("Please play with me!");
+      navigate(`/play`, {replace: false});
+    }
+
+    const goToPlayPage = () => {
+      navigate(`/play`, {replace: false});
+    }
+
     //Format Timestamp from msg stored in DB
     const formattedTimestamp = (date:Date) => {
       if (date)
@@ -129,14 +138,14 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
       return "";
     }
 
-const isMute = (mutedUsers:any, currentUser:any) => {
-  //if element is found, currentUser is muted
-  return mutedUsers.find((e:any) => {
-    return (
-      e.userId === currentUser.id
-      && new Date(e.endsAt) > new Date())
-  })
-}
+    const isMute = (mutedUsers:any, currentUser:any) => {
+      //if element is found, currentUser is muted
+      return mutedUsers.find((e:any) => {
+        return (
+          e.userId === currentUser.id
+          && new Date(e.endsAt) > new Date())
+      })
+    }
 
 	return (
 		<Box className="conversation"
@@ -149,16 +158,21 @@ const isMute = (mutedUsers:any, currentUser:any) => {
               { //CONVERSATION HEADER
                 isChat ? ( //Si la conversation est un chat
                   recipients.length > 0 &&
-                  <Miniature
-                    miniatureUser={{
-                      nickname: recipients[0].nickname,
-                      id: recipients[0].id,
-                      minAvatar: {
-                        url: `http://localhost:3333/public/picture/${recipients[0].nickname}`,
-                        name: recipients[0].nickname
-                      },
-                    }}
-                  ></Miniature>
+                  <>
+                    <Button onClick={handleInviteToPlay}>
+                      {"Invite to play"}
+                    </Button>
+                    <Miniature
+                      miniatureUser={{
+                        nickname: recipients[0].nickname,
+                        id: recipients[0].id,
+                        minAvatar: {
+                          url: `http://localhost:3333/public/picture/${recipients[0].nickname}`,
+                          name: recipients[0].nickname
+                        },
+                      }}
+                    ></Miniature>
+                  </>
                 ) : (  //Si la conversation est un channel
                   <>
                     <div className="chan-left">
@@ -188,7 +202,11 @@ const isMute = (mutedUsers:any, currentUser:any) => {
                     return (
                       !senderBlocked && <MessageLeft
                         key={index}
-                        message={msg.content}
+                        message={
+                          msg.content === "Please play with me!" ?
+                          <Button onClick={goToPlayPage}>{msg.content}</Button>
+                          :msg.content
+                        }
                         timestamp={formattedTimestamp(msg.createdAt)}
                         sender={chat?.participants.find((e: any) => e.id === msg.senderId)}
                     />);

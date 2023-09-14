@@ -41,7 +41,6 @@ export class ExcludeSensitiveData implements NestInterceptor {
         if (data instanceof ServerResponse) {
           return data;
         } else {
-          console.log({data})
           return excludeHash(data);
         }
       })
