@@ -110,7 +110,6 @@ function Profile() {
 					validateStatus: status => status >= 200 && status < 300,
 				}
 			);
-			console.log({response})
 			if (response.status === 200) {
 				// Update the user's email in the user state
 				setUser((prevUser) => ({ ...prevUser, email: newEmail }));
@@ -296,7 +295,7 @@ function Profile() {
 						</div>
 					</div>
 					{/* Render PASSWORD */}
-					{auth.pwd !== '' ? (
+					{auth.pwd && auth.pwd !== '' ? (
 						<div className="element-profile">
 							<h2>Password</h2>
 							<div className="a-modifier">

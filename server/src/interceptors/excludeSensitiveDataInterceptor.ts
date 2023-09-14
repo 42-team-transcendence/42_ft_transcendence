@@ -18,7 +18,7 @@ const isArray = (data: any) => {
 const excludeHash = (data: any) => {
   if (isObject(data)) {
     for (const key in data) {
-      if (data.hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
         data[key] = excludeHash(data[key]); // Recursively traverse the object
       }
     }
