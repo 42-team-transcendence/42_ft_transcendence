@@ -19,6 +19,7 @@ import {Box, Button} from "@mui/material";
 import { MessageLeft, MessageRight } from "./MessageStyle";
 import '../../../styles/chat/Conversation.css'
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useOnlineStatus } from "../../../context/OnlineStatus";
 
 
 //TODO : problème quand on utilise la search bar directement depuis la page du chat, et qu'on join un nouveau canal, et qu'on envoie un message : il ne s'affiche pas (probleme de socket ?)
@@ -30,8 +31,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser:any, rerenderParent:any}) {
     const [chatSocket, setChatSocket] = useState<Socket>();
     const [messages, setMessages] = useState<Message[]>([]);
+    const [recipientOnline, setRecipientOnline] = useState<boolean>(false);
 
     const navigate = useNavigate();
+    const onlineUsers = useOnlineStatus();
 
     let isChat = true;
     if (chat.channelInfo) //Check si c'est un chat ou un channel
@@ -124,6 +127,20 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
       navigate(`/play`, {replace: false});
     }
 
+
+    useEffect(() => {
+      if (isChat) {
+        for (const u of onlineUsers.values()) {
+          if (u.userId === recipients[0].id) {
+            u.isOnline ? setRecipientOnline(true) : setRecipientOnline(false)
+            break;
+          }
+        }
+      }
+    }, [isChat, onlineUsers])
+
+
+
     //Format Timestamp from msg stored in DB
     const formattedTimestamp = (date:Date) => {
       if (date)
@@ -159,7 +176,7 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
                 isChat ? ( //Si la conversation est un chat
                   recipients.length > 0 &&
                   <>
-                    <Button onClick={handleInviteToPlay}>
+                    <Button disabled={!recipientOnline} onClick={handleInviteToPlay}>
                       {"Invite to play"}
                     </Button>
                     <Miniature
@@ -203,7 +220,7 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
                       !senderBlocked && <MessageLeft
                         key={index}
                         message={
-                          msg.content === "Please play with me!" ?
+                          msg.content === "Please play with me!" && recipientOnline ?
                           <Button onClick={goToPlayPage}>{msg.content}</Button>
                           :msg.content
                         }
