@@ -83,7 +83,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     const userId = client.handshake.query.userId; // Assuming you pass userId as a query parameter while connecting
 
     //Remove socket connection from connectedClients list
-    this.connectedClients = this.connectedClients.filter((e:any) => e.userId != userId);
+    this.connectedClients = this.connectedClients.filter((e:any) => e.userId !== userId);
   }
 
   //The @SubscribeMessage decorator is used in NestJS WebSocket gateways to indicate

@@ -66,7 +66,7 @@ async function saveScoresToDatabase(player1Id: number, player2Id: number, player
 				winnerId: winnerId,
 			},
     	});
-    if(winnerId != 0) {
+    if(winnerId !== 0) {
         updateScore(winnerId);
     }
 	}

@@ -10,15 +10,13 @@ import PageWrapper from "../navbar/pageWrapper";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import { Box, Button, Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 import '../../styles/profile/OtherUserProfile.css';
 import '../../styles/profile/Profile.css';
 import CustomButtonSecond from "../../styles/buttons/CustomButtonSecond";
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
-import PublicIcon from '@mui/icons-material/Public';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import BlockIcon from '@mui/icons-material/Block';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { PersonAdd } from "@mui/icons-material";
 import Badge from '@mui/material/Badge';

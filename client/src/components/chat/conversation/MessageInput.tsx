@@ -2,7 +2,7 @@ import { useState } from "react";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import { TextField, Box, Fab } from "@mui/material";
+import { TextField, Fab } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import '../../../styles/chat/MessageInput.css'
 

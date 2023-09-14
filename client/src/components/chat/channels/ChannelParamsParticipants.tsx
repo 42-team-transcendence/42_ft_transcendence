@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import {  useNavigate } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS AND TYPES =================================================
@@ -9,7 +9,7 @@ import Miniature from "../../miniature/Miniature";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import {IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Menu, MenuItem,} from '@mui/material';
+import {IconButton, List, ListItem, ListItemButton, ListSubheader, Menu, MenuItem,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SchoolIcon from '@mui/icons-material/School';
@@ -83,11 +83,11 @@ export default function ChannelParamsParticipants(
 		let erase : {admin: null | number, mute: null | number} = {admin: null, mute: null};
 		if (admins.find((e:any) => e.id === userId)) {
 			erase.admin = userId;
-			setAdmins(admins.filter((e:any)=> userId != e.id));
+			setAdmins(admins.filter((e:any)=> userId !== e.id));
 		}
 		if (mutes.find((e:any) => e.userId === userId)) {
 			erase.mute = userId;
-			setMutes(mutes.filter((e:any)=> userId != e.userId));
+			setMutes(mutes.filter((e:any)=> userId !== e.userId));
 		}
 		return erase;
 	}
@@ -104,7 +104,7 @@ export default function ChannelParamsParticipants(
 						oldAdmin: erase.admin,
 					}),{headers: {'Content-Type': 'application/json'}, withCredentials: true}
                 );
-				setParticipants(participants.filter((user:any)=> user.id != kicked.id));
+				setParticipants(participants.filter((user:any)=> user.id !== kicked.id));
 
 				if (erase.mute) {
 					const eraseMute = await axiosPrivate.post(
@@ -131,7 +131,7 @@ export default function ChannelParamsParticipants(
 						oldAdmin: erase.admin,
 					}),{headers: {'Content-Type': 'application/json'}, withCredentials: true}
                 );
-				setParticipants(participants.filter((user:any)=> user.id != currentUser.id));
+				setParticipants(participants.filter((user:any)=> user.id !== currentUser.id));
 				
 				if (erase.mute) {
 					const eraseMute = await axiosPrivate.post(
@@ -169,8 +169,8 @@ export default function ChannelParamsParticipants(
 			return (
 				<ListItem key={"user_"+idx} disablePadding>
 					<Miniature miniatureUser={miniatureUser} ></Miniature>
-					{user.id != currentUser.id ? (
-						admins.find((e:any) => e.id === currentUser.id ) && user.id != ownerId &&
+					{user.id !== currentUser.id ? (
+						admins.find((e:any) => e.id === currentUser.id ) && user.id !== ownerId &&
 						<>
 							<ListItemButton
 								id="chan_user_param_button"
@@ -206,7 +206,7 @@ export default function ChannelParamsParticipants(
 							</Menu>
 						</>
 					): (
-						user.id != ownerId && <ListItemButton onClick={handleLeave}>
+						user.id !== ownerId && <ListItemButton onClick={handleLeave}>
 							<IconButton edge="end" aria-label="delete">
 								<DeleteIcon />
 							</IconButton>

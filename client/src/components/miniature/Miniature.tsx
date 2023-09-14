@@ -1,6 +1,6 @@
-import { Container, Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -22,7 +22,6 @@ import '../../styles/Miniature.css';
 
 export default function Miniature({miniatureUser}: {miniatureUser: MiniatureUser}) {
 	const navigate = useNavigate();
-	const location = useLocation();
 	const axiosPrivate = useAxiosPrivate();
 
     const [currentUser, setCurrentUser] = useState<any>();

@@ -1,6 +1,6 @@
 
 import Miniature from "../miniature/Miniature";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import PageWrapper from "../navbar/pageWrapper";
 import Logout from "../logout/Logout";

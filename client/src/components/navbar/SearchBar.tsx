@@ -3,15 +3,10 @@ import { useEffect, useState } from 'react';
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -98,7 +93,7 @@ export default function SearchAppBar() {
                 withCredentials: true
             }
         );
-        const chansNotPrivate = response.data.filter((e:any)=>e.channelInfo.status != "PRIVATE")
+        const chansNotPrivate = response.data.filter((e:any)=>e.channelInfo.status !== "PRIVATE")
         setSearchResults(chansNotPrivate);
         } catch (err: any) {
             console.log(err);
@@ -143,7 +138,7 @@ export default function SearchAppBar() {
 	};
 
   const handlePwdInput = async (inputPwd: string, channelPwd: string, channelId: number) => {
-    if (inputPwd != channelPwd) {
+    if (inputPwd !== channelPwd) {
       setPwdModal(!pwdModal)
     } else {
       joinChannel(channelId)

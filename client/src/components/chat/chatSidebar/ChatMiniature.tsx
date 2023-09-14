@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Container, Box } from "@mui/material";
+import {  Box } from "@mui/material";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -7,7 +7,6 @@ import Miniature from "../../miniature/Miniature";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import { CenterFocusStrong } from "@mui/icons-material";
 import  "../../../styles/chat/ChatMiniature.css";
 
 

@@ -8,7 +8,7 @@ import PageWrapper from "../../navbar/pageWrapper";
 import NickModal from "../../profile/NicknameModal";
 import StatusModal from "./ChannelParamsStatusModal";
 
-import { statuses, Status } from "../types";
+import {  Status } from "../types";
 
 import ChannelParamsParticipants from "./ChannelParamsParticipants";
 import ChannelParamsAdmins from "./ChannelParamsAdmins";
@@ -99,7 +99,7 @@ export default function ChannelParams() {
     }, [])
 
 	const SaveName = async (newName: string) => {
-        if (newName != name) {
+        if (newName !== name) {
             try {
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
@@ -116,19 +116,19 @@ export default function ChannelParams() {
 	};
 
     const SaveStatus = async (newStatus: Status, newPwd: string) => {
-        if (newStatus != status || newStatus === 'PROTECTED' && newPwd != pwd) {
+        if (newStatus !== status || newStatus === 'PROTECTED' && newPwd !== pwd) {
             try {
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
                     JSON.stringify({
-                        status: newStatus != status ? newStatus: null,
-                        password: newStatus === 'PROTECTED' && newPwd != pwd ? newPwd: null
+                        status: newStatus !== status ? newStatus: null,
+                        password: newStatus === 'PROTECTED' && newPwd !== pwd ? newPwd: null
                     }), {
                         headers: {'Content-Type': 'application/json'},withCredentials: true
                     }
                 );
                 setStatus(newStatus)
-                if (newStatus === 'PROTECTED' && newPwd != pwd)
+                if (newStatus === 'PROTECTED' && newPwd !== pwd)
                     setPwd(newPwd)
             } catch (err: any) {
                 console.log(err.response);

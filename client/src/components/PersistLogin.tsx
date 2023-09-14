@@ -46,7 +46,7 @@ const PersistLogin: React.FC = () => {
             }
         }
         checkUsers();
-    }, [auth?.accessToken, navigate, refresh])
+    }, [])
 
     return (
         <>

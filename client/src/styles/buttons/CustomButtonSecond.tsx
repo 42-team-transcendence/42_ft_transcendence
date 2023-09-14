@@ -1,5 +1,5 @@
 import React, { ReactNode, ButtonHTMLAttributes } from 'react';
-import Button, { ButtonProps } from '@mui/material/Button';
+import Button from '@mui/material/Button';
 
 interface CustomButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	text: string;

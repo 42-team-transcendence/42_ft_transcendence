@@ -1,22 +1,9 @@
 import axios from "../../api/axios"
 import CustomButton from "../../styles/buttons/CustomButton";
-import useAuth from "../../hooks/useAuth";
-import io from 'socket.io-client';
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import { useNavigate } from "react-router-dom";
-
-const socket = io('http://localhost:3333', {
-	path: "/status",
-	withCredentials: true,
-	autoConnect: true,
-	auth: { token: "TODO: gérer les tokens d'authentification ici" },
-});
 
 const AuthPage:React.FC = () => {
-	const { auth } = useAuth();
 
     const handleClick = async() => {
-		const email = auth.email;
         try {
             axios.get('/auth/login/42').then((res) => {
                 window.location.href = res.data.url;

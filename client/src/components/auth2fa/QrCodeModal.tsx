@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { Modal, Box, Button } from '@mui/material';
-import QRCode from 'qrcode.react';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 

@@ -1,5 +1,5 @@
 // NickModal.tsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -10,7 +10,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 // =============================================================================
 // IMPORT COMPONENTS && TYPES ===========================================================
-import { MenuItem } from '@mui/material';
 
 export default function SearchChanPwdModal({ channelId, channelPwd, open, onClose, onSave }: {
 	channelId:number,

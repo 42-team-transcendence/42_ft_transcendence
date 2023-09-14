@@ -1,6 +1,3 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
 // =============================================================================
 // IMPORT COMPONENTS AND TYPES =================================================
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
@@ -33,7 +30,7 @@ export default function ChannelParamsBans({chatId, bans, setBans, currentUser, a
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-				setBans(bans.filter((ban:any)=> ban.id != user.id));
+				setBans(bans.filter((ban:any)=> ban.id !== user.id));
             } catch (err: any) {
                 console.log(err.response);
             }
@@ -54,7 +51,7 @@ export default function ChannelParamsBans({chatId, bans, setBans, currentUser, a
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(user.id != currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
+						{(user.id !== currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
 							<ListItemButton onClick={(event)=>handleDeleteBans(event, user)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />

@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS AND TYPES =================================================
@@ -12,7 +10,7 @@ import Miniature from "../../miniature/Miniature";
 import {IconButton, List, ListItem, ListItemButton, ListItemText, ListSubheader,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function ChannelParamsParticipants({chatId, admins, setAdmins, ownerId, currentUser}: {
+export default function ChannelParamsParticipants({chatId, admins, setAdmins, ownerId}: {
 	chatId:number,
 	admins:any,
 	setAdmins:any,
@@ -30,7 +28,7 @@ export default function ChannelParamsParticipants({chatId, admins, setAdmins, ow
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-				setAdmins(admins.filter((admin:any)=> admin.id != user.id));
+				setAdmins(admins.filter((admin:any)=> admin.id !== user.id));
             } catch (err: any) {
                 console.log(err.response);
             }
@@ -51,7 +49,7 @@ export default function ChannelParamsParticipants({chatId, admins, setAdmins, ow
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(user.id != ownerId) ? (
+						{(user.id !== ownerId) ? (
 							<ListItemButton onClick={(event)=>handleDeleteAdmin(event, user)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />

@@ -14,12 +14,6 @@ const Email: React.FC<EmailProps> = ({ stateEmail, fonctionUpdateEmail}) =>{
   	const {email}  = stateEmail;
 	const {updateEmail} = fonctionUpdateEmail;
 
-    // const emailRef = useRef();
-
-    //     useEffect(() => {
-    //     emailRef.current.focus();
-    // }, [])
-
     return (
 		<>
 			<TextField

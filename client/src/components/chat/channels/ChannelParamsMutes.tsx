@@ -1,6 +1,3 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
 // =============================================================================
 // IMPORT COMPONENTS AND TYPES =================================================
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
@@ -39,7 +36,7 @@ export default function ChannelParamsMutes({
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-				setMutes(mutes.filter((e:any)=> e.userId != mute.userId));
+				setMutes(mutes.filter((e:any)=> e.userId !== mute.userId));
             } catch (err: any) {
                 console.log(err.response);
             }
@@ -63,7 +60,7 @@ export default function ChannelParamsMutes({
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(mute.userId != currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
+						{(mute.userId !== currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
 							<ListItemButton onClick={(event)=>handleDeleteMutes(event, mute)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />

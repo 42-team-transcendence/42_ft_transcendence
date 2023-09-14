@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import { useOnlineStatus } from '../../context/OnlineStatus';
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import type {MiniAvatarPicture} from '../../utils/types'
 

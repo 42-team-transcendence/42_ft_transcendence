@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom"
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import useAuth from "../../hooks/useAuth";
-import io from 'socket.io-client';
 import { useSocket } from "../../context/SocketProvider";
 import '../../styles/Navbar.css';
 

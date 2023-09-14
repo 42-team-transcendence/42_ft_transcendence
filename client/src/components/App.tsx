@@ -9,7 +9,6 @@ import Leaderboard from './leaderboard/Leaderboard';
 import PersistLogin from './PersistLogin';
 import Callback42 from './0Auth42/Callback42';
 import Rules from './Play/Rules';
-import Play from './Play/Play'
 import Profile from './profile/Profile';
 import FriendList from './friends/FriendList';
 import ChatChannels from './chat/ChatChannels'
@@ -17,8 +16,6 @@ import OtherUserProfile from './profile/OtherUserProfile';
 import ChannelCreation from './chat/channels/ChannelCreation';
 import ChannelParams from './chat/channels/ChannelParams';
 import Background from './Play/Background';
-import React, { useEffect } from 'react';
-import io from 'socket.io-client';
 
 function App() {
 //Contient toutes les URLS / Routes de notre app front.

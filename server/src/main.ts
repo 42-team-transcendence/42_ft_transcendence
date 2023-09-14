@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import * as cors from 'cors'
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from "@nestjs/config";
@@ -29,17 +28,6 @@ async function bootstrap() {
   }))
 
   app.use(cookieParser());
-
-  // Supprimer les cookies ici
-  app.use((req, res, next) => {
-    // Vous pouvez supprimer des cookies en utilisant res.clearCookie() pour chaque cookie que vous souhaitez supprimer.
-    // Par exemple, pour supprimer un cookie nommé 'monCookie', vous pouvez faire :
-    res.clearCookie('refreshToken');
-    // Répétez cette instruction pour chaque cookie que vous souhaitez supprimer.
-
-    // Ensuite, continuez à gérer la requête comme d'habitude
-    next();
-  });
 
   // Apply the SanitizePipe and the validationPipe globally
   app.useGlobalPipes(

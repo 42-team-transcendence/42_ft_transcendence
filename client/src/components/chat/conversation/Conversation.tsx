@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import io, {Socket} from "socket.io-client"
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 
 // =============================================================================
@@ -37,7 +37,7 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
     if (chat.channelInfo) //Check si c'est un chat ou un channel
       isChat = false;
 
-    const recipients = (chat?.participants.filter((e:any) => e.id != currentUser.id));
+    const recipients = (chat?.participants.filter((e:any) => e.id !== currentUser.id));
 
     //Update des messages displayed quand le chat est modifié
     useEffect(() => {

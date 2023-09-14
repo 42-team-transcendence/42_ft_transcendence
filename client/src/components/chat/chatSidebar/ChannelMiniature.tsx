@@ -1,11 +1,9 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { Container, Box, AvatarGroup, Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import {  Box } from "@mui/material";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
-import { CenterFocusStrong } from "@mui/icons-material";
 import  "../../../styles/chat/ChatMiniature.css";
-import BadgeAvatar from "../../miniature/BadgeAvatar";
 import GroupMiniature from "../../miniature/GroupMiniature";
 
 

@@ -8,7 +8,6 @@ import Password from "./Password";
 import MatchPwd from "./MatchPwd";
 import useAuth from '../../hooks/useAuth';
 import AuthPage from "../0Auth42/AuthPage";
-import io from 'socket.io-client';
 import { useSocket } from "../../context/SocketProvider";
 
 // STYLE =====================================================
