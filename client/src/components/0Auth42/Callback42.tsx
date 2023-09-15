@@ -71,7 +71,6 @@ const Callback42 = () => {
             navigate("/register");
         }
         else if (email42 && token && isOnline42 === "false") {
-            console.log({email})
             socket?.emit('userLoggedIn', {userId: intValue, userEmail: email42});
 
             handleMe();

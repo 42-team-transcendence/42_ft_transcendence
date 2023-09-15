@@ -53,8 +53,7 @@ const prisma = new PrismaClient();
 	handleConnection(
 		client: Socket,
 	) {
-		console.log({client_handshake : client.handshake.query.userEmail});
-		console.log("HANDLE CONNECT", client.id)
+		// console.log("HANDLE CONNECT", client.id)
 		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
 			if (client.handshake.query.userId === online.userId.toString()) {
 				const existingUserData = this.onlineUsers.get(socketIdInMap);
@@ -89,7 +88,7 @@ const prisma = new PrismaClient();
 	// }
 
 	handleDisconnect(client: Socket) {
-		console.log("HANDLE DISCONNECT", client.id)
+		// console.log("HANDLE DISCONNECT", client.id)
 		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
 			if (client.handshake.query.userId === online.userId.toString()) {
 				const existingUserData = this.onlineUsers.get(socketIdInMap);
@@ -115,7 +114,7 @@ const prisma = new PrismaClient();
 /**********************************************************************************************************************************************/
 
 	async updateIsOnline(online: boolean, userId: number) {
-		console.log({userId}, {online})
+		// console.log({userId}, {online})
 		if (userId) {
 			try {
 				await prisma.user.update({
@@ -131,8 +130,8 @@ const prisma = new PrismaClient();
 
 	@SubscribeMessage('userLoggedIn')
   	handleUserLoggedIn(client: Socket, data: { userId: number, userEmail: string }) {
-		console.log("USER LOGIN");
-		console.log(data.userEmail);
+		// console.log("USER LOGIN");
+		// console.log(data.userEmail);
 		this.onlineUsers.set(client.id, {userId: data.userId, isOnline: true });
 		this.updateIsOnline(true, data.userId);
 		this.updateOnlineUsers();
@@ -148,13 +147,13 @@ const prisma = new PrismaClient();
 		}
 		this.updateIsOnline(false, data.userId);
 		this.onlineUsers.delete(client.id);
-		console.log("USER LOGOUT");
+		// console.log("USER LOGOUT");
 		this.updateOnlineUsers();
 	}
 
 	private updateOnlineUsers() {
 		const onlineUsersArray = Array.from(this.onlineUsers.entries());
-		console.log(onlineUsersArray);
+		// console.log(onlineUsersArray);
 		this.server.emit('onlineUsers', onlineUsersArray);
 	}
 
