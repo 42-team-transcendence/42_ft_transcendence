@@ -93,6 +93,7 @@ function OtherUserProfile() {
 
     useEffect(() => {//GET ALL CHATS & CHANNELS DATA from current User
 		const findAllMyPrivateChansOwned = async () => {
+			if (currentUser) {
 			try {
                 const response = await axiosPrivate.get('/chats/findAllMyChats', {
                     headers: { 'Content-Type': 'application/json'},
@@ -107,6 +108,7 @@ function OtherUserProfile() {
 			} catch (error:any) {
 				console.log(error.response );
 			}
+		}
 		}
 		findAllMyPrivateChansOwned();
     }, [currentUser, user])

@@ -162,6 +162,7 @@ export class UserController {
 		return (this.userService.updateBlockedUsers(userId, me.sub, dto.block));
 	}
 
+	@UseGuards(JwtGuard)
 	@UseInterceptors(ExcludeSensitiveData)
 	@Post ('add-friend/:id')
 	async addFriend(

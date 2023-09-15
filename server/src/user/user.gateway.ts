@@ -67,26 +67,6 @@ const prisma = new PrismaClient();
 		this.updateOnlineUsers();
 	}
 
-
-	// handleConnection(
-	// 	client: Socket,
-	// ) {
-	// 	console.log({client_handshake : client.handshake.query.userEmail});
-	// 	console.log("HANDLE CONNECT", client.id)
-	// 	for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
-	// 		if (socketIdInMap === online.userId) {
-	// 			const existingUserData = this.onlineUsers.get(socketIdInMap);
-	// 			existingUserData.isOnline = true;
-	// 			existingUserData.userId = socketIdInMap;
-	// 			this.onlineUsers.delete(socketIdInMap);
-	// 			this.onlineUsers.set(client.id, existingUserData);
-	// 			this.updateIsOnline(true, parseInt(existingUserData.userId));
-	// 			break;
-	// 		}
-	// 	}
-	// 	this.updateOnlineUsers();
-	// }
-
 	handleDisconnect(client: Socket) {
 		// console.log("HANDLE DISCONNECT", client.id)
 		for (const [socketIdInMap, online] of this.onlineUsers.entries()) {
@@ -99,13 +79,6 @@ const prisma = new PrismaClient();
 				break;
 			}
 		}
-		// const existingUserData = this.onlineUsers.get(client.id);
-		// this.onlineUsers.delete(client.id);
-		// if (existingUserData && existingUserData.isOnline === true) {
-		// 	existingUserData.isOnline = false;
-		// 	this.onlineUsers.set(existingUserData.userId, existingUserData);
-		// 	this.updateIsOnline(true, parseInt(existingUserData.userId));
-		// }
 		this.updateOnlineUsers();
 	}
 
