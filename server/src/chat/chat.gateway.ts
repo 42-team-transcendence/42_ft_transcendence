@@ -19,7 +19,7 @@ import { UseFilters, UseGuards, UsePipes, ValidationPipe, WsExceptionFilter } fr
 import { JwtGuard } from 'src/auth/guard';
 import { PrismaService } from "src/prisma/prisma.service";
 import { GetUserDto } from 'src/auth/dto';
-import { MessageDto } from './dto/gateway.dto';
+import { MessageDto, UserDataDto } from './dto/gateway.dto';
 import { WSValidationPipe } from './pipe/wsValidationPipe';
 import { BadRequestExceptionsFilter } from './pipe/wsExceptionFilter';
 import { ChannelService } from './channel.service';
@@ -60,7 +60,7 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
   @WebSocketServer()
   server: Server;
 
-  private connectedClients = []; // Keep track of connected clients
+  private connectedClients: UserDataDto[] = []; // Keep track of connected clients
 
   //lifecycle method : it will be executed automatically (due to OnGatewayInit interface) once the gateway is initialized.
   //This provides an opportunity to perform any necessary
@@ -90,18 +90,17 @@ export default class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
   //that a particular method should be invoked when a specific WebSocket message is received.
   @SubscribeMessage('userData')
   async handleUserData(
-    @MessageBody() data: any, //It instructs NestJS to inject the message body directly into the data parameter.
+    @MessageBody() data: UserDataDto, //It instructs NestJS to inject the message body directly into the data parameter.
     @ConnectedSocket() client: Socket, //By using the @ConnectedSocket decorator, you can access the client's socket connection within a WebSocket gateway method, enabling you to perform client-specific actions or emit messages specifically to that client.
   ) {
+      //Get all chats of user and add user to corresponding socket rooms
+      const userChats = await this.chatService.findAllMyChats(data.userId);
+      client.join(userChats.map(chat => "room_" + chat.id));
 
-    //Get all chats of user and add user to corresponding socket rooms
-    const userChats = await this.chatService.findAllMyChats(data.userId);
-    client.join(userChats.map(chat => "room_" + chat.id));
-
-    //Add new socket connection to connectedClients list
-    if (this.connectedClients.find((e:any) => e.userId === data.userId))
-      this.connectedClients = this.connectedClients.filter((e:any) => e.userId !== data.userId);
-    this.connectedClients.push({userId : data.userId, socketId : data.socketId});
+      //Add new socket connection to connectedClients list
+      if (this.connectedClients.find((e:any) => e.userId === data.userId))
+        this.connectedClients = this.connectedClients.filter((e:any) => e.userId !== data.userId);
+      this.connectedClients.push({userId : data.userId, socketId : data.socketId});
   }
 
   @SubscribeMessage('message')

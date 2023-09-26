@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 // import { CreateChatParams, } from "./chat";
-import { User } from "@prisma/client";
+import { Message, User } from "@prisma/client";
 import { MessageDto } from "./dto/gateway.dto";
+import { AllChatInfo, ChatAndParticipants } from "./chat";
 
 @Injectable()
 export class ChatService {
@@ -12,7 +13,10 @@ export class ChatService {
     ) {}
 
 	// async createChat(params: CreateChatParams, creator:User) {
-	async createChat(participants, creatorId) {
+	async createChat(
+		participants: number[],
+		creatorId: number
+	): Promise<ChatAndParticipants & {messages: Message[]}> {
 		try {
 			let participantsArray = participants.map((id: number) => {return {id : id}});
 
@@ -38,7 +42,9 @@ export class ChatService {
 		}
 	}
 
-	async findChatByParticipants(participantIds) {
+	async findChatByParticipants(
+		participantIds: number[]
+	): Promise<ChatAndParticipants & {messages: Message[]}> {
 		//find chats that include exactly the specified participants
 		const chat = await this.prisma.chat.findFirst({
 			where: {
@@ -55,7 +61,7 @@ export class ChatService {
 		return chat;
 	}
 
-	async findChatById(chatId:number) {
+	async findChatById(chatId:number): Promise<AllChatInfo> {
 		const chat = await this.prisma.chat.findFirst({
 			where: {
 				id : chatId
@@ -76,7 +82,7 @@ export class ChatService {
 	}
 
 	//if the chat exists, return it. If it does not, create it
-	async findOrCreateChat(participantIds, creatorId) {
+	async findOrCreateChat(participantIds: number[], creatorId: number) {
 		try {
 			const findChat = await this.findChatByParticipants(participantIds);
 			if (!findChat) {
@@ -90,7 +96,7 @@ export class ChatService {
 		}
 	}
 
-	async findAllMyChats(userId: number) {
+	async findAllMyChats(userId: number): Promise<AllChatInfo[]> {
 		//find all the chats where I am
 		const myChats = await this.prisma.chat.findMany({
 			where: {
@@ -113,7 +119,7 @@ export class ChatService {
 		return myChats;
 	}
 
-	async storeMessage(msg:MessageDto) {
+	async storeMessage(msg:MessageDto): Promise<Message> {
 		try {
 			//création du msg dans la DB
 			const createdMsg = await this.prisma.message.create({

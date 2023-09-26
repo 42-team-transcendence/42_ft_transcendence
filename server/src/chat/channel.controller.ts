@@ -6,6 +6,8 @@ import { ChatService } from "./chat.service";
 import { GetUserDto } from "src/auth/dto";
 import { CreateChannelDto, UpdateChannelDto, UpdateChannelMutedDto } from "./dto";
 import { ExcludeSensitiveData } from "src/interceptors/excludeSensitiveDataInterceptor";
+import { ChannelInfo, Chat, User } from "@prisma/client";
+import { AllChannelInfo, AllChatInfo } from "./chat";
 
 @UseGuards(JwtGuard) //link this custom guard (check for jwt token for every user route of this controller) to our strategy named 'jwt' in file jwt.strategy.ts.
 @Controller('channels') // définit la route "/channels" de l'API
@@ -20,13 +22,13 @@ export class ChannelController {
 	createChannel(
 		@GetUser() creator: GetUserDto,
         @Body() payload: CreateChannelDto,
-    ) {
+    ): Promise<Chat> {
 		return (this.channelService.createChannel(payload, creator.sub));
 	}
 
 	@UseInterceptors(ExcludeSensitiveData)
 	@Get('getByName/:input') //see nestjs doc on route parameters : https://docs.nestjs.com/controllers#route-parameters
-	getChannelsByName(@Param('input') input: string) {
+	getChannelsByName(@Param('input') input: string): Promise<AllChatInfo[]> {
 		return (this.channelService.getChannelsByName(input));
 	}
 
@@ -35,7 +37,7 @@ export class ChannelController {
 	async joinChannel(
 		@GetUser() user: GetUserDto,
 		@Param('id', ParseIntPipe) channelId: number,
-    ) {
+    ): Promise<Chat & {participants: User[]} & {channelInfo: ChannelInfo}> {
 		try {
 			const chat = await this.chatService.findChatById(channelId);
 			if (chat.channelInfo.bannedUsers.find((e:any)=>e.id === user.sub))
@@ -52,14 +54,14 @@ export class ChannelController {
 		@GetUser() user: GetUserDto,
 		@Param('id', ParseIntPipe) channelId: number,
 		@Body() payload: UpdateChannelDto
-    ) {
+    ): Promise<{ chat: {participants : User[]} } & AllChannelInfo> {
 		try {
 			//check that currentUser is admin
 			const isAdmin = await this.channelService.checkIsAdmin(channelId, user.sub)
 			if (!isAdmin)
 				throw new ForbiddenException('User is not admin of channel',);
 
-			return (this.channelService.updateChannelInfos(channelId, user.sub, payload));
+			return (this.channelService.updateChannelInfos(channelId, payload));
 		} catch (error) {
 			console.log(error);
 			throw error;
@@ -72,14 +74,9 @@ export class ChannelController {
 		@GetUser() user: GetUserDto,
 		@Param('id', ParseIntPipe) channelId: number,
 		@Body() payload: UpdateChannelDto
-    ) {
+    ): Promise<{ chat: {participants : User[]} } & AllChannelInfo> {
 		try {
-			//check that currentUser is admin
-			// const isAdmin = await this.channelService.checkIsAdmin(channelId, user.sub)
-			// if (!isAdmin)
-			// 	throw new ForbiddenException('User is not admin of channel',);
-
-			return (this.channelService.updateChannelInfos(channelId, user.sub, payload));
+			return (this.channelService.updateChannelInfos(channelId, payload));
 		} catch (error) {
 			console.log(error);
 			throw error;

@@ -13,3 +13,13 @@ export class MessageDto {
     @IsNumber()
     chatId: number;
 }
+
+export class UserDataDto {
+    @IsNotEmpty()
+    @IsNumber()
+    userId: number;
+    
+    @IsNotEmpty()
+    @IsNumber()
+    socketId: number
+}
