@@ -7,13 +7,12 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import PageWrapper from "../../navbar/pageWrapper";
 import NickModal from "../../profile/NicknameModal";
 import StatusModal from "./ChannelParamsStatusModal";
-
-import {  Status } from "../types";
-
 import ChannelParamsParticipants from "./ChannelParamsParticipants";
 import ChannelParamsAdmins from "./ChannelParamsAdmins";
 import ChannelParamsMutes from "./ChannelParamsMutes";
 import ChannelParamsBans from "./ChannelParamsBans";
+
+import { Status } from "../../../utils/types/chat";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================

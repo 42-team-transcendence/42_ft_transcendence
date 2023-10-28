@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { redirect } from "react-router-dom";
 
 // =============================================================================
@@ -15,18 +15,22 @@ import { Box, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import '../../styles/chat/ChatChannel.css';
 
+// =============================================================================
+// IMPORT TYPES ===============================================================
+import { AllChatInfo, Chat, ChatAndParticipantsAndMsgs } from "../../utils/types/chat";
+import { User } from "../../utils/types/user";
+
 
 // =============================================================================
 // FUNCTION ====================================================================
 
 export default function ChatChannels() {
 	const axiosPrivate = useAxiosPrivate();
-	const navigate = useNavigate();
 
-	const [myChats, setMyChats] = useState<any>();
+	const [myChats, setMyChats] = useState<AllChatInfo[]>();
 	const [chatFound, setChatFound] = useState<boolean>(false)
-	const [currentChat, setCurrentChat] = useState<any>();
-	const [currentUser, setCurrentUser] = useState<any>();
+	const [currentChat, setCurrentChat] = useState<ChatAndParticipantsAndMsgs | AllChatInfo>();
+	const [currentUser, setCurrentUser] = useState<User>();
 	const [showChatSidebar, setShowChatSidebar] = useState<boolean>(true);
 	const [rerender, setRerender] = useState<boolean>(false);
 
@@ -43,7 +47,7 @@ export default function ChatChannels() {
         const findOrCreateChat = async () => { //definition de la fonction
             try {
                 if (recipientId && currentUser && recipientId !== currentUser.id) { //ne s'actionne que si on a recipientId
-                    const response = await axiosPrivate.post('/chats/findOrCreate',
+                    const response = await axiosPrivate.post<ChatAndParticipantsAndMsgs>('/chats/findOrCreate',
                         JSON.stringify({'recipients': [recipientId]}), {
                             headers: { 'Content-Type': 'application/json'},
                             withCredentials: true
@@ -51,22 +55,22 @@ export default function ChatChannels() {
                     setCurrentChat(response.data);
                     setChatFound(true);
                 } else if (channelId && currentUser) { //ne s'actionne que si on a un channelId
-                    const response = await axiosPrivate.get(`/chats/findById/${channelId}`, {
+                    const response = await axiosPrivate.get<AllChatInfo>(`/chats/findById/${channelId}`, {
 						headers: { 'Content-Type': 'application/json'},
 						withCredentials: true
 					})
 					//Si currentUser ne fait pas parti du channel
 					//ou est ban du channel, redirection hors du channel
 					if (
-						!response.data.participants.find((e:any)=>e.id === currentUser.id) ||
-						response.data.channelInfo.bannedUsers.find((e:any)=>e.id === currentUser.id)
+						!response.data.participants.find(e => e.id === currentUser.id) ||
+						response.data.channelInfo.bannedUsers.find(e => e.id === currentUser.id)
 					)
 						return redirect("/chat");
 					setCurrentChat(response.data);
 					setChatFound(true);
 				}
             } catch (error:any) {
-                console.log(error.response );
+                console.log(error.response);
             }
         }
         findOrCreateChat(); //appel de la fonction
@@ -76,7 +80,7 @@ export default function ChatChannels() {
     useEffect(() => {
 		const findAllMyChats = async () => { //definition de la fonction
 			try {
-                const response = await axiosPrivate.get('/chats/findAllMyChats', {
+                const response = await axiosPrivate.get<AllChatInfo[]>('/chats/findAllMyChats', {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 })
@@ -91,7 +95,7 @@ export default function ChatChannels() {
     useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => { //definition de la fonction
 			try {
-                const response = await axiosPrivate.get('/users/me', {
+                const response = await axiosPrivate.get<User>('/users/me', {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 })

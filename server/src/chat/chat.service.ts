@@ -3,7 +3,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 // import { CreateChatParams, } from "./chat";
 import { Message, User } from "@prisma/client";
 import { MessageDto } from "./dto/gateway.dto";
-import { AllChatInfo, ChatAndParticipants } from "./chat";
+import { AllChatInfo, ChatAndParticipantsAndMsgs } from "./chat";
 
 @Injectable()
 export class ChatService {
@@ -16,7 +16,7 @@ export class ChatService {
 	async createChat(
 		participants: number[],
 		creatorId: number
-	): Promise<ChatAndParticipants & {messages: Message[]}> {
+	): Promise<ChatAndParticipantsAndMsgs> {
 		try {
 			let participantsArray = participants.map((id: number) => {return {id : id}});
 
@@ -44,7 +44,7 @@ export class ChatService {
 
 	async findChatByParticipants(
 		participantIds: number[]
-	): Promise<ChatAndParticipants & {messages: Message[]}> {
+	): Promise<ChatAndParticipantsAndMsgs> {
 		//find chats that include exactly the specified participants
 		const chat = await this.prisma.chat.findFirst({
 			where: {

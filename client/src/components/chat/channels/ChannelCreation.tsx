@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import PageWrapper from "../../navbar/pageWrapper";
 
-import { statuses, Status } from "../types";
+import { statuses, Status } from "../../../utils/types/chat";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
