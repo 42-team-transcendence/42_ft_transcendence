@@ -58,9 +58,15 @@ export type MutedUsersAndChannelInfo = ChannelMutedUsers & {
 }
 
 export type Message = {
-    id: number;
-    createdAt: Date;
-    message: string;
-    chatId: number;
-    senderId: number;
+    content: string,
+    senderId: number,
+    chatId: number,
+	createdAt: Date
+}
+
+export type Conversation = {
+    id: number,
+    creator: User,
+    recipient: User,
+    messages: Message[]
 }

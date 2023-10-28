@@ -14,19 +14,7 @@ export type User = {
 //     password: string
 // }
 
-export type Message = {
-    content: string,
-    senderId: number,
-    chatId: number,
-	createdAt: Date
-}
 
-export type Conversation = {
-    id: number,
-    creator: User,
-    recipient: User,
-    messages: Message[]
-}
 
 export type MiniAvatarPicture = {
     url: string,

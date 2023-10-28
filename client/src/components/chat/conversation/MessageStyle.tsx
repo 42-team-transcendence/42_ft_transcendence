@@ -3,20 +3,7 @@ import { deepOrange } from "@mui/material/colors";
 
 import {Box} from "@mui/material";
 import BadgeAvatar from "../../miniature/BadgeAvatar";
-
-type MessageProps = {
-  message: string | JSX.Element;
-  timestamp: string; // Adjust the type as needed
-  photoURL?: string;
-  sender?: string;
-//   id?: string;
-};
-
-type SenderType = {
-	id: number;
-	nickname: string;
-	url: string;
-  };
+import { User } from "../../../utils/types/user";
 
 const useStyles: any = {
   messageRow: {
@@ -74,11 +61,12 @@ const useStyles: any = {
 };
 
 // Avatar is on the left
-export const MessageLeft: React.FC<MessageProps & { recipients?: any; sender?: SenderType }> = (
-	props
-) => {
-	const { message, timestamp, sender } = props;
-
+export const MessageLeft = ({key, message, timestamp, sender}: {
+  key:number,
+  message: string | JSX.Element,
+  timestamp: string,
+  sender?: User
+}) => {
 	return (
 		<div style={useStyles.messageRow}>
 			<Box>
@@ -98,9 +86,11 @@ export const MessageLeft: React.FC<MessageProps & { recipients?: any; sender?: S
 };
 
 // Avatar is on the right
-export const MessageRight: React.FC<MessageProps> = (props) => {
-	const { message, timestamp } = props;
-
+export const MessageRight = ({key, message, timestamp}: {
+  key: number,
+  message: string,
+  timestamp: string
+}) => {
 	return (
 		<div style={useStyles.messageRowRight}>
 			<div style={useStyles.messageOrange}>
@@ -112,8 +102,3 @@ export const MessageRight: React.FC<MessageProps> = (props) => {
 		</div>
 	);
 };
-
-
-
-
-//sender.id.toString()

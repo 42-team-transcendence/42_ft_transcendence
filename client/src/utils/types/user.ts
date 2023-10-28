@@ -14,4 +14,11 @@ export type UserSensitiveData = {
     avatar: string;
 }
 
-export type User = Omit<UserSensitiveData, "hash" | "hashedRt" | "secret" | "auth2fa">
+export type UserNoSensitiveData = Omit<UserSensitiveData, "hash" | "hashedRt" | "secret" | "auth2fa">
+
+export type User = UserNoSensitiveData & {
+    blocked: UserNoSensitiveData[];
+    blockedBy: UserNoSensitiveData[];
+    friend: UserNoSensitiveData[];
+    friendOf: UserNoSensitiveData[];
+}

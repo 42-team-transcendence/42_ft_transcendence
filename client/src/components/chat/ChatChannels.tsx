@@ -135,7 +135,7 @@ export default function ChatChannels() {
 					<ArrowBackIcon />
 					</IconButton>
 				)}
-				{currentChat ? (
+				{currentChat && currentUser ? (
 					<Conversation
 						chat={currentChat}
 						currentUser={currentUser}

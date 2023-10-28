@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import io, {Socket} from "socket.io-client"
 import {  useNavigate } from "react-router-dom";
 
-
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
 import MessageInput from "./MessageInput";
@@ -11,7 +10,8 @@ import GroupMiniature from "../../miniature/GroupMiniature";
 
 // =============================================================================
 // IMPORT TYPES ===============================================================
-import type {Message} from "../../../utils/types"
+import type {AllChatInfo, ChatAndParticipantsAndMsgs, Message} from "../../../utils/types/chat"
+import { User } from "../../../utils/types/user";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
@@ -28,17 +28,22 @@ import { useOnlineStatus } from "../../../context/OnlineStatus";
 // =============================================================================
 // FUNCTION ====================================================================
 
-function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser:any, rerenderParent:any}) {
+//User-define typeguard : https://www.typescriptlang.org/docs/handbook/advanced-types.html#using-type-predicates
+function isChannel(chat: ChatAndParticipantsAndMsgs | AllChatInfo): chat is AllChatInfo {
+  return (chat as AllChatInfo).channelInfo !== undefined;
+}
+
+function Conversation({chat, currentUser, rerenderParent}:{
+  chat: ChatAndParticipantsAndMsgs | AllChatInfo,
+  currentUser: User,
+  rerenderParent: () => void
+}) {
     const [chatSocket, setChatSocket] = useState<Socket>();
     const [messages, setMessages] = useState<Message[]>([]);
     // const [recipientOnline, setRecipientOnline] = useState<boolean>(false);
 
     const navigate = useNavigate();
     // const onlineUsers = useOnlineStatus();
-
-    let isChat = true;
-    if (chat.channelInfo) //Check si c'est un chat ou un channel
-      isChat = false;
 
     const recipients = (chat?.participants.filter((e:any) => e.id !== currentUser.id));
 
@@ -144,7 +149,7 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
 
 
     //Format Timestamp from msg stored in DB
-    const formattedTimestamp = (date:Date) => {
+    const formattedTimestamp = (date: Date | undefined) => {
       if (date)
         return new Intl.DateTimeFormat("en-GB", {
           day: "2-digit",
@@ -175,7 +180,7 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
           <>
             <div className="chan-top">
               { //CONVERSATION HEADER
-                isChat ? ( //Si la conversation est un chat
+                !isChannel(chat) ? ( //Si la conversation est un chat
                   recipients.length > 0 &&
                   <>
                     <Button onClick={handleInviteToPlay}>
@@ -197,7 +202,7 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
                   <>
                     <div className="chan-left">
                       {chat.participants.length > 0 && <GroupMiniature participants={chat.participants}></GroupMiniature>}
-                      {chat.channelInfo &&
+                      {"channelInfo" in chat &&
                         <Button onClick={handleChannelTitleClick} endIcon={<SettingsIcon />}>
                           {chat.channelInfo.name}
                         </Button>}
@@ -229,17 +234,17 @@ function Conversation({chat, currentUser, rerenderParent}:{chat:any, currentUser
                           :msg.content
                         }
                         timestamp={formattedTimestamp(msg.createdAt)}
-                        sender={chat?.participants.find((e: any) => e.id === msg.senderId)}
+                        sender={chat?.participants.find(e => e.id === msg.senderId)}
                     />);
                 }
               })
             }
             </Box>
             <Box>
-            {!isChat && isMute(chat?.channelInfo.mutedUsers, currentUser) && (
-                `YOU ARE MUTED UNTIL ${formattedTimestamp(chat?.channelInfo.mutedUsers.find(
-                  (e:any)=>e.userId === currentUser.id
-                ).endsAt)}`
+            {chat && isChannel(chat) && isMute(chat.channelInfo.mutedUsers, currentUser) && (
+                `YOU ARE MUTED UNTIL ${formattedTimestamp(
+                  chat.channelInfo.mutedUsers.find(e=>e.userId === currentUser.id)?.endsAt
+                )}`
               )
             }
               <MessageInput send={send}></MessageInput>
