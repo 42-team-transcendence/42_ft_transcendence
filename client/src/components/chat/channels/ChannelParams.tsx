@@ -12,13 +12,14 @@ import ChannelParamsAdmins from "./ChannelParamsAdmins";
 import ChannelParamsMutes from "./ChannelParamsMutes";
 import ChannelParamsBans from "./ChannelParamsBans";
 
-import { Status } from "../../../utils/types/chat";
+import { AllChatInfo, MutedUser, Status } from "../../../utils/types/chat";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import {Box} from '@mui/material';
 
 import "../../../styles/chat/ChanCreationParam.css"
+import { User } from "../../../utils/types/user";
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -31,7 +32,7 @@ export default function ChannelParams() {
     if (!location.state || !location.state.chatId)
         navigate('/chat');
 
-    const [currentUser, setCurrentUser] = useState<any>();
+    const [currentUser, setCurrentUser] = useState<User>();
 
     const [chatId, setChatId] = useState<number>(location.state.chatId);
     const [channelInfoId, setChannelInfoId] = useState<number>();
@@ -44,23 +45,23 @@ export default function ChannelParams() {
     const [pwd, setPwd] = useState<string>('');
 
     const [ownerId, setOwnerId] = useState<number>();
-    const [participants, setParticipants] = useState([]);
-    const [admins, setAdmins] = useState([]);
-    const [bans, setBans] = useState([]);
-    const [mutes, setMutes] = useState([]);
+    const [participants, setParticipants] = useState<User[]>([]);
+    const [admins, setAdmins] = useState<User[]>([]);
+    const [bans, setBans] = useState<User[]>([]);
+    const [mutes, setMutes] = useState<MutedUser[]>([]);
 
     //GET CURRENT CHANNEL
     useEffect(() => {
         const getChat = async () => {
-            const response = await axiosPrivate.get(`/chats/findById/${location.state.chatId}`, {
+            const response = await axiosPrivate.get<AllChatInfo>(`/chats/findById/${location.state.chatId}`, {
                 headers: { 'Content-Type': 'application/json'},
                 withCredentials: true
             })
             //Si currentUser ne fait pas parti du channel 
             //ou est ban du channel, redirection hors du channel
             if (
-                !response.data.participants.find((e:any)=>e.id === currentUser.id) ||
-                response.data.channelInfo.bannedUsers.find((e:any)=>e.id === currentUser.id)
+                !response.data.participants.find((e)=>e.id === currentUser?.id) ||
+                response.data.channelInfo.bannedUsers.find((e)=>e.id === currentUser?.id)
             )
                 navigate('/chat');
             setChatElements(response.data);
@@ -69,7 +70,7 @@ export default function ChannelParams() {
             getChat();
     },[location.state.chatId, currentUser])
 
-    const setChatElements = (channel:any) => {
+    const setChatElements = (channel:AllChatInfo) => {
         setChatId(channel.id)
         setName(channel.channelInfo.name);
         setChannelInfoId(channel.channelInfo.id);
@@ -85,7 +86,7 @@ export default function ChannelParams() {
     useEffect(() => { //Fetch current user data
 		const getCurrentUser = async () => { //definition de la fonction
 			try {
-                const response = await axiosPrivate.get('/users/me', {
+                const response = await axiosPrivate.get<User>('/users/me', {
                     headers: { 'Content-Type': 'application/json'},
                     withCredentials: true
                 })
@@ -144,7 +145,7 @@ export default function ChannelParams() {
                 <Box className="chan-param-subcontainer">
                     <div className="a-modifier">
                         <div>NAME: {name}</div>
-                        {admins.find((e:any) => e.id === currentUser.id) &&
+                        {admins.find(e => e.id === currentUser.id) &&
                             <span className="modifier" onClick={() => setNameModal(!nameModal)}>modifier</span>
                         }
                     </div>

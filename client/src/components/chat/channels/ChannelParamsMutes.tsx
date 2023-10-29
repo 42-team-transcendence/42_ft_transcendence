@@ -8,6 +8,8 @@ import Miniature from "../../miniature/Miniature";
 // IMPORT STYLES ===============================================================
 import {IconButton, List, ListItem, ListItemButton, ListSubheader,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { User } from "../../../utils/types/user";
+import { MutedUser } from "../../../utils/types/chat";
 
 
 export default function ChannelParamsMutes({
@@ -20,15 +22,15 @@ export default function ChannelParamsMutes({
 }: {
 	chatId:number,
 	channelInfoId:number
-	mutes:any,
-	setMutes:any,
-	currentUser:any,
-	admins:any
+	mutes:MutedUser[],
+	setMutes:React.Dispatch<React.SetStateAction<MutedUser[]>>,
+	currentUser:User,
+	admins:User[]
 }) {
 	const axiosPrivate = useAxiosPrivate();
 
-	const handleDeleteMutes = async (event:any, mute:any) => {
-		if (mutes.find((e:any) => e.userId === mute.userId)) {
+	const handleDeleteMutes = async (event:any, mute:MutedUser) => {
+		if (mutes.find(e => e.userId === mute.userId)) {
 			try {
                 const response = await axiosPrivate.post(
                     `channels/updateMutes/${chatId}`,
@@ -36,7 +38,7 @@ export default function ChannelParamsMutes({
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-				setMutes(mutes.filter((e:any)=> e.userId !== mute.userId));
+				setMutes(mutes.filter(e => e.userId !== mute.userId));
             } catch (err: any) {
                 console.log(err.response);
             }
@@ -45,7 +47,7 @@ export default function ChannelParamsMutes({
 
 	return (
 		<List subheader={<ListSubheader>Muted Users</ListSubheader>}>
-			{mutes.map((mute:any, idx:number) => {
+			{mutes.map((mute, idx) => {
 				if (new Date(mute.endsAt) < new Date())
 					return;
 
@@ -60,7 +62,7 @@ export default function ChannelParamsMutes({
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(mute.userId !== currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
+						{(mute.userId !== currentUser.id) && admins.find(e => e.id === currentUser.id ) &&
 							<ListItemButton onClick={(event)=>handleDeleteMutes(event, mute)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />

@@ -1,11 +1,14 @@
-import { useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { Dispatch, SetStateAction, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // =============================================================================
 // IMPORT COMPONENTS AND TYPES =================================================
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { MiniatureUser } from "../../../utils/types";
 import Miniature from "../../miniature/Miniature";
+
+import { AllChannelInfo, MutedUser, MutedUsersAndChannelInfo } from "../../../utils/types/chat";
+import { User } from "../../../utils/types/user";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
@@ -19,35 +22,37 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ClearIcon from '@mui/icons-material/Clear';
 
 
+
+
 export default function ChannelParamsParticipants(
 	{chatId,channelInfoId,  participants, setParticipants, admins, setAdmins, bans,setBans, mutes, setMutes, ownerId, currentUser}: {
 	chatId:number,
 	channelInfoId:number,
-	participants:any,
-	setParticipants:any,
-	admins:any,
-	setAdmins:any,
-	bans:any,
-	setBans:any,
-	mutes:any,
-	setMutes:any,
+	participants:User[],
+	setParticipants:Dispatch<SetStateAction<User[]>>,
+	admins:User[],
+	setAdmins:Dispatch<SetStateAction<User[]>>,
+	bans:User[],
+	setBans:Dispatch<SetStateAction<User[]>>,
+	mutes:MutedUser[],
+	setMutes:Dispatch<SetStateAction<MutedUser[]>>,
 	ownerId:number,
-	currentUser:any
+	currentUser:User
 }) {
 	const navigate = useNavigate();
 	const axiosPrivate = useAxiosPrivate();
 
     const [anchorUserMenu, setAnchorUserMenu] = useState<null | HTMLElement>(null);
     const openUserMenu = Boolean(anchorUserMenu);
-	const [userSelected, setUserSelected] = useState()
+	const [userSelected, setUserSelected] = useState<User>()
 
-	const handleClickUserMenu = (event: React.MouseEvent<HTMLElement>, user: any) => {
+	const handleClickUserMenu = (event: React.MouseEvent<HTMLElement>, user: User) => {
 		setAnchorUserMenu(event.currentTarget);
 		setUserSelected(user); // define selectedUser state
 	  };
 
-	const handleAddAdmin = async (newAdmin:any) => {
-		if (!admins.find((e:any) => e.id === newAdmin.id)) {
+	const handleAddAdmin = async (newAdmin: User | undefined) => {
+		if (newAdmin && !admins.find(e => e.id === newAdmin.id)) {
 			try {
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
@@ -63,16 +68,17 @@ export default function ChannelParamsParticipants(
 		setAnchorUserMenu(null);
     };
 
-	const handleMute = async (muted:any) => {//Can mute multiple times same user, adds muted time in DB
+	const handleMute = async (muted:User) => {//Can mute multiple times same user, adds muted time in DB
 		try {
-			const response = await axiosPrivate.post(
+			const response = await axiosPrivate.post<{ chat: {participants : User[]} } & AllChannelInfo>(
 				`channels/updateMutes/${chatId}`,
 				JSON.stringify({ newMuted: muted.id, channelInfoId }), {
 					headers: {'Content-Type': 'application/json'}, withCredentials: true
 				}
 			);
-			const newMuted = response.data.mutedUsers.find((e:any)=>e.userId === muted.id);
-			setMutes([...mutes, newMuted]);
+			const newMuted = response.data.mutedUsers.find(e=>e.userId === muted.id);
+			if (newMuted)
+				setMutes([...mutes, newMuted]);
 		} catch (err: any) {
 			console.log(err.response);
 		}
@@ -81,19 +87,19 @@ export default function ChannelParamsParticipants(
 
 	const eraseData = (userId: number) => {
 		let erase : {admin: null | number, mute: null | number} = {admin: null, mute: null};
-		if (admins.find((e:any) => e.id === userId)) {
+		if (admins.find(e => e.id === userId)) {
 			erase.admin = userId;
-			setAdmins(admins.filter((e:any)=> userId !== e.id));
+			setAdmins(admins.filter(e => userId !== e.id));
 		}
-		if (mutes.find((e:any) => e.userId === userId)) {
+		if (mutes.find(e => e.userId === userId)) {
 			erase.mute = userId;
-			setMutes(mutes.filter((e:any)=> userId !== e.userId));
+			setMutes(mutes.filter(e => userId !== e.userId));
 		}
 		return erase;
 	}
 
-	const handleKick = async (kicked:any, ban:boolean) => {//kick out of participants
-		if (participants.find((e:any) => e.id === kicked.id)) {
+	const handleKick = async (kicked:User, ban:boolean) => {//kick out of participants
+		if (participants.find(e => e.id === kicked.id)) {
 			try {
 				//if user is kicked, also need to strip of admins and mutes
 				let erase = eraseData(kicked.id);
@@ -104,7 +110,7 @@ export default function ChannelParamsParticipants(
 						oldAdmin: erase.admin,
 					}),{headers: {'Content-Type': 'application/json'}, withCredentials: true}
                 );
-				setParticipants(participants.filter((user:any)=> user.id !== kicked.id));
+				setParticipants(participants.filter(user => user.id !== kicked.id));
 
 				if (erase.mute) {
 					const eraseMute = await axiosPrivate.post(
@@ -121,7 +127,7 @@ export default function ChannelParamsParticipants(
     };
 
 	const handleLeave = async () => {//leave this channel
-		if (participants.find((e:any) => e.id === currentUser.id)) {
+		if (participants.find(e => e.id === currentUser.id)) {
 			try {
 				//if user leaves, also need to strip of admins and mutes
 				let erase = eraseData(currentUser.id);
@@ -131,7 +137,7 @@ export default function ChannelParamsParticipants(
 						oldAdmin: erase.admin,
 					}),{headers: {'Content-Type': 'application/json'}, withCredentials: true}
                 );
-				setParticipants(participants.filter((user:any)=> user.id !== currentUser.id));
+				setParticipants(participants.filter(user => user.id !== currentUser.id));
 				
 				if (erase.mute) {
 					const eraseMute = await axiosPrivate.post(
@@ -147,8 +153,8 @@ export default function ChannelParamsParticipants(
 		}
     };
 
-	const handleBan = (banned:any) => { //Add to banned list and kick out of chan
-		if (!bans.find((e:any) => e.id === banned.id)) {
+	const handleBan = (banned:User) => { //Add to banned list and kick out of chan
+		if (!bans.find(e => e.id === banned.id)) {
 			handleKick(banned, true);
 			setBans([...bans, banned]);
 		} else
@@ -157,7 +163,7 @@ export default function ChannelParamsParticipants(
 
 	return (
 		<List subheader={<ListSubheader>Participants</ListSubheader>}>
-		{participants.map((user:any, idx:number) => {
+		{participants.map((user, idx) => {
 			const miniatureUser: MiniatureUser = {
 				nickname: user?.nickname,
 				id: user?.id,
@@ -169,8 +175,8 @@ export default function ChannelParamsParticipants(
 			return (
 				<ListItem key={"user_"+idx} disablePadding>
 					<Miniature miniatureUser={miniatureUser} ></Miniature>
-					{user.id !== currentUser.id ? (
-						admins.find((e:any) => e.id === currentUser.id ) && user.id !== ownerId &&
+					{userSelected && user.id !== currentUser.id ? (
+						admins.find(e => e.id === currentUser.id ) && user.id !== ownerId &&
 						<>
 							<ListItemButton
 								id="chan_user_param_button"

@@ -17,7 +17,7 @@ export default function StatusModal({ data, open, onClose, onSave }: {
   data:{status:Status, pwd:string},
   open:boolean,
   onClose: () => void;
-  onSave: (newStatus: Status, newPwd: string) => any;
+  onSave: (newStatus: Status, newPwd: string) => Promise<void>;
 }) {
   const [newStatus, setNewStatus] = useState(data.status);
   const [newPwd, setNewPwd] = useState(data.pwd);

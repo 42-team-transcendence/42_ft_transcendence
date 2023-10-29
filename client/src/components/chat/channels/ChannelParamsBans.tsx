@@ -8,21 +8,22 @@ import Miniature from "../../miniature/Miniature";
 // IMPORT STYLES ===============================================================
 import {IconButton, List, ListItem, ListItemButton, ListSubheader,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { User } from "../../../utils/types/user";
 
 
 
 
 export default function ChannelParamsBans({chatId, bans, setBans, currentUser, admins}: {
 	chatId:number,
-	bans:any,
-	setBans:any,
-	currentUser:any
-	admins:any
+	bans:User[],
+	setBans:React.Dispatch<React.SetStateAction<User[]>>,
+	currentUser:User
+	admins:User[]
 }) {
 	const axiosPrivate = useAxiosPrivate();
 
-	const handleDeleteBans = async (event:any, user:any) => {
-		if (bans.find((e:any) => e.id === user.id)) {
+	const handleDeleteBans = async (event:any, user:User) => {
+		if (bans.find(e => e.id === user.id)) {
 			try {
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
@@ -30,7 +31,7 @@ export default function ChannelParamsBans({chatId, bans, setBans, currentUser, a
                         headers: {'Content-Type': 'application/json'}, withCredentials: true
                     }
                 );
-				setBans(bans.filter((ban:any)=> ban.id !== user.id));
+				setBans(bans.filter(ban => ban.id !== user.id));
             } catch (err: any) {
                 console.log(err.response);
             }
@@ -39,7 +40,7 @@ export default function ChannelParamsBans({chatId, bans, setBans, currentUser, a
 
 	return (
 		<List subheader={<ListSubheader>Banned Users</ListSubheader>}>
-			{bans.map((user:any, idx:number) => {
+			{bans.map((user:User, idx:number) => {
 				const miniatureUser: MiniatureUser = {
 					nickname: user?.nickname,
 					id: user?.id,
@@ -51,7 +52,7 @@ export default function ChannelParamsBans({chatId, bans, setBans, currentUser, a
 				return (
 					<ListItem key={idx} disablePadding>
 						<Miniature miniatureUser={miniatureUser} ></Miniature>
-						{(user.id !== currentUser.id) && admins.find((e:any) => e.id === currentUser.id ) &&
+						{(user.id !== currentUser.id) && admins.find(e => e.id === currentUser.id ) &&
 							<ListItemButton onClick={(event)=>handleDeleteBans(event, user)}>
 								<IconButton edge="end" aria-label="delete">
 									<DeleteIcon />

@@ -9,18 +9,19 @@ import Miniature from "../../miniature/Miniature";
 // IMPORT STYLES ===============================================================
 import {IconButton, List, ListItem, ListItemButton, ListItemText, ListSubheader,} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { User } from "../../../utils/types/user";
 
 export default function ChannelParamsParticipants({chatId, admins, setAdmins, ownerId}: {
-	chatId:number,
-	admins:any,
-	setAdmins:any,
-	ownerId:number,
-	currentUser:any
+	chatId: number,
+	admins: User[],
+	setAdmins: React.Dispatch<React.SetStateAction<User[]>>,
+	ownerId: number,
+	currentUser: User
 }) {
 	const axiosPrivate = useAxiosPrivate();
 
 	const handleDeleteAdmin = async (event:any, user:any) => {
-		if (admins.find((e:any) => e.id === user.id)) {
+		if (admins.find(e => e.id === user.id)) {
 			try {
                 const response = await axiosPrivate.post(
                     `channels/update/${chatId}`,
