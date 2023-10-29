@@ -1,24 +1,28 @@
 import { useNavigate } from "react-router-dom";
+import { Dispatch, SetStateAction } from "react";
 import {  Box } from "@mui/material";
 
 // =============================================================================
 // IMPORT STYLES ===============================================================
 import  "../../../styles/chat/ChatMiniature.css";
 import GroupMiniature from "../../miniature/GroupMiniature";
+import { User } from "../../../utils/types/user";
 
 
 
 // =============================================================================
 // FUNCTION ====================================================================
 
-export default function ChannelMiniature({notif, channelName, lastMessage, channelId, participants, showChatSidebar, setShowChatSidebar}: {
-    notif:boolean,
-    channelName:string,
-    lastMessage:string,
-    channelId:number,
-    participants:any,
-    showChatSidebar:any,
-    setShowChatSidebar:any,
+export default function ChannelMiniature({
+    notif, channelName, lastMessage, channelId, participants, showChatSidebar, setShowChatSidebar
+}: {
+    notif: boolean,
+    channelName: string,
+    lastMessage: string,
+    channelId: number,
+    participants: User[],
+    showChatSidebar: boolean,
+    setShowChatSidebar: Dispatch<SetStateAction<boolean>>
 }) {
     const navigate = useNavigate();
 

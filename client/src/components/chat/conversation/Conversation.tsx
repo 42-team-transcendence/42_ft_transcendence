@@ -10,7 +10,7 @@ import GroupMiniature from "../../miniature/GroupMiniature";
 
 // =============================================================================
 // IMPORT TYPES ===============================================================
-import type {AllChatInfo, ChatAndParticipantsAndMsgs, Message} from "../../../utils/types/chat"
+import type {AllChatInfo, ChannelMutedUsers, ChatAndParticipantsAndMsgs, Message, MessageInConv, MutedUser} from "../../../utils/types/chat"
 import { User } from "../../../utils/types/user";
 
 // =============================================================================
@@ -39,17 +39,17 @@ function Conversation({chat, currentUser, rerenderParent}:{
   rerenderParent: () => void
 }) {
     const [chatSocket, setChatSocket] = useState<Socket>();
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<MessageInConv[]>([]);
     // const [recipientOnline, setRecipientOnline] = useState<boolean>(false);
 
     const navigate = useNavigate();
     // const onlineUsers = useOnlineStatus();
 
-    const recipients = (chat?.participants.filter((e:any) => e.id !== currentUser.id));
+    const recipients = (chat?.participants.filter(e => e.id !== currentUser.id));
 
     //Update des messages displayed quand le chat est modifié
     useEffect(() => {
-        const oldMessages: Message[] = chat.messages.map((msg:any) => {
+        const oldMessages: MessageInConv[] = chat.messages.map((msg) => {
             return {content: msg.message, senderId: msg.senderId, chatId: msg.chatId, createdAt: msg.createdAt
         }});
         setMessages([...oldMessages]);
@@ -103,7 +103,7 @@ function Conversation({chat, currentUser, rerenderParent}:{
     }
 
     //Réception et stockage des messages par le client
-    const messageListener = (message:Message) => {
+    const messageListener = (message: MessageInConv) => {
         try {
           setMessages([...messages, message]);
           rerenderParent();
@@ -162,9 +162,9 @@ function Conversation({chat, currentUser, rerenderParent}:{
       return "";
     }
 
-    const isMute = (mutedUsers:any, currentUser:any) => {
+    const isMute = (mutedUsers: MutedUser[], currentUser:User) => {
       //if element is found, currentUser is muted
-      return mutedUsers.find((e:any) => {
+      return mutedUsers.find((e) => {
         return (
           e.userId === currentUser.id
           && new Date(e.endsAt) > new Date())
@@ -221,9 +221,9 @@ function Conversation({chat, currentUser, rerenderParent}:{
                       timestamp={formattedTimestamp(msg.createdAt)}/>
                   );
                 } else {// Display messages sent by others on the left
-                    const sender = chat?.participants.find((e: any) => e.id === msg.senderId);
+                    const sender = chat?.participants.find((e) => e.id === msg.senderId);
 
-                    const senderBlocked = currentUser.blocked.find((e: any) => e.id === msg.senderId);
+                    const senderBlocked = currentUser.blocked.find((e) => e.id === msg.senderId);
                     return (
                       !senderBlocked && <MessageLeft
                         key={index}

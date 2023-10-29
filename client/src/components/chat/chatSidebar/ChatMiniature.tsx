@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Dispatch, SetStateAction } from "react";
 import {  Box } from "@mui/material";
 
 // =============================================================================
@@ -19,8 +20,8 @@ export default function ChatMiniature({notif, nickname, lastMessage, userId, sho
     nickname:string,
     lastMessage:string,
     userId:number,
-    showChatSidebar:any,
-    setShowChatSidebar:any,
+    showChatSidebar: boolean,
+    setShowChatSidebar: Dispatch<SetStateAction<boolean>>
 }) {
     const navigate = useNavigate();
 

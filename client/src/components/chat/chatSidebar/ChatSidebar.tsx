@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Dispatch, SetStateAction } from "react";
 
 // =============================================================================
 // IMPORT COMPONENTS ===========================================================
@@ -11,6 +12,8 @@ import CustomButton from "../../../styles/buttons/CustomButton";
 import { Box } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import "../../../styles/chat/ChatSidebar.css"
+import { AllChatInfo } from "../../../utils/types/chat";
+import { User } from "../../../utils/types/user";
 
 // =============================================================================
 // FUNCTION ====================================================================
@@ -22,10 +25,10 @@ export default function ChatSidebar({
   showChatSidebar,
   setShowChatSidebar
 }: {
-  myChats: any;
-  currentUser: any;
-  showChatSidebar:any;
-  setShowChatSidebar:any;
+  myChats: AllChatInfo[];
+  currentUser: User;
+  showChatSidebar: boolean,
+  setShowChatSidebar: Dispatch<SetStateAction<boolean>>
 }) {
 	const navigate = useNavigate();
 
@@ -39,12 +42,12 @@ export default function ChatSidebar({
 			CREATE CHAN
 		</CustomButton>
 
-		{myChats && myChats.map((chat: any, i: number) => {
+		{myChats && myChats.map((chat, i: number) => {
 			// Ensure chat and participants are defined before accessing properties
 			if (chat && chat.participants && chat.participants.length > 0) {
 				if (!chat.channelInfo) { //CHAT
 					// Find first user id which is not mine
-					const recipient = chat?.participants?.find((e: any) => e.id !== currentUser.id);
+					const recipient = chat?.participants?.find((e) => e.id !== currentUser.id);
 					if (recipient?.id) {
 						return (
 							<ChatMiniature
@@ -53,7 +56,7 @@ export default function ChatSidebar({
 								userId={recipient.id}
 								nickname={recipient.nickname}
 								lastMessage={
-									chat.messages.length > 0 && !currentUser.blocked.find((e:any)=>e.id === recipient.id)
+									chat.messages.length > 0 && !currentUser.blocked.find(e => e.id === recipient.id)
 									  ? (chat.messages[chat.messages.length - 1].message.length > 20
 										? chat.messages[chat.messages.length - 1].message.substring(0, 20) + "..."
 										: chat.messages[chat.messages.length - 1].message)
@@ -73,7 +76,7 @@ export default function ChatSidebar({
 							channelName={chat.channelInfo.name}
 							lastMessage={
 								chat.messages.length > 0 && !currentUser.blocked.find(
-									(e:any)=>e.id === chat.messages[chat.messages.length - 1].senderId
+									(e)=>e.id === chat.messages[chat.messages.length - 1].senderId
 								) ? (chat.messages[chat.messages.length - 1].message.length > 20
 									? chat.messages[chat.messages.length - 1].message.substring(0, 20) + "..."
 									: chat.messages[chat.messages.length - 1].message)
